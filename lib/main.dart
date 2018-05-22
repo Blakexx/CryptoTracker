@@ -20,7 +20,7 @@ String response;
 
 void main() {
   runApp(new MaterialApp(
-    home: new HomePage()
+      home: new HomePage()
   ));
 }
 
@@ -62,38 +62,43 @@ class HomePageState extends State<HomePage>{
     //print(itemCount);
     http.Response r;
     while(count<itemCount){
-       //print(count);
-       r = await http.get(
+      //print(count);
+      r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
-       );
-       data = json.decode(r.body);
-       //print(data);
-       //print(data["data"]["1"]);
-       //print(data["data"]);
-       Map<String,dynamic> map = data["data"];
-       //print(map);
-       for(Map<String,dynamic> s in map.values){
-         //print(s);
-         //print(s["id"]);
-         //(fullList[ids.indexOf(data["data"][i]["id"])] as Crypto).price = data["data"][i]["price"];
-         //print(s["quotes"]["USD"]["price"]);
-         (fullList[ids.indexOf(s["id"])] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
-         (fullList[ids.indexOf(s["id"])] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
-         (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
-         (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-         (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
-       }
-       count+=100;
+      );
+      data = json.decode(r.body);
+      //print(data);
+      //print(data["data"]["1"]);
+      //print(data["data"]);
+      Map<String,dynamic> map = data["data"];
+      //print(map);
+      for(Map<String,dynamic> s in map.values){
+        //print(s);
+        //print(s["id"]);
+        //(fullList[ids.indexOf(data["data"][i]["id"])] as Crypto).price = data["data"][i]["price"];
+        //print(s["quotes"]["USD"]["price"]);
+        (fullList[ids.indexOf(s["id"])] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+      }
+      count+=100;
     }
     //print(count.toString()+" "+itemCount.toString());
-    print("Data Retrieved and Processed");
-    buildCount = 199;
+    //print("Data Retrieved and Processed");
+    if(first){
+      buildCount = 199;
+    }
+    first = false;
     //print(data.toString());
     done = true;
     //print(fullList);
     setState((){});
     return new Future<String>((){return "0";});
   }
+
+  bool first = true;
 
   bool done = false;
 
@@ -104,6 +109,8 @@ class HomePageState extends State<HomePage>{
     }
     buildCount++;
   }
+
+  ScrollController scrollController = new ScrollController();
 
   @override
   Widget build(BuildContext context){
@@ -133,30 +140,57 @@ class HomePageState extends State<HomePage>{
       });
     }
     return new Scaffold(
-      appBar:new AppBar(title:new Text("Favorites"),backgroundColor: Colors.black54),
-      floatingActionButton: done?new FloatingActionButton(
-        onPressed: (){
-          Navigator.push(context,new MaterialPageRoute(builder: (context) => new CryptoList()));
-        },
-        child: new Icon(Icons.add)
-      ):new Container(),
-      body: new Container(
-        child: new Center(
-          child: new ListView(
-            children: <Widget>[
-              new Column(
-                children: favList
-              )
-            ]
-          )
+        appBar:new AppBar(title:new Text("Favorites"),backgroundColor: Colors.black54),
+        floatingActionButton: (done && completer.isCompleted)?new FloatingActionButton(
+            onPressed: (){
+              completer = new Completer<Null>();
+              completer.complete();
+              Navigator.push(context,new MaterialPageRoute(builder: (context) => new CryptoList()));
+            },
+            child: new Icon(Icons.add)
+        ):new Container(),
+        body: new Container(
+            child: new Center(
+                child: new RefreshIndicator(
+                  child: new ListView.builder(
+                      controller: scrollController,
+                      itemCount: favList.length,
+                      itemBuilder: (BuildContext context,int index) => favList[index],
+                      physics: const AlwaysScrollableScrollPhysics()
+                  ),
+                  onRefresh: (){
+                    completer = new Completer<Null>();
+                    done = false;
+                    setUpData();
+                    wait() {
+                      if (done) {
+                        completer.complete();
+                      } else {
+                        new Timer(Duration.zero, wait);
+                      }
+                    }
+                    wait();
+                    for(int i = 0; i<favList.length;i++){
+                      Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
+                      (favList[i] as FavCrypto).price = temp.price;
+                      (favList[i] as FavCrypto).oneHour = temp.oneHour;
+                      (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
+                      (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
+                      (favList[i] as FavCrypto).mCap = temp.mCap;
+                    }
+                    done = false;
+                    setState((){});
+                    return completer.future;
+                  },
+                )
+            )
         )
-      )
     );
   }
 }
 
 List<Widget> favList = [
-  
+
 ];
 
 List<Widget> fullList = [
@@ -169,6 +203,47 @@ class CryptoList extends StatefulWidget{
 }
 
 class CryptoListState extends State<CryptoList>{
+
+  Future<String> setUpData() async{
+    int count = 0;
+    //print(count);
+    //print(itemCount);
+    http.Response r;
+    while(count<itemCount){
+      //print(count);
+      r = await http.get(
+          Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
+      );
+      data = json.decode(r.body);
+      //print(data);
+      //print(data["data"]["1"]);
+      //print(data["data"]);
+      Map<String,dynamic> map = data["data"];
+      //print(map);
+      for(Map<String,dynamic> s in map.values){
+        //print(s);
+        //print(s["id"]);
+        //(fullList[ids.indexOf(data["data"][i]["id"])] as Crypto).price = data["data"][i]["price"];
+        //print(s["quotes"]["USD"]["price"]);
+        (fullList[ids.indexOf(s["id"])] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+      }
+      count+=100;
+    }
+    //print(count.toString()+" "+itemCount.toString());
+    //print("Data Retrieved and Processed");
+    //buildCount = 199;
+    //print(data.toString());
+    done = true;
+    //print(fullList);
+    setState((){});
+    return new Future<String>((){return "0";});
+  }
+
+  bool done = true;
 
   String search = "";
 
@@ -250,90 +325,126 @@ class CryptoListState extends State<CryptoList>{
         filteredList.addAll(fullList);
       }
     }
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new TextField(
-            controller: textController,
-            maxLength:20,
-            autocorrect: false,
-            decoration: new InputDecoration(
-              hintText: "Search",
-              // ignore: conflicting_dart_import
-              hintStyle: new TextStyle(color:Colors.white),
-              prefixIcon: new Icon(Icons.search)
-            ),
-          style:new TextStyle(color:Colors.white),
-          onChanged:(s){
-              setState((){search = s;});
-          },
-          onSubmitted: (s){
-              selection = null;
-              scrollController.jumpTo(0.0);
-              filteredList.clear();
-              search = s;
-              for(int i = 0; i<fullList.length;i++){
-                if((fullList[i] as Crypto).name.toUpperCase().contains(search.toUpperCase())){
-                  filteredList.add(fullList[i]);
-                }
-              }
-              setState(() {
-
-              });
-          }
-        ),
-        backgroundColor: Colors.black54,
-        bottom: new PreferredSize(
-          preferredSize: new Size(0.0,50.0),
-          child: new Column(
-            children: [
-              new Container(
-                  padding: EdgeInsets.only(left:5.0,right:5.0),
-                  color: Colors.white,
-                  child: new DropdownButton(
-                      hint:new Text("Sort",style:new TextStyle(color:Colors.black)),
-                      value: selection,
-                      items: dropdownMenuOptions,
-                      onChanged: (s){
-                        onChanged(s);
+    return new WillPopScope(
+        child: new Scaffold(
+            appBar: new AppBar(
+                title: new TextField(
+                    controller: textController,
+                    maxLength:20,
+                    autocorrect: false,
+                    decoration: new InputDecoration(
+                        hintText: "Search",
+                        // ignore: conflicting_dart_import
+                        hintStyle: new TextStyle(color:Colors.white),
+                        prefixIcon: new Icon(Icons.search)
+                    ),
+                    style:new TextStyle(color:Colors.white),
+                    onChanged:(s){
+                      setState((){search = s;});
+                    },
+                    onSubmitted: (s){
+                      selection = null;
+                      scrollController.jumpTo(0.0);
+                      filteredList.clear();
+                      search = s;
+                      for(int i = 0; i<fullList.length;i++){
+                        if((fullList[i] as Crypto).name.toUpperCase().contains(search.toUpperCase())){
+                          filteredList.add(fullList[i]);
+                        }
+                      }
+                      setState(() {});
+                    }
+                ),
+                backgroundColor: Colors.black54,
+                bottom: new PreferredSize(
+                    preferredSize: new Size(0.0,50.0),
+                    child: new Column(
+                        children: [
+                          new Container(
+                              padding: EdgeInsets.only(left:5.0,right:5.0),
+                              color: Colors.white,
+                              child: new DropdownButton(
+                                  hint:new Text("Sort",style:new TextStyle(color:Colors.black)),
+                                  value: selection,
+                                  items: dropdownMenuOptions,
+                                  onChanged: (s){
+                                    onChanged(s);
+                                  }
+                              )
+                          ),
+                          new Container(
+                              padding: EdgeInsets.only(bottom:10.0)
+                          )
+                        ]
+                    )
+                ),
+                actions: <Widget>[
+                  new IconButton(
+                      icon: search.length>0?new Icon(Icons.close):new Icon(Icons.edit),
+                      onPressed: (){
+                        if(search.length>0){
+                          selection = null;
+                          setState((){
+                            search = "";
+                          });
+                          textController.text = "";
+                          scrollController.jumpTo(0.0);
+                          filteredList.clear();
+                          filteredList.addAll(fullList);
+                        }
                       }
                   )
-              ),
-              new Container(
-                padding: EdgeInsets.only(bottom:10.0)
-              )
-            ]
-          )
+                ]
+            ),
+            body: new Container(
+                child: new Center(
+                    child: new RefreshIndicator(
+                        child: new ListView.builder(
+                            controller: scrollController,
+                            itemCount: filteredList.length,
+                            itemBuilder: (BuildContext context,int index) => filteredList[index]
+                        ),
+                        onRefresh: (){
+                          if(!kill){
+                            done = false;
+                            setUpData();
+                            completer = new Completer<Null>();
+                            wait() {
+                              if (done) {
+                                completer.complete();
+                              } else {
+                                new Timer(Duration.zero, wait);
+                              }
+                            }
+                            wait();
+                            for(int i = 0; i<favList.length;i++){
+                              Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
+                              (favList[i] as FavCrypto).price = temp.price;
+                              (favList[i] as FavCrypto).oneHour = temp.oneHour;
+                              (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
+                              (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
+                              (favList[i] as FavCrypto).mCap = temp.mCap;
+                            }
+                            setState((){});
+                            return completer.future;
+                          }else{
+                            return new Completer<Null>().future;
+                          }
+                        }
+                    )
+                )
+            )
         ),
-        actions: <Widget>[
-          new IconButton(
-            icon: search.length>0?new Icon(Icons.close):new Icon(Icons.edit),
-            onPressed: (){
-              if(search.length>0){
-                selection = null;
-                setState((){
-                  search = "";
-                });
-                textController.text = "";
-                scrollController.jumpTo(0.0);
-                filteredList.clear();
-                filteredList.addAll(fullList);
-              }
-            }
-          )
-        ]
-      ),
-      body: new Container(
-        child: new Center(
-          child: new ListView.builder(
-            controller: scrollController,
-            itemCount: filteredList.length,
-            itemBuilder: (BuildContext context,int index) => filteredList[index]
-          )
-        )
-      )
+        onWillPop: (){
+          kill = true;
+          return (completer.isCompleted && done)?new Future((){return true;}):new Future((){return false;});
+        }
     );
   }
+  bool kill = false;
 }
+
+Completer completer = new Completer<Null>()..complete();
 
 class FavCrypto extends StatefulWidget{
 
@@ -367,46 +478,48 @@ class FavCryptoState extends State<FavCrypto>{
   @override
   Widget build(BuildContext context){
     return new Dismissible(
-      direction: DismissDirection.endToStart,
-      key: new Key(widget.slug),
-      onDismissed: (direction){
-        favList.removeAt(widget.index);
-        for(int i = 0;i <favList.length;i++){
-          (favList[i] as FavCrypto).index = i;
-          (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
-        }
-        (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
-        String dataBuild = "";
-        for(int i = 0;i<favList.length;i++){
-          dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
-        }
-        //print(dataBuild);
-        storage.writeData(dataBuild);
-      },
-      background: new Container(color:Colors.red),
-      child: new Container(
-        padding: EdgeInsets.only(top:10.0),
-        child: new FlatButton(
-          padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-          color:Colors.black12,
-          child: new Row(
-            children: <Widget>[
-              // ignore: conflicting_dart_import
-              new Expanded(child: new Text(widget.name,style: new TextStyle(fontSize:25.0))),
-              new Expanded(child: new Text("\$"+(widget.price!=-1?widget.price.toStringAsFixed(3):"N/A"),style: new TextStyle(fontSize:25.0))),
-              new Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString(),style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                  widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString(),style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                  widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString(),style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
-                ],
-              )
-            ],
-          ),
-          onPressed: (){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug)));}
+        direction: completer.isCompleted?DismissDirection.endToStart:null,
+        key: new ObjectKey(widget.slug),
+        onDismissed: (direction){
+          if(completer.isCompleted){
+            favList.removeAt(widget.index);
+            for(int i = 0;i <favList.length;i++){
+              (favList[i] as FavCrypto).index = i;
+              (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+            }
+            (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
+            String dataBuild = "";
+            for(int i = 0;i<favList.length;i++){
+              dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+            }
+            //print(dataBuild)
+            storage.writeData(dataBuild);
+          }
+        },
+        background: new Container(color:Colors.red),
+        child: new Container(
+            padding: EdgeInsets.only(top:10.0),
+            child: new FlatButton(
+                padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
+                color:Colors.black12,
+                child: new Row(
+                  children: <Widget>[
+                    // ignore: conflicting_dart_import
+                    new Expanded(child: new Text(widget.name,style: new TextStyle(fontSize:25.0))),
+                    new Expanded(child: new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0))),
+                    new Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                        widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                        widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                      ],
+                    )
+                  ],
+                ),
+                onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.price)));}}
+            )
         )
-      )
     );
   }
 }
@@ -455,44 +568,46 @@ class CryptoState extends State<Crypto>{
               children: <Widget>[
                 // ignore: conflicting_dart_import
                 new Expanded(child: new Text(widget.name,style: new TextStyle(fontSize:25.0))),
-                new Expanded(child: new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(3):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0))),
+                new Expanded(child: new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0))),
                 new Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString(),style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                    widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString(),style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                    widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString(),style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                    widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                    widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                    widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
                   ],
                 ),
                 new Icon(widget.color==Colors.black12?Icons.add:Icons.check)
               ],
             ),
             onPressed: (){
-              setState((){widget.color = widget.color==Colors.black12?Colors.black26:Colors.black12;});
-              Scaffold.of(context).removeCurrentSnackBar();
-              Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(widget.color==Colors.black26?"Added":"Removed"),duration: new Duration(milliseconds: 500)));
-              if(widget.color==Colors.black26){
-                favList.add(new FavCrypto(widget.slug, favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap));
-                widget.favIndex = favList.length-1;
-                String dataBuild = "";
-                for(int i = 0;i<favList.length;i++){
-                  dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+              if(completer.isCompleted){
+                setState((){widget.color = widget.color==Colors.black12?Colors.black26:Colors.black12;});
+                Scaffold.of(context).removeCurrentSnackBar();
+                Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(widget.color==Colors.black26?"Added":"Removed"),duration: new Duration(milliseconds: 500)));
+                if(widget.color==Colors.black26){
+                  favList.add(new FavCrypto(widget.slug, favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap));
+                  widget.favIndex = favList.length-1;
+                  String dataBuild = "";
+                  for(int i = 0;i<favList.length;i++){
+                    dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                  }
+                  //print(dataBuild);
+                  storage.writeData(dataBuild);
+                }else{
+                  //print(widget.favIndex);
+                  favList.removeAt(widget.favIndex);
+                  for(int i = 0; i<favList.length;i++){
+                    (favList[i] as FavCrypto).index = i;
+                    (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex=i;
+                  }
+                  String dataBuild = "";
+                  for(int i = 0;i<favList.length;i++){
+                    dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                  }
+                  //print(dataBuild);
+                  storage.writeData(dataBuild);
                 }
-                //print(dataBuild);
-                storage.writeData(dataBuild);
-              }else{
-                //print(widget.favIndex);
-                favList.removeAt(widget.favIndex);
-                for(int i = 0; i<favList.length;i++){
-                  (favList[i] as FavCrypto).index = i;
-                  (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex=i;
-                }
-                String dataBuild = "";
-                for(int i = 0;i<favList.length;i++){
-                  dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
-                }
-                //print(dataBuild);
-                storage.writeData(dataBuild);
               }
             }
         )
@@ -504,7 +619,9 @@ class ItemInfo extends StatelessWidget{
 
   String slug;
 
-  ItemInfo(this.slug);
+  double price;
+
+  ItemInfo(this.slug,this.price);
 
   @override
   Widget build(BuildContext context){
@@ -516,7 +633,7 @@ class ItemInfo extends StatelessWidget{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       new Text(slug,style:new TextStyle(fontSize: 25.0)),
-                      new Text("price",style:new TextStyle(fontSize: 25.0))
+                      new Text("\$"+(price!=-1?price>=1?price.toStringAsFixed(2):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0))
                     ]
                 )
             )
