@@ -56,8 +56,13 @@ class HomePageState extends State<HomePage>{
     return new Future<String>((){return "0";});
   }
 
+  int count = 0;
+
+  int realCount = 0;
+
   Future<String> setUpData() async{
-    int count = 0;
+    count = 0;
+    realCount = 0;
     //print(count);
     //print(itemCount);
     http.Response r;
@@ -82,6 +87,8 @@ class HomePageState extends State<HomePage>{
         (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+        realCount++;
+        setState((){});
       }
       count+=100;
     }
@@ -110,6 +117,8 @@ class HomePageState extends State<HomePage>{
     buildCount++;
   }
 
+  bool firstLoad = false;
+
   ScrollController scrollController = new ScrollController();
 
   @override
@@ -136,10 +145,11 @@ class HomePageState extends State<HomePage>{
           }
         }
         buildCount = 300;
+        firstLoad = true;
         setState((){});
       });
     }
-    return new Scaffold(
+    return firstLoad?new Scaffold(
         appBar:new AppBar(title:new Text("Favorites"),backgroundColor: Colors.black54),
         floatingActionButton: (done && completer.isCompleted)?new FloatingActionButton(
             onPressed: (){
@@ -185,6 +195,25 @@ class HomePageState extends State<HomePage>{
                 )
             )
         )
+    ):new Scaffold(
+      appBar: new AppBar(
+        title: new Text("Loading..."),
+        backgroundColor: Colors.black54,
+      ),
+      body: new Container(
+        padding: EdgeInsets.all(15.0),
+        child:new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text(((realCount/itemCount)*100).round().toString()+"%"),
+              new LinearProgressIndicator(
+                value: realCount/itemCount
+              )
+            ]
+          )
+        )
+      )
     );
   }
 }
@@ -326,6 +355,8 @@ class CryptoListState extends State<CryptoList>{
       }
     }
     return new WillPopScope(
+      child: new GestureDetector(
+        onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
         child: new Scaffold(
             appBar: new AppBar(
                 title: new TextField(
@@ -368,6 +399,7 @@ class CryptoListState extends State<CryptoList>{
                                   value: selection,
                                   items: dropdownMenuOptions,
                                   onChanged: (s){
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     onChanged(s);
                                   }
                               )
@@ -380,12 +412,12 @@ class CryptoListState extends State<CryptoList>{
                 ),
                 actions: <Widget>[
                   new IconButton(
-                      icon: search.length>0?new Icon(Icons.close):new Icon(Icons.edit),
+                      icon: (search!=null&&search.length>0)?new Icon(Icons.close):new Icon(Icons.edit),
                       onPressed: (){
                         if(search.length>0){
                           selection = null;
                           setState((){
-                            search = "";
+                            search = null;
                           });
                           textController.text = "";
                           scrollController.jumpTo(0.0);
@@ -434,7 +466,7 @@ class CryptoListState extends State<CryptoList>{
                     )
                 )
             )
-        ),
+        )),
         onWillPop: (){
           kill = true;
           return (completer.isCompleted && done)?new Future((){return true;}):new Future((){return false;});
@@ -582,6 +614,7 @@ class CryptoState extends State<Crypto>{
             ),
             onPressed: (){
               if(completer.isCompleted){
+                FocusScope.of(context).requestFocus(new FocusNode());
                 setState((){widget.color = widget.color==Colors.black12?Colors.black26:Colors.black12;});
                 Scaffold.of(context).removeCurrentSnackBar();
                 Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(widget.color==Colors.black26?"Added":"Removed"),duration: new Duration(milliseconds: 500)));
