@@ -34,6 +34,8 @@ List<int> ids;
 
 class HomePageState extends State<HomePage>{
 
+  List<Widget> filteredList = new List<Widget>();
+
   Future<String> getData() async{
     ids = new List<int>();
     http.Response r = await http.get(
@@ -120,12 +122,24 @@ class HomePageState extends State<HomePage>{
 
   bool firstLoad = false;
 
+  bool inSearch = false;
+
   ScrollController scrollController = new ScrollController();
 
   int a = 0;
 
+  String search = null;
+
+  bool hasSearched = false;
+
   @override
   Widget build(BuildContext context){
+
+    if(search==null){
+      if(filteredList.length==0){
+        filteredList.addAll(favList);
+      }
+    }
 
     if(buildCount==100){
       setUpData();
@@ -154,7 +168,90 @@ class HomePageState extends State<HomePage>{
       });
     }
     return firstLoad?new Scaffold(
-        appBar:new AppBar(title:new Text("Favorites"),backgroundColor: Colors.black54),
+        appBar:new AppBar(
+            title:!inSearch?new Text("Favorites"):new TextField(
+              maxLength:20,
+              autocorrect: false,
+              decoration: new InputDecoration(
+                  hintText: "Search",
+                  // ignore: conflicting_dart_import
+                  hintStyle: new TextStyle(color:Colors.white),
+                  prefixIcon: new Icon(Icons.search)
+              ),
+              style:new TextStyle(color:Colors.white),
+              autofocus: true,
+              onChanged: (s) {
+                search = s;
+              },
+              onSubmitted: (s){
+                scrollController.jumpTo(1.0);
+                filteredList.clear();
+                search = s;
+                for(int i = 0; i<favList.length;i++){
+                  if((favList[i] as FavCrypto).name.toUpperCase().contains(search.toUpperCase())){
+                    filteredList.add(favList[i]);
+                  }
+                }
+                inSearch = false;
+                hasSearched = true;
+                setState((){});
+              }
+            ),
+            backgroundColor: Colors.black54,
+            actions: [
+              new IconButton(
+                icon: new Icon(!hasSearched?Icons.search:Icons.clear),
+                onPressed: (){
+                  if(hasSearched){
+                    filteredList.clear();
+                    filteredList.addAll(favList);
+                    hasSearched = false;
+                    setState((){inSearch = false;});
+                  }else{
+                    setState((){inSearch = true;});
+                  }
+                }
+              ),
+              new PopupMenuButton<String>(
+                onSelected: (String selected){
+                  if(selected=="Settings"){
+                    Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
+                      appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                      body: new Container(
+                        child: new Center(
+                          child: new Column(
+                            children: <Widget>[
+                              new Text("It's perfect the way it is")
+                            ]
+                          )
+                        )
+                      )
+                    )));
+                  }else if(selected=="Rate us"){
+                    Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
+                      appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                      body: new Container(
+                        child: new Center(
+                          child: new Column(
+                            children: <Widget>[
+                              new Text("Please :(")
+                            ]
+                          )
+                        )
+                      )
+                    )));
+                  }
+                },
+                itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                  new PopupMenuItem<String>(
+                      child: const Text("Settings"), value: "Settings"),
+                  new PopupMenuItem<String>(
+                      child: const Text("Rate us"), value: "Rate us"),
+                ],
+                child: new Icon(Icons.more_vert)
+              )
+            ]
+        ),
         floatingActionButton: (done && completer.isCompleted)?new FloatingActionButton(
             onPressed: (){
               completer = new Completer<Null>();
@@ -168,8 +265,8 @@ class HomePageState extends State<HomePage>{
                 child: new RefreshIndicator(
                   child: new ListView.builder(
                       controller: scrollController,
-                      itemCount: favList.length,
-                      itemBuilder: (BuildContext context,int index) => favList[index],
+                      itemCount: filteredList.length,
+                      itemBuilder: (BuildContext context,int index) => filteredList[index],
                       physics: const AlwaysScrollableScrollPhysics()
                   ),
                   onRefresh: (){
@@ -202,7 +299,7 @@ class HomePageState extends State<HomePage>{
     ):new Scaffold(
       appBar: new AppBar(
         title: new Text("Loading..."),
-        backgroundColor: Colors.black54,
+        backgroundColor: Colors.black54
       ),
       body: new Container(
         padding: EdgeInsets.all(15.0),
@@ -593,7 +690,7 @@ class FavCryptoState extends State<FavCrypto>{
                             widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
                           ],
                         )
-                    ),
+                    )
                   ],
                 ),
                 onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.price)));}}
@@ -747,6 +844,17 @@ class ItemInfo extends StatelessWidget{
                 )
             )
         )
+    );
+  }
+}
+
+class Options{
+
+  @override
+  Widget build(BuildContext context){
+    return new Scaffold(
+      appBar:new AppBar(title:new Text("More"),backgroundColor: Colors.black54),
+
     );
   }
 }
