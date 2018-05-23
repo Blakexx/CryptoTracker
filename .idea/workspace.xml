@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -22,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="692" column="21" lean-forward="false" selection-start-line="692" selection-start-column="21" selection-end-line="692" selection-end-column="21" />
+            <state relative-caret-position="364">
+              <caret line="590" column="39" lean-forward="true" selection-start-line="590" selection-start-column="39" selection-end-line="590" selection-end-column="39" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -45,12 +44,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>search</find>
-      <find>jump</find>
-      <find>refrs</find>
-      <find>dism</find>
-      <find>favori</find>
-      <find>widget.price</find>
       <find>fontSize:22</find>
       <find>Naviga</find>
       <find>onPressed</find>
@@ -75,6 +68,12 @@
       <find>new Icon</find>
       <find>onSub</find>
       <find>inSearch</find>
+      <find>onSubmitt</find>
+      <find>search</find>
+      <find>searc</find>
+      <find>filtere</find>
+      <find>filtered</find>
+      <find>onWillPo</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -464,8 +463,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="692" column="21" lean-forward="false" selection-start-line="692" selection-start-column="21" selection-end-line="692" selection-end-column="21" />
+        <state relative-caret-position="364">
+          <caret line="590" column="39" lean-forward="true" selection-start-line="590" selection-start-column="39" selection-end-line="590" selection-end-column="39" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

@@ -34,7 +34,7 @@ List<int> ids;
 
 class HomePageState extends State<HomePage>{
 
-  List<Widget> filteredList = new List<Widget>();
+  static List<Widget> filteredList = new List<Widget>();
 
   Future<String> getData() async{
     ids = new List<int>();
@@ -188,11 +188,10 @@ class HomePageState extends State<HomePage>{
                 filteredList.clear();
                 search = s;
                 for(int i = 0; i<favList.length;i++){
-                  if((favList[i] as FavCrypto).name.toUpperCase().contains(search.toUpperCase())){
+                  if((favList[i] as FavCrypto).name.toUpperCase().contains(search.toUpperCase()) || (favList[i] as FavCrypto).shortName.toUpperCase().contains(search.toUpperCase())){
                     filteredList.add(favList[i]);
                   }
                 }
-                inSearch = false;
                 hasSearched = true;
                 setState((){});
               }
@@ -254,6 +253,8 @@ class HomePageState extends State<HomePage>{
         ),
         floatingActionButton: (done && completer.isCompleted)?new FloatingActionButton(
             onPressed: (){
+              search = null;
+              filteredList.clear();
               completer = new Completer<Null>();
               completer.complete();
               Navigator.push(context,new MaterialPageRoute(builder: (context) => new CryptoList()));
@@ -487,7 +488,7 @@ class CryptoListState extends State<CryptoList>{
                       filteredList.clear();
                       search = s;
                       for(int i = 0; i<fullList.length;i++){
-                        if((fullList[i] as Crypto).name.toUpperCase().contains(search.toUpperCase())){
+                        if((fullList[i] as Crypto).name.toUpperCase().contains(search.toUpperCase()) || (favList[i] as FavCrypto).shortName.toUpperCase().contains(search.toUpperCase())){
                           filteredList.add(fullList[i]);
                         }
                       }
@@ -577,6 +578,7 @@ class CryptoListState extends State<CryptoList>{
         )),
         onWillPop: (){
           kill = true;
+          HomePageState.filteredList.clear();
           return (completer.isCompleted && done)?new Future((){return true;}):new Future((){return false;});
         }
     );
