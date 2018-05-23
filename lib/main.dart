@@ -6,8 +6,6 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 int itemCount = 1;
@@ -364,6 +362,13 @@ class CryptoListState extends State<CryptoList>{
       child: new GestureDetector(
         onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
         child: new Scaffold(
+            floatingActionButton: new FloatingActionButton(
+              child: new Icon(Icons.arrow_upward),
+              onPressed: (){
+                scrollController.jumpTo(1.0);
+              },
+              backgroundColor: Colors.black26,
+            ),
             appBar: new AppBar(
                 title: new TextField(
                     controller: textController,
@@ -561,13 +566,13 @@ class FavCryptoState extends State<FavCrypto>{
                         children: [
                           new Row(
                             children: [
-                              new Text(widget.name,style: new TextStyle(fontSize:((10/widget.name.length)<1)?(22.0*10/widget.name.length):22.0))
+                              new Text(widget.name,style: new TextStyle(fontSize:((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0))
                             ]
                           ),
                           new Row(
                             children: [
                               widget.image,
-                              new Text(" "+widget.shortName)
+                              new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
                             ]
                           )
                         ]
@@ -575,8 +580,8 @@ class FavCryptoState extends State<FavCrypto>{
                     new Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0)),
-                          new Text("\$"+(widget.mCap!=-1?widget.mCap>=1?widget.mCap.toStringAsFixed(0):widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                          new Text((widget.price!=-1?widget.price>=1?"\$"+widget.price.toStringAsFixed(2):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0)),
+                          new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+widget.mCap.toStringAsFixed(0):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
                         ]
                     ),
                     new Expanded(
@@ -665,8 +670,8 @@ class CryptoState extends State<Crypto>{
                 new Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0)),
-                     new Text("\$"+(widget.mCap!=-1?widget.mCap>=1?widget.mCap.toStringAsFixed(0):widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                    new Text((widget.price!=-1?widget.price>=1?"\$"+widget.price.toStringAsFixed(2):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0)),
+                     new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+widget.mCap.toStringAsFixed(0):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
                   ]
                 ),
                 new Expanded(
