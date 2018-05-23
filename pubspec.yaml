@@ -11,7 +11,7 @@ dependencies:
   path_provider:
   flutter_webview_plugin:
   url_launcher:
-
+  flutter_list_drag_and_drop:
 
 dev_dependencies:
   flutter_test:

@@ -49,7 +49,7 @@ class HomePageState extends State<HomePage>{
     for(int i = 0; i<runs;i++){
       // ignore: conflicting_dart_import
       fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new Image.network(
-        'https://s2.coinmarketcap.com/static/img/coins/32x32/'+data["data"][i]["id"].toString()+".png"
+          'https://s2.coinmarketcap.com/static/img/coins/32x32/'+data["data"][i]["id"].toString()+".png"
       ),data["data"][i]["symbol"]));
       ids[i] = data["data"][i]["id"];
     }
@@ -170,84 +170,155 @@ class HomePageState extends State<HomePage>{
     return firstLoad?new Scaffold(
         appBar:new AppBar(
             title:!inSearch?new Text("Favorites"):new TextField(
-              maxLength:20,
-              autocorrect: false,
-              decoration: new InputDecoration(
-                  hintText: "Search",
-                  // ignore: conflicting_dart_import
-                  hintStyle: new TextStyle(color:Colors.white),
-                  prefixIcon: new Icon(Icons.search)
-              ),
-              style:new TextStyle(color:Colors.white),
-              autofocus: true,
-              onChanged: (s) {
-                search = s;
-              },
-              onSubmitted: (s){
-                scrollController.jumpTo(1.0);
-                filteredList.clear();
-                search = s;
-                for(int i = 0; i<favList.length;i++){
-                  if((favList[i] as FavCrypto).name.toUpperCase().contains(search.toUpperCase()) || (favList[i] as FavCrypto).shortName.toUpperCase().contains(search.toUpperCase())){
-                    filteredList.add(favList[i]);
+                maxLength:20,
+                autocorrect: false,
+                decoration: new InputDecoration(
+                    hintText: "Search",
+                    // ignore: conflicting_dart_import
+                    hintStyle: new TextStyle(color:Colors.white),
+                    prefixIcon: new Icon(Icons.search)
+                ),
+                style:new TextStyle(color:Colors.white),
+                autofocus: true,
+                onChanged: (s) {
+                  search = s;
+                },
+                onSubmitted: (s){
+                  scrollController.jumpTo((1.0));
+                  filteredList.clear();
+                  search = s;
+                  for(int i = 0; i<favList.length;i++){
+                    if((favList[i] as FavCrypto).name.toUpperCase().contains(search.toUpperCase()) || (favList[i] as FavCrypto).shortName.toUpperCase().contains(search.toUpperCase())){
+                      filteredList.add(favList[i]);
+                    }
                   }
+                  hasSearched = true;
+                  setState((){});
                 }
-                hasSearched = true;
-                setState((){});
-              }
             ),
             backgroundColor: Colors.black54,
             actions: [
               new IconButton(
-                icon: new Icon(!hasSearched?Icons.search:Icons.clear),
-                onPressed: (){
-                  if(hasSearched){
-                    filteredList.clear();
-                    filteredList.addAll(favList);
-                    hasSearched = false;
-                    setState((){inSearch = false;});
-                  }else{
-                    setState((){inSearch = true;});
+                  icon: new Icon(!hasSearched?Icons.search:Icons.clear),
+                  onPressed: (){
+                    if(hasSearched){
+                      filteredList.clear();
+                      filteredList.addAll(favList);
+                      hasSearched = false;
+                      setState((){inSearch = false;});
+                    }else{
+                      setState((){inSearch = true;});
+                    }
                   }
+              ),
+              new PopupMenuButton<String>(
+                  itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                    new PopupMenuItem<String>(
+                        child: const Text("Name Ascending"), value: "Name Ascending"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Name Descending"), value: "Name Descending"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Price Ascending"), value: "Price Ascending"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Price Descending"), value: "Price Descending"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Default"), value: "Default"),
+                  ],
+                child: new Icon(Icons.dehaze),
+                onSelected:(s){
+                  setState(() {
+                    scrollController.jumpTo(0.0);
+                    if(s=="Name Ascending"){
+                      filteredList.sort((o1,o2){
+                        if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
+                          return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                        }
+                        return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
+                      });
+                    }else if(s=="Name Descending"){
+                      filteredList.sort((o1,o2){
+                        if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
+                          return (o2 as FavCrypto).name.compareTo((o1 as FavCrypto).name);
+                        }
+                        return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
+                      });
+                    }else if(s=="Price Ascending"){
+                      filteredList.sort((o1,o2){
+                        if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
+                          return ((o1 as FavCrypto).price*1000000000-(o2 as FavCrypto).price*1000000000).round();
+                        }
+                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                      });
+                    }else if(s=="Price Descending"){
+                      filteredList.sort((o1,o2){
+                        if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
+                          return ((o2 as FavCrypto).price*1000000000-(o1 as FavCrypto).price*1000000000).round();
+                        }
+                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                      });
+                    }else if(s=="Market Cap Ascending"){
+                      filteredList.sort((o1,o2){
+                        if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
+                          return ((o1 as FavCrypto).mCap*100-(o2 as FavCrypto).mCap*100).round();
+                        }
+                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                      });
+                    }else if(s=="Market Cap Descending"){
+                      filteredList.sort((o1,o2){
+                        if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
+                          return ((o2 as FavCrypto).mCap*100-(o1 as FavCrypto).mCap*100).round();
+                        }
+                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                      });
+                    }else if(s=="Default"){
+                      filteredList.sort((o1,o2) {
+                        return (o1 as FavCrypto).index - (o2 as FavCrypto).index;
+                      });
+                    }
+                  });
                 }
               ),
               new PopupMenuButton<String>(
-                onSelected: (String selected){
-                  if(selected=="Settings"){
-                    Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                      appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
-                      body: new Container(
-                        child: new Center(
-                          child: new Column(
-                            children: <Widget>[
-                              new Text("It's perfect the way it is")
-                            ]
+                  onSelected: (String selected){
+                    if(selected=="Settings"){
+                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
+                          appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                          body: new Container(
+                              child: new Center(
+                                  child: new Column(
+                                      children: <Widget>[
+                                        new Text("It's perfect the way it is")
+                                      ]
+                                  )
+                              )
                           )
-                        )
-                      )
-                    )));
-                  }else if(selected=="Rate us"){
-                    Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                      appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
-                      body: new Container(
-                        child: new Center(
-                          child: new Column(
-                            children: <Widget>[
-                              new Text("Please :(")
-                            ]
+                      )));
+                    }else if(selected=="Rate us"){
+                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
+                          appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                          body: new Container(
+                              child: new Center(
+                                  child: new Column(
+                                      children: <Widget>[
+                                        new Text("Please :(")
+                                      ]
+                                  )
+                              )
                           )
-                        )
-                      )
-                    )));
-                  }
-                },
-                itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
-                  new PopupMenuItem<String>(
-                      child: const Text("Settings"), value: "Settings"),
-                  new PopupMenuItem<String>(
-                      child: const Text("Rate us"), value: "Rate us"),
-                ],
-                child: new Icon(Icons.more_vert)
+                      )));
+                    }
+                  },
+                  itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                    new PopupMenuItem<String>(
+                        child: const Text("Settings"), value: "Settings"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Rate us"), value: "Rate us"),
+                  ],
+                  child: new Icon(Icons.more_vert)
               )
             ]
         ),
@@ -265,11 +336,13 @@ class HomePageState extends State<HomePage>{
             child: new Center(
                 child: new RefreshIndicator(
                   child: new ListView(
-                      children: <Widget>[
-                        new Column(
+                    children: <Widget>[
+                      new Column(
                           children: filteredList
-                        )
-                      ]
+                      )
+                    ],
+                    controller: scrollController,
+                    physics: new AlwaysScrollableScrollPhysics(),
                   ),
                   onRefresh: (){
                     completer = new Completer<Null>();
@@ -299,24 +372,24 @@ class HomePageState extends State<HomePage>{
             )
         )
     ):new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Loading..."),
-        backgroundColor: Colors.black54
-      ),
-      body: new Container(
-        padding: EdgeInsets.all(15.0),
-        child:new Center(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text(((realCount/itemCount)*100).round().toString()+"%"),
-              new LinearProgressIndicator(
-                value: realCount/itemCount
-              )
-            ]
-          )
+        appBar: new AppBar(
+            title: new Text("Loading..."),
+            backgroundColor: Colors.black54
+        ),
+        body: new Container(
+            padding: EdgeInsets.all(15.0),
+            child:new Center(
+                child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Text(((realCount/itemCount)*100).round().toString()+"%"),
+                      new LinearProgressIndicator(
+                          value: realCount/itemCount
+                      )
+                    ]
+                )
+            )
         )
-      )
     );
   }
 }
@@ -390,7 +463,7 @@ class CryptoListState extends State<CryptoList>{
   void onChanged(String s){
     //print("meme");
     setState(() {
-      scrollController.jumpTo(0.0);
+      scrollController.jumpTo(1.0);
       selection = s;
       if(s=="Name Ascending"){
         filteredList.sort((o1,o2){
@@ -458,125 +531,125 @@ class CryptoListState extends State<CryptoList>{
       }
     }
     return new WillPopScope(
-      child: new GestureDetector(
-        onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
-        child: new Scaffold(
-            floatingActionButton: new FloatingActionButton(
-              child: new Icon(Icons.arrow_upward),
-              onPressed: (){
-                scrollController.jumpTo(1.0);
-              },
-              backgroundColor: Colors.black26,
-            ),
-            appBar: new AppBar(
-                title: new TextField(
-                    controller: textController,
-                    maxLength:20,
-                    autocorrect: false,
-                    decoration: new InputDecoration(
-                        hintText: "Search",
-                        // ignore: conflicting_dart_import
-                        hintStyle: new TextStyle(color:Colors.white),
-                        prefixIcon: new Icon(Icons.search)
-                    ),
-                    style:new TextStyle(color:Colors.white),
-                    onChanged:(s){
-                      setState((){search = s;});
-                    },
-                    onSubmitted: (s){
-                      selection = null;
-                      scrollController.jumpTo(1.0);
-                      filteredList.clear();
-                      search = s;
-                      for(int i = 0; i<fullList.length;i++){
-                        if((fullList[i] as Crypto).name.toUpperCase().contains(search.toUpperCase()) || (favList[i] as FavCrypto).shortName.toUpperCase().contains(search.toUpperCase())){
-                          filteredList.add(fullList[i]);
-                        }
-                      }
-                      setState(() {});
-                    }
+        child: new GestureDetector(
+            onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
+            child: new Scaffold(
+                floatingActionButton: new FloatingActionButton(
+                  child: new Icon(Icons.arrow_upward),
+                  onPressed: (){
+                    scrollController.jumpTo(1.0);
+                  },
+                  backgroundColor: Colors.black26,
                 ),
-                backgroundColor: Colors.black54,
-                bottom: new PreferredSize(
-                    preferredSize: new Size(0.0,50.0),
-                    child: new Column(
-                        children: [
-                          new Container(
-                              padding: EdgeInsets.only(left:5.0,right:5.0),
-                              color: Colors.white,
-                              child: new DropdownButton(
-                                  hint:new Text("Sort",style:new TextStyle(color:Colors.black)),
-                                  value: selection,
-                                  items: dropdownMenuOptions,
-                                  onChanged: (s){
-                                    FocusScope.of(context).requestFocus(new FocusNode());
-                                    onChanged(s);
-                                  }
-                              )
-                          ),
-                          new Container(
-                              padding: EdgeInsets.only(bottom:10.0)
-                          )
-                        ]
-                    )
-                ),
-                actions: <Widget>[
-                  new IconButton(
-                      icon: (search!=null&&search.length>0)?new Icon(Icons.close):new Icon(Icons.edit),
-                      onPressed: (){
-                        if(search.length>0){
+                appBar: new AppBar(
+                    title: new TextField(
+                        controller: textController,
+                        maxLength:20,
+                        autocorrect: false,
+                        decoration: new InputDecoration(
+                            hintText: "Search",
+                            // ignore: conflicting_dart_import
+                            hintStyle: new TextStyle(color:Colors.white),
+                            prefixIcon: new Icon(Icons.search)
+                        ),
+                        style:new TextStyle(color:Colors.white),
+                        onChanged:(s){
+                          setState((){search = s;});
+                        },
+                        onSubmitted: (s){
                           selection = null;
-                          setState((){
-                            search = null;
-                          });
-                          textController.text = "";
                           scrollController.jumpTo(1.0);
                           filteredList.clear();
-                          filteredList.addAll(fullList);
+                          search = s;
+                          for(int i = 0; i<fullList.length;i++){
+                            if((fullList[i] as Crypto).name.toUpperCase().contains(search.toUpperCase()) || (fullList[i] as Crypto).shortName.toUpperCase().contains(search.toUpperCase())){
+                              this.filteredList.add(fullList[i]);
+                            }
+                          }
+                          setState(() {});
                         }
-                      }
-                  )
-                ]
-            ),
-            body: new Container(
-                child: new Center(
-                    child: new RefreshIndicator(
-                        child: new ListView.builder(
-                            controller: scrollController,
-                            itemCount: filteredList.length,
-                            itemBuilder: (BuildContext context,int index) => filteredList[index]
-                        ),
-                        onRefresh: (){
-                          if(!kill){
-                            done = false;
-                            setUpData();
-                            completer = new Completer<Null>();
-                            wait() {
-                              if (done) {
-                                for(int i = 0; i<favList.length;i++){
-                                  Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
-                                  (favList[i] as FavCrypto).price = temp.price;
-                                  (favList[i] as FavCrypto).oneHour = temp.oneHour;
-                                  (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
-                                  (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
-                                  (favList[i] as FavCrypto).mCap = temp.mCap;
+                    ),
+                    backgroundColor: Colors.black54,
+                    bottom: new PreferredSize(
+                        preferredSize: new Size(0.0,50.0),
+                        child: new Column(
+                            children: [
+                              new Container(
+                                  padding: EdgeInsets.only(left:5.0,right:5.0),
+                                  color: Colors.white,
+                                  child: new DropdownButton(
+                                      hint:new Text("Sort",style:new TextStyle(color:Colors.black)),
+                                      value: selection,
+                                      items: dropdownMenuOptions,
+                                      onChanged: (s){
+                                        FocusScope.of(context).requestFocus(new FocusNode());
+                                        onChanged(s);
+                                      }
+                                  )
+                              ),
+                              new Container(
+                                  padding: EdgeInsets.only(bottom:10.0)
+                              )
+                            ]
+                        )
+                    ),
+                    actions: <Widget>[
+                      new IconButton(
+                          icon: (search!=null&&search.length>0)?new Icon(Icons.close):new Icon(Icons.edit),
+                          onPressed: (){
+                            if(search.length>0){
+                              selection = null;
+                              setState((){
+                                search = null;
+                              });
+                              textController.text = "";
+                              scrollController.jumpTo(1.0);
+                              filteredList.clear();
+                              filteredList.addAll(fullList);
+                            }
+                          }
+                      )
+                    ]
+                ),
+                body: new Container(
+                    child: new Center(
+                        child: new RefreshIndicator(
+                            child: new ListView.builder(
+                                controller: scrollController,
+                                itemCount: filteredList.length,
+                                itemBuilder: (BuildContext context,int index) => filteredList[index]
+                            ),
+                            onRefresh: (){
+                              if(!kill){
+                                done = false;
+                                setUpData();
+                                completer = new Completer<Null>();
+                                wait() {
+                                  if (done) {
+                                    for(int i = 0; i<favList.length;i++){
+                                      Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
+                                      (favList[i] as FavCrypto).price = temp.price;
+                                      (favList[i] as FavCrypto).oneHour = temp.oneHour;
+                                      (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
+                                      (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
+                                      (favList[i] as FavCrypto).mCap = temp.mCap;
+                                    }
+                                    completer.complete();
+                                  } else {
+                                    new Timer(Duration.zero, wait);
+                                  }
                                 }
-                                completer.complete();
-                              } else {
-                                new Timer(Duration.zero, wait);
+                                wait();
+                                setState((){});
+                                return completer.future;
+                              }else{
+                                return new Completer<Null>().future;
                               }
                             }
-                            wait();
-                            setState((){});
-                            return completer.future;
-                          }else{
-                            return new Completer<Null>().future;
-                          }
-                        }
+                        )
                     )
                 )
-            )
-        )),
+            )),
         onWillPop: (){
           kill = true;
           HomePageState.filteredList.clear();
@@ -665,15 +738,15 @@ class FavCryptoState extends State<FavCrypto>{
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           new Row(
-                            children: [
-                              new Text(widget.name,style: new TextStyle(fontSize:((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0))
-                            ]
+                              children: [
+                                new Text(widget.name,style: new TextStyle(fontSize:((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0))
+                              ]
                           ),
                           new Row(
-                            children: [
-                              widget.image,
-                              new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
-                            ]
+                              children: [
+                                widget.image,
+                                new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
+                              ]
                           )
                         ]
                     )),
@@ -743,7 +816,7 @@ class CryptoState extends State<Crypto>{
   @override
   Widget build(BuildContext context){
     return new Container(
-      key: new ObjectKey("full"+widget.slug),
+        key: new ObjectKey("full"+widget.slug),
         padding: EdgeInsets.only(top:10.0),
         child: new FlatButton(
             padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
@@ -752,7 +825,7 @@ class CryptoState extends State<Crypto>{
               children: <Widget>[
                 // ignore: conflicting_dart_import
                 new Expanded(child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       new Row(
                           children: [
@@ -768,21 +841,21 @@ class CryptoState extends State<Crypto>{
                     ]
                 )),
                 new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    new Text((widget.price!=-1?widget.price>=1?"\$"+widget.price.toStringAsFixed(2):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0)),
-                     new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+widget.mCap.toStringAsFixed(0):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
-                  ]
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      new Text((widget.price!=-1?widget.price>=1?"\$"+widget.price.toStringAsFixed(2):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0)),
+                      new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+widget.mCap.toStringAsFixed(0):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                    ]
                 ),
                 new Expanded(
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                      widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                      widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
-                    ],
-                  )
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                        widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                        widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                      ],
+                    )
                 ),
                 new Icon(widget.color==Colors.black12?Icons.add:Icons.check)
               ],

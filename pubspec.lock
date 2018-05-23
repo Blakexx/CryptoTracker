@@ -90,6 +90,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_list_drag_and_drop:
+    dependency: "direct main"
+    description:
+      name: flutter_list_drag_and_drop
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter
