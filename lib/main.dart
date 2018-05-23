@@ -264,11 +264,12 @@ class HomePageState extends State<HomePage>{
         body: new Container(
             child: new Center(
                 child: new RefreshIndicator(
-                  child: new ListView.builder(
-                      controller: scrollController,
-                      itemCount: filteredList.length,
-                      itemBuilder: (BuildContext context,int index) => filteredList[index],
-                      physics: const AlwaysScrollableScrollPhysics()
+                  child: new ListView(
+                      children: <Widget>[
+                        new Column(
+                          children: filteredList
+                        )
+                      ]
                   ),
                   onRefresh: (){
                     completer = new Completer<Null>();
