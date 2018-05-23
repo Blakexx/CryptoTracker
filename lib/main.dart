@@ -47,7 +47,10 @@ class HomePageState extends State<HomePage>{
     itemCount = runs;
     ids.length = itemCount;
     for(int i = 0; i<runs;i++){
-      fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"]));
+      // ignore: conflicting_dart_import
+      fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new Image.network(
+        'https://s2.coinmarketcap.com/static/img/coins/32x32/'+data["data"][i]["id"].toString()+".png"
+      ),data["data"][i]["symbol"]));
       ids[i] = data["data"][i]["id"];
     }
     //print(fullList);
@@ -121,8 +124,11 @@ class HomePageState extends State<HomePage>{
 
   ScrollController scrollController = new ScrollController();
 
+  int a = 0;
+
   @override
   Widget build(BuildContext context){
+
     if(buildCount==100){
       setUpData();
       buildCount++;
@@ -139,7 +145,7 @@ class HomePageState extends State<HomePage>{
           for(int i = 0; i<inds.length;i+=2){
             Crypto temp = (fullList[inds[i]] as Crypto);
             (fullList[inds[i]] as Crypto).favIndex = inds[i+1];
-            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap));
+            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName));
             (fullList[inds[i]] as Crypto).color = Colors.black26;
             //print(favList);
           }
@@ -174,20 +180,20 @@ class HomePageState extends State<HomePage>{
                     setUpData();
                     wait() {
                       if (done) {
+                        for(int i = 0; i<favList.length;i++){
+                          Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
+                          (favList[i] as FavCrypto).price = temp.price;
+                          (favList[i] as FavCrypto).oneHour = temp.oneHour;
+                          (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
+                          (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
+                          (favList[i] as FavCrypto).mCap = temp.mCap;
+                        }
                         completer.complete();
                       } else {
                         new Timer(Duration.zero, wait);
                       }
                     }
                     wait();
-                    for(int i = 0; i<favList.length;i++){
-                      Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
-                      (favList[i] as FavCrypto).price = temp.price;
-                      (favList[i] as FavCrypto).oneHour = temp.oneHour;
-                      (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
-                      (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
-                      (favList[i] as FavCrypto).mCap = temp.mCap;
-                    }
                     done = false;
                     setState((){});
                     return completer.future;
@@ -375,7 +381,7 @@ class CryptoListState extends State<CryptoList>{
                     },
                     onSubmitted: (s){
                       selection = null;
-                      scrollController.jumpTo(0.0);
+                      scrollController.jumpTo(1.0);
                       filteredList.clear();
                       search = s;
                       for(int i = 0; i<fullList.length;i++){
@@ -420,7 +426,7 @@ class CryptoListState extends State<CryptoList>{
                             search = null;
                           });
                           textController.text = "";
-                          scrollController.jumpTo(0.0);
+                          scrollController.jumpTo(1.0);
                           filteredList.clear();
                           filteredList.addAll(fullList);
                         }
@@ -443,20 +449,20 @@ class CryptoListState extends State<CryptoList>{
                             completer = new Completer<Null>();
                             wait() {
                               if (done) {
+                                for(int i = 0; i<favList.length;i++){
+                                  Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
+                                  (favList[i] as FavCrypto).price = temp.price;
+                                  (favList[i] as FavCrypto).oneHour = temp.oneHour;
+                                  (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
+                                  (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
+                                  (favList[i] as FavCrypto).mCap = temp.mCap;
+                                }
                                 completer.complete();
                               } else {
                                 new Timer(Duration.zero, wait);
                               }
                             }
                             wait();
-                            for(int i = 0; i<favList.length;i++){
-                              Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
-                              (favList[i] as FavCrypto).price = temp.price;
-                              (favList[i] as FavCrypto).oneHour = temp.oneHour;
-                              (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
-                              (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
-                              (favList[i] as FavCrypto).mCap = temp.mCap;
-                            }
                             setState((){});
                             return completer.future;
                           }else{
@@ -480,6 +486,10 @@ Completer completer = new Completer<Null>()..complete();
 
 class FavCrypto extends StatefulWidget{
 
+  String shortName;
+
+  Image image;
+
   double mCap;
 
   final String slug;
@@ -494,11 +504,15 @@ class FavCrypto extends StatefulWidget{
 
   int index,friendIndex;
 
-  FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap);
+  ObjectKey key;
+
+  FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
 
   @override
   FavCryptoState createState() => new FavCryptoState();
 }
+
+int removed = 0;
 
 class FavCryptoState extends State<FavCrypto>{
 
@@ -509,21 +523,26 @@ class FavCryptoState extends State<FavCrypto>{
 
   @override
   Widget build(BuildContext context){
+    widget.key = new ObjectKey(widget.slug);
     return new Dismissible(
         direction: completer.isCompleted?DismissDirection.endToStart:null,
-        key: new ObjectKey(widget.slug),
+        key: widget.key,
         onDismissed: (direction){
           if(completer.isCompleted){
+            widget.key = new ObjectKey("removed"+(removed++).toString());
             favList.removeAt(widget.index);
-            for(int i = 0;i <favList.length;i++){
+            (fullList[widget.friendIndex] as Crypto).favIndex = null;
+            for(int i = 0;i<favList.length;i++){
               (favList[i] as FavCrypto).index = i;
               (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+              (favList[i] as FavCrypto).key = new ObjectKey((favList[i] as FavCrypto).slug);
             }
             (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
             String dataBuild = "";
             for(int i = 0;i<favList.length;i++){
               dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
             }
+            //setState((){});
             //print(dataBuild)
             storage.writeData(dataBuild);
           }
@@ -537,16 +556,39 @@ class FavCryptoState extends State<FavCrypto>{
                 child: new Row(
                   children: <Widget>[
                     // ignore: conflicting_dart_import
-                    new Expanded(child: new Text(widget.name,style: new TextStyle(fontSize:25.0))),
-                    new Expanded(child: new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0))),
+                    new Expanded(child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          new Row(
+                            children: [
+                              new Text(widget.name,style: new TextStyle(fontSize:((10/widget.name.length)<1)?(22.0*10/widget.name.length):22.0))
+                            ]
+                          ),
+                          new Row(
+                            children: [
+                              widget.image,
+                              new Text(" "+widget.shortName)
+                            ]
+                          )
+                        ]
+                    )),
                     new Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                        widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                        widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
-                      ],
-                    )
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0)),
+                          new Text("\$"+(widget.mCap!=-1?widget.mCap>=1?widget.mCap.toStringAsFixed(0):widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                        ]
+                    ),
+                    new Expanded(
+                        child: new Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                            widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                            widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                          ],
+                        )
+                    ),
                   ],
                 ),
                 onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.price)));}}
@@ -557,6 +599,10 @@ class FavCryptoState extends State<FavCrypto>{
 }
 
 class Crypto extends StatefulWidget{
+
+  String shortName;
+
+  Image image;
 
   double mCap;
 
@@ -576,7 +622,7 @@ class Crypto extends StatefulWidget{
 
   int index;
 
-  Crypto(this.slug,this.color,this.index,this.name,this.id);
+  Crypto(this.slug,this.color,this.index,this.name,this.id,this.image,this.shortName);
 
   @override
   CryptoState createState() => new CryptoState();
@@ -592,22 +638,46 @@ class CryptoState extends State<Crypto>{
   @override
   Widget build(BuildContext context){
     return new Container(
+      key: new ObjectKey("full"+widget.slug),
         padding: EdgeInsets.only(top:10.0),
         child: new FlatButton(
             padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-            color:widget.color,
+            color: widget.color,
             child: new Row(
               children: <Widget>[
                 // ignore: conflicting_dart_import
-                new Expanded(child: new Text(widget.name,style: new TextStyle(fontSize:25.0))),
-                new Expanded(child: new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0))),
+                new Expanded(child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      new Row(
+                          children: [
+                            new Text(widget.name,style: new TextStyle(fontSize:((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0))
+                          ]
+                      ),
+                      new Row(
+                          children: [
+                            widget.image,
+                            new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
+                          ]
+                      )
+                    ]
+                )),
                 new Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                    widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                    widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    new Text("\$"+(widget.price!=-1?widget.price>=1?widget.price.toStringAsFixed(2):widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:25.0)),
+                     new Text("\$"+(widget.mCap!=-1?widget.mCap>=1?widget.mCap.toStringAsFixed(0):widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                  ]
+                ),
+                new Expanded(
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                      widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                      widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                    ],
+                  )
                 ),
                 new Icon(widget.color==Colors.black12?Icons.add:Icons.check)
               ],
@@ -619,7 +689,7 @@ class CryptoState extends State<Crypto>{
                 Scaffold.of(context).removeCurrentSnackBar();
                 Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(widget.color==Colors.black26?"Added":"Removed"),duration: new Duration(milliseconds: 500)));
                 if(widget.color==Colors.black26){
-                  favList.add(new FavCrypto(widget.slug, favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap));
+                  favList.add(new FavCrypto(widget.slug,favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName));
                   widget.favIndex = favList.length-1;
                   String dataBuild = "";
                   for(int i = 0;i<favList.length;i++){
@@ -630,6 +700,7 @@ class CryptoState extends State<Crypto>{
                 }else{
                   //print(widget.favIndex);
                   favList.removeAt(widget.favIndex);
+                  widget.favIndex = null;
                   for(int i = 0; i<favList.length;i++){
                     (favList[i] as FavCrypto).index = i;
                     (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex=i;
