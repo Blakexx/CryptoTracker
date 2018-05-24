@@ -215,76 +215,79 @@ class HomePageState extends State<HomePage>{
                     }
                   }
               ),
-              new PopupMenuButton<String>(
-                  itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
-                    new PopupMenuItem<String>(
-                        child: const Text("Name Ascending"), value: "Name Ascending"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Name Descending"), value: "Name Descending"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Price Ascending"), value: "Price Ascending"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Price Descending"), value: "Price Descending"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Default"), value: "Default"),
-                  ],
-                child: new Icon(Icons.dehaze),
-                onSelected:(s){
-                  setState(() {
-                    scrollController.jumpTo(0.0);
-                    if(s=="Name Ascending"){
-                      filteredList.sort((o1,o2){
-                        if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
-                          return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                        }
-                        return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
-                      });
-                    }else if(s=="Name Descending"){
-                      filteredList.sort((o1,o2){
-                        if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
-                          return (o2 as FavCrypto).name.compareTo((o1 as FavCrypto).name);
-                        }
-                        return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
-                      });
-                    }else if(s=="Price Ascending"){
-                      filteredList.sort((o1,o2){
-                        if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
-                          return ((o1 as FavCrypto).price*1000000000-(o2 as FavCrypto).price*1000000000).round();
-                        }
-                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                      });
-                    }else if(s=="Price Descending"){
-                      filteredList.sort((o1,o2){
-                        if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
-                          return ((o2 as FavCrypto).price*1000000000-(o1 as FavCrypto).price*1000000000).round();
-                        }
-                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                      });
-                    }else if(s=="Market Cap Ascending"){
-                      filteredList.sort((o1,o2){
-                        if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
-                          return ((o1 as FavCrypto).mCap*100-(o2 as FavCrypto).mCap*100).round();
-                        }
-                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                      });
-                    }else if(s=="Market Cap Descending"){
-                      filteredList.sort((o1,o2){
-                        if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
-                          return ((o2 as FavCrypto).mCap*100-(o1 as FavCrypto).mCap*100).round();
-                        }
-                        return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                      });
-                    }else if(s=="Default"){
-                      filteredList.sort((o1,o2) {
-                        return (o1 as FavCrypto).index - (o2 as FavCrypto).index;
-                      });
-                    }
-                  });
-                }
+              new Container(
+                padding: EdgeInsets.only(right:10.0),
+                  child: new PopupMenuButton<String>(
+                      itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                        new PopupMenuItem<String>(
+                            child: const Text("Name Ascending"), value: "Name Ascending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Name Descending"), value: "Name Descending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Price Ascending"), value: "Price Ascending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Price Descending"), value: "Price Descending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Default"), value: "Default"),
+                      ],
+                      child: new Icon(Icons.filter_list),
+                      onSelected:(s){
+                        setState(() {
+                          scrollController.jumpTo(0.0);
+                          if(s=="Name Ascending"){
+                            filteredList.sort((o1,o2){
+                              if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              }
+                              return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
+                            });
+                          }else if(s=="Name Descending"){
+                            filteredList.sort((o1,o2){
+                              if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
+                                return (o2 as FavCrypto).name.compareTo((o1 as FavCrypto).name);
+                              }
+                              return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
+                            });
+                          }else if(s=="Price Ascending"){
+                            filteredList.sort((o1,o2){
+                              if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
+                                return ((o1 as FavCrypto).price*1000000000-(o2 as FavCrypto).price*1000000000).round();
+                              }
+                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                            });
+                          }else if(s=="Price Descending"){
+                            filteredList.sort((o1,o2){
+                              if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
+                                return ((o2 as FavCrypto).price*1000000000-(o1 as FavCrypto).price*1000000000).round();
+                              }
+                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                            });
+                          }else if(s=="Market Cap Ascending"){
+                            filteredList.sort((o1,o2){
+                              if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
+                                return ((o1 as FavCrypto).mCap*100-(o2 as FavCrypto).mCap*100).round();
+                              }
+                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                            });
+                          }else if(s=="Market Cap Descending"){
+                            filteredList.sort((o1,o2){
+                              if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
+                                return ((o2 as FavCrypto).mCap*100-(o1 as FavCrypto).mCap*100).round();
+                              }
+                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                            });
+                          }else if(s=="Default"){
+                            filteredList.sort((o1,o2) {
+                              return (o1 as FavCrypto).index - (o2 as FavCrypto).index;
+                            });
+                          }
+                        });
+                      }
+                  )
               ),
               new PopupMenuButton<String>(
                   onSelected: (String selected){
@@ -316,7 +319,7 @@ class HomePageState extends State<HomePage>{
                       )));
                     }else if(selected=="About"){
                       Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                          appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                          appBar: new AppBar(title:new Text("About"),backgroundColor: Colors.black54),
                           body: new Container(
                               child: new Center(
                                   child: new Column(
@@ -1126,21 +1129,22 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
     ];
 
-    DateTime d = DateTime.now();
+    DateTime d = DateTime.now().toUtc();
+
+
+    d = d.add(new Duration(hours:-1*d.hour,minutes:-1*d.minute,seconds:-1*d.second,milliseconds: -1*d.millisecond,microseconds: -1*d.microsecond));
+    d = d.add(new Duration(milliseconds: 10));
 
     for(int i = 0; i<30;i++){
       http.Response r = await http.get(
-          Uri.encodeFull("https://min-api.cryptocompare.com/data/pricehistorical?fsym="+s+"&tsyms=USD&ts="+(d.millisecondsSinceEpoch/1000).floor().toString())
+          Uri.encodeFull("https://min-api.cryptocompare.com/data/dayAvg?fsym="+s+"&tsym=USD&toTs="+(d.millisecondsSinceEpoch/1000).round().toString())
       );
       Map<String, dynamic> info = json.decode(r.body);
-      double price = info[s]["USD"]*1.0;
+      double price = info["USD"]*1.0;
       data.insert(0,new TimeSeriesPrice(d, price));
       d = d.add(new Duration(days:-1));
       setState((){count++;});
     }
-
-    //print(data);
-
     return [
       new charts.Series<TimeSeriesPrice, DateTime>(
         id: 'Prices',
