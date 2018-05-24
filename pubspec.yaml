@@ -12,6 +12,7 @@ dependencies:
   flutter_webview_plugin:
   url_launcher:
   flutter_list_drag_and_drop:
+  charts_flutter:
 
 dev_dependencies:
   flutter_test:

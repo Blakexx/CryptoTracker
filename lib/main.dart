@@ -7,6 +7,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 int itemCount = 1;
 
@@ -291,7 +295,7 @@ class HomePageState extends State<HomePage>{
                               child: new Center(
                                   child: new Column(
                                       children: <Widget>[
-                                        new Text("It's perfect the way it is")
+                                        new Text("It's perfect the way it is",style: new TextStyle(fontSize:25.0))
                                       ]
                                   )
                               )
@@ -304,7 +308,36 @@ class HomePageState extends State<HomePage>{
                               child: new Center(
                                   child: new Column(
                                       children: <Widget>[
-                                        new Text("Please :(")
+                                        new Text("Please :(",style: new TextStyle(fontSize:25.0))
+                                      ]
+                                  )
+                              )
+                          )
+                      )));
+                    }else if(selected=="About"){
+                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
+                          appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                          body: new Container(
+                              child: new Center(
+                                  child: new Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        new Text("\nHistorical data retrieved from",style: new TextStyle(fontSize:20.0)),
+                                        new RichText(
+                                          text: new TextSpan(
+                                            text: 'https://www.cryptocompare.com',
+                                            style: new TextStyle(color: Colors.blue,fontSize:20.0),
+                                            recognizer: new TapGestureRecognizer()
+                                              ..onTap = () async {
+                                                const url = 'https://www.cryptocompare.com';
+                                                if (await canLaunch(url)) {
+                                                  await launch(url);
+                                                } else {
+                                                  throw 'Could not launch $url';
+                                                }
+                                              },
+                                          ),
+                                        )
                                       ]
                                   )
                               )
@@ -317,6 +350,8 @@ class HomePageState extends State<HomePage>{
                         child: const Text("Settings"), value: "Settings"),
                     new PopupMenuItem<String>(
                         child: const Text("Rate us"), value: "Rate us"),
+                    new PopupMenuItem<String>(
+                        child: const Text("About"), value: "About"),
                   ],
                   child: new Icon(Icons.more_vert)
               )
@@ -769,7 +804,7 @@ class FavCryptoState extends State<FavCrypto>{
                     )
                   ],
                 ),
-                onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.price)));}}
+                onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName)));}}
             )
         )
     );
@@ -899,23 +934,66 @@ class CryptoState extends State<Crypto>{
 
 class ItemInfo extends StatelessWidget{
 
+  Image image;
+
   String slug;
 
-  double price;
+  String name,shortName;
 
-  ItemInfo(this.slug,this.price);
+  int id;
+
+  double price,oneHour,twentyFourHours,sevenDays,mCap;
+
+  ItemInfo(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
 
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-        appBar:new AppBar(title:new Text(slug),backgroundColor: Colors.black54),
+        appBar:new AppBar(
+            title:new Text(name),
+            backgroundColor: Colors.black54,
+          actions: [
+            new Row(
+              children: [
+                image,
+                new Text(" "+this.shortName)
+              ]
+            )
+          ]
+        ),
         body:new Container(
             child:new Center(
                 child:new Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new Text(slug,style:new TextStyle(fontSize: 25.0)),
-                      new Text("\$"+(price!=-1?price>=1?price.toStringAsFixed(2):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0))
+                      new Container(
+                        height: 200.0,
+                        width: 350.0*MediaQuery.of(context).size.width/375.0,
+                        child: new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,animate:false)
+                      ),
+                      new Text("\nPrice: \$"+(price!=-1?price>=1?price.toStringAsFixed(2):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
+                      new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?mCap.toStringAsFixed(0):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          new Text("Change 1h: ",style: new TextStyle(fontSize:25.0)),
+                          oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                        ]
+                      ),
+                      new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            new Text("Change 1d: ",style: new TextStyle(fontSize:25.0)),
+                            twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                          ]
+                      ),
+                      new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            new Text("Change 1w: ",style: new TextStyle(fontSize:25.0)),
+                            sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                          ]
+                      )
                     ]
                 )
             )
@@ -923,6 +1001,7 @@ class ItemInfo extends StatelessWidget{
     );
   }
 }
+
 
 class Options{
 
@@ -977,4 +1056,107 @@ class DataStorage {
     return data!=""?file.writeAsString(data.substring(0,data.length-1)):file.writeAsString("");
   }
 
+}
+
+class SimpleTimeSeriesChart extends StatefulWidget{
+
+  String shortName;
+
+  List<charts.Series<TimeSeriesPrice,DateTime>> seriesList;
+  final bool animate;
+
+  SimpleTimeSeriesChart(this.seriesList, this.shortName,{this.animate});
+
+  @override
+  SimpleTimeSeriesChartState createState() => new SimpleTimeSeriesChartState(seriesList,shortName,animate:animate);
+}
+
+class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
+  List<charts.Series<TimeSeriesPrice,DateTime>> seriesList;
+  final bool animate;
+  String shortName;
+  int count = 0;
+
+  SimpleTimeSeriesChartState(this.seriesList, this.shortName,{this.animate});
+
+
+  @override
+  Widget build(BuildContext context) {
+    if(seriesList.length==0 && count==0){
+      createSampleData(shortName).then((value){
+        seriesList = value;
+        setState((){});
+      });
+    }
+    return count==30?new charts.TimeSeriesChart(
+      seriesList,
+      animate: animate,
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+        tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredMaxTickCount: 5,desiredMinTickCount: 3),
+        tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
+          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: 0)
+        )
+      ),
+      domainAxis: charts.DateTimeAxisSpec(
+          tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+            day: new charts.TimeFormatterSpec(
+                format: 'd',
+                transitionFormat: 'MM/dd'
+            )
+        ),
+        tickProviderSpec: new charts.DayTickProviderSpec(
+          increments: [5]
+        )
+      )
+    ):new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Text(((count/30)*100).round().toString()+"%"),
+          new LinearProgressIndicator(
+            value: count/30
+          )
+        ]
+    ));
+  }
+
+  Future<List<charts.Series<TimeSeriesPrice, DateTime>>> createSampleData(String s) async {
+
+
+    List<TimeSeriesPrice> data = [
+
+    ];
+
+    DateTime d = DateTime.now();
+
+    for(int i = 0; i<30;i++){
+      http.Response r = await http.get(
+          Uri.encodeFull("https://min-api.cryptocompare.com/data/pricehistorical?fsym="+s+"&tsyms=USD&ts="+(d.millisecondsSinceEpoch/1000).floor().toString())
+      );
+      Map<String, dynamic> info = json.decode(r.body);
+      double price = info[s]["USD"]*1.0;
+      data.insert(0,new TimeSeriesPrice(d, price));
+      d = d.add(new Duration(days:-1));
+      setState((){count++;});
+    }
+
+    //print(data);
+
+    return [
+      new charts.Series<TimeSeriesPrice, DateTime>(
+        id: 'Prices',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (TimeSeriesPrice sales, _) => sales.time,
+        measureFn: (TimeSeriesPrice sales, _) => sales.price,
+        data: data,
+      )
+    ];
+  }
+}
+
+/// Sample time series data type.
+class TimeSeriesPrice {
+  final DateTime time;
+  final double price;
+
+  TimeSeriesPrice(this.time, this.price);
 }
