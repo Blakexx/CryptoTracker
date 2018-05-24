@@ -22,6 +22,7 @@ String response;
 
 void main() {
   runApp(new MaterialApp(
+      theme: new ThemeData(fontFamily: "MavenPro"),
       home: new HomePage()
   ));
 }
@@ -972,7 +973,7 @@ class ItemInfo extends StatelessWidget{
                       new Container(
                         height: 200.0,
                         width: 350.0*MediaQuery.of(context).size.width/375.0,
-                        child: new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,animate:false)
+                        child: new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,animate:false)
                       ),
                       new Text("\nPrice: \$"+(price!=-1?price>=1?price.toStringAsFixed(2):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
                       new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?mCap.toStringAsFixed(0):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
@@ -1063,15 +1064,17 @@ class DataStorage {
 
 class SimpleTimeSeriesChart extends StatefulWidget{
 
+  double price;
+
   String shortName;
 
   List<charts.Series<TimeSeriesPrice,DateTime>> seriesList;
   final bool animate;
 
-  SimpleTimeSeriesChart(this.seriesList, this.shortName,{this.animate});
+  SimpleTimeSeriesChart(this.seriesList,this.shortName,this.price,{this.animate});
 
   @override
-  SimpleTimeSeriesChartState createState() => new SimpleTimeSeriesChartState(seriesList,shortName,animate:animate);
+  SimpleTimeSeriesChartState createState() => new SimpleTimeSeriesChartState(seriesList,shortName,price,animate:animate);
 }
 
 class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
@@ -1079,8 +1082,9 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   final bool animate;
   String shortName;
   int count = 0;
+  double price;
 
-  SimpleTimeSeriesChartState(this.seriesList, this.shortName,{this.animate});
+  SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,{this.animate});
 
 
   @override
@@ -1095,9 +1099,9 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       seriesList,
       animate: animate,
       primaryMeasureAxis: new charts.NumericAxisSpec(
-        tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredMaxTickCount: 5,desiredMinTickCount: 3),
+        tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: price>1?5:0),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: 0)
+          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>1?0:2)
         )
       ),
       domainAxis: charts.DateTimeAxisSpec(
