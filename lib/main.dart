@@ -16,17 +16,33 @@ int itemCount = 1;
 
 final DataStorage storage = new DataStorage();
 
+final ThemeInfo themeInfo = new ThemeInfo();
+
 Map<String, dynamic> data;
 
 String response;
 
-bool bright = true;
+bool bright;
 
 void main() {
-  runApp(new MaterialApp(
-      theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-      home: new HomePage()
-  ));
+  themeInfo.readData().then((value){
+    if(value==1){
+      bright = false;
+    }else{
+      bright = true;
+    }
+  });
+  wait(){
+    if(bright!=null){
+      runApp(new MaterialApp(
+          theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+          home: new HomePage()
+      ));
+    }else{
+      new Timer(Duration.zero,wait);
+    }
+  }
+  wait();
 }
 
 int buildCount = 0;
@@ -177,7 +193,6 @@ class HomePageState extends State<HomePage>{
     return firstLoad?new Scaffold(
         appBar:new AppBar(
             title:!inSearch?new Text("Favorites"):new TextField(
-                maxLength:20,
                 autocorrect: false,
                 decoration: new InputDecoration(
                     hintText: "Search",
@@ -290,12 +305,57 @@ class HomePageState extends State<HomePage>{
                   onSelected: (String selected){
                     if(selected=="Settings"){
                       Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                          appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
+                          appBar: new AppBar(title:new Text("Settings",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
                           body: new Container(
+                              padding:EdgeInsets.only(bottom:10.0,top:10.0),
                               child: new Center(
                                   child: new Column(
                                       children: <Widget>[
-                                        new Text("It's perfect the way it is",style: new TextStyle(fontSize:25.0))
+                                        new Container(
+                                          color: bright?Colors.black12:Colors.black87,
+                                          child: new Row(
+                                              children: <Widget>[
+                                                new Expanded(
+                                                    child: new Text(" Dark Mode",style:new TextStyle(fontSize:20.0))
+                                                ),
+                                                new Switch(
+                                                    value: !bright,
+                                                    onChanged: (dark){
+                                                      showDialog(
+                                                          barrierDismissible: false,
+                                                          context:context,
+                                                          builder: (BuildContext context)=>new AlertDialog(
+                                                              title: new Text("Are you sure?"),
+                                                              content: new Text("The app will close if you select this option"),
+                                                              actions: <Widget>[
+                                                                new FlatButton(
+                                                                  onPressed: (){Navigator.of(context).pop(false);},
+                                                                  child: new Text('No'),
+                                                                ),
+                                                                new FlatButton(
+                                                                    onPressed: (){
+                                                                      if(dark==true){
+                                                                        themeInfo.writeData(1).then((file){
+                                                                          bright = false;
+                                                                          exit(0);
+                                                                        });
+                                                                      }else{
+                                                                        themeInfo.writeData(0).then((file){
+                                                                          bright = true;
+                                                                          exit(0);
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    child: new Text('Yes')
+                                                                )
+                                                              ]
+                                                          )
+                                                      );
+                                                    }
+                                                )
+                                              ]
+                                          )
+                                        )
                                       ]
                                   )
                               )
@@ -366,7 +426,7 @@ class HomePageState extends State<HomePage>{
               )
             ]
         ),
-        floatingActionButton: (done && completer.isCompleted)?new FloatingActionButton(
+        floatingActionButton: (done && completer.isCompleted)?new Opacity(opacity:.75,child:new FloatingActionButton(
             onPressed: (){
               search = null;
               filteredList.clear();
@@ -376,8 +436,9 @@ class HomePageState extends State<HomePage>{
               buttonPressed = true;
             },
             child: new Icon(Icons.add)
-        ):new Container(),
+        )):new Container(),
         body: new Container(
+            color: bright?Colors.white:Colors.grey[700],
             child: new Center(
                 child: new RefreshIndicator(
                   child: new ListView(
@@ -531,18 +592,20 @@ class CryptoListState extends State<CryptoList>{
         child: new GestureDetector(
             onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
             child: new Scaffold(
-                floatingActionButton: new FloatingActionButton(
-                  child: new Icon(Icons.arrow_upward),
-                  onPressed: (){
-                    scrollController.jumpTo(1.0);
-                  },
-                  backgroundColor: Colors.black26,
+                floatingActionButton: new Opacity(
+                    opacity: bright?1.0:.75,
+                    child: new FloatingActionButton(
+                    child: new Icon(Icons.arrow_upward),
+                      onPressed: (){
+                       scrollController.jumpTo(1.0);
+                      },
+                      backgroundColor: bright?Colors.black26:Colors.tealAccent,
+                    )
                 ),
                 appBar: new AppBar(
                     title: new TextField(
                         focusNode: focusNode,
                         controller: textController,
-                        maxLength:20,
                         autocorrect: false,
                         decoration: new InputDecoration(
                             hintText: "Search",
@@ -670,6 +733,7 @@ class CryptoListState extends State<CryptoList>{
                     ]
                 ),
                 body: new Container(
+                    color: bright?Colors.white:Colors.grey[700],
                     child: new Center(
                         child: new RefreshIndicator(
                             child: new ListView.builder(
@@ -790,7 +854,7 @@ class FavCryptoState extends State<FavCrypto>{
             padding: EdgeInsets.only(top:10.0),
             child: new FlatButton(
                 padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-                color:Colors.black12,
+                color:bright?Colors.black12:Colors.black87,
                 child: new Row(
                   children: <Widget>[
                     // ignore: conflicting_dart_import
@@ -814,7 +878,7 @@ class FavCryptoState extends State<FavCrypto>{
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                          new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                          new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                         ]
                     ),
                     new Expanded(
@@ -880,7 +944,7 @@ class CryptoState extends State<Crypto>{
         padding: EdgeInsets.only(top:10.0),
         child: new FlatButton(
             padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-            color: widget.color,
+            color: bright?widget.color:widget.color==Colors.black26?Colors.black87:Colors.black54,
             child: new Row(
               children: <Widget>[
                 // ignore: conflicting_dart_import
@@ -904,7 +968,7 @@ class CryptoState extends State<Crypto>{
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                      new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                      new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                     ]
                 ),
                 new Expanded(
@@ -1123,6 +1187,11 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: price>1?5:0),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
           NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>1?0:2)
+        ),
+        renderSpec: new charts.SmallTickRendererSpec(
+          labelStyle: new charts.TextStyleSpec(
+              color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
+          ),
         )
       ),
       domainAxis: charts.DateTimeAxisSpec(
@@ -1134,6 +1203,11 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         ),
         tickProviderSpec: new charts.DayTickProviderSpec(
           increments: [5]
+        ),
+        renderSpec: new charts.SmallTickRendererSpec(
+          labelStyle: new charts.TextStyleSpec(
+              color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
+          ),
         )
       )
     ):new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
@@ -1157,18 +1231,19 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     DateTime d = DateTime.now().toUtc();
 
 
-    d = d.add(new Duration(hours:-1*d.hour,minutes:-1*d.minute,seconds:-1*d.second,milliseconds: -1*d.millisecond,microseconds: -1*d.microsecond));
-    d = d.add(new Duration(milliseconds: 10));
+    //d = d.add(new Duration(hours:-1*d.hour,minutes:-1*d.minute,seconds:-1*d.second,milliseconds: -1*d.millisecond,microseconds: -1*d.microsecond));
+    //d = d.add(new Duration(milliseconds: 10));
 
     for(int i = 0; i<30;i++){
-      http.Response r = await http.get(
-          Uri.encodeFull("https://min-api.cryptocompare.com/data/dayAvg?fsym="+s+"&tsym=USD&toTs="+(d.millisecondsSinceEpoch/1000).round().toString())
-      );
-      Map<String, dynamic> info = json.decode(r.body);
-      double price = info["USD"]*1.0;
-      data.insert(0,new TimeSeriesPrice(d, price));
-      d = d.add(new Duration(days:-1));
-      setState((){count++;});
+      await http.get(
+          Uri.encodeFull("https://min-api.cryptocompare.com/data/pricehistorical?fsym="+s+"&tsyms=USD&ts="+(d.millisecondsSinceEpoch/1000).round().toString())
+      ).then((r){
+        Map<String, dynamic> info = json.decode(r.body);
+        double price = info[s]["USD"]*1.0;
+        data.insert(0,new TimeSeriesPrice(d, price));
+        d = d.add(new Duration(days:-1));
+        setState((){count++;});
+      });
     }
     return [
       new charts.Series<TimeSeriesPrice, DateTime>(
@@ -1190,3 +1265,36 @@ class TimeSeriesPrice {
   TimeSeriesPrice(this.time, this.price);
 }
 
+class ThemeInfo{
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return new File('$path/themeinfo.txt');
+  }
+
+  Future<int> readData() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      String contents = await file.readAsString();
+
+      return int.parse(contents);
+    } catch (e) {
+      // If we encounter an error, return 0
+      return null;
+    }
+  }
+
+  Future<File> writeData(int data) async {
+    final file = await _localFile;
+    // Write the file
+    return file.writeAsString(data.toString());
+  }
+
+}

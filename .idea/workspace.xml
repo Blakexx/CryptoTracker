@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" afterPath="$PROJECT_DIR$/pubspec.lock" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" afterPath="$PROJECT_DIR$/pubspec.yaml" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -25,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="36" column="53" lean-forward="true" selection-start-line="36" selection-start-column="53" selection-end-line="36" selection-end-column="53" />
+            <state relative-caret-position="-113">
+              <caret line="1224" column="0" lean-forward="true" selection-start-line="1224" selection-start-column="0" selection-end-line="1224" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -46,36 +42,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>filteredList.length</find>
-      <find>right;</find>
-      <find>right:</find>
-      <find>bool</find>
-      <find>floa</find>
-      <find>Settings</find>
-      <find>urlLa</find>
-      <find>isIos</find>
-      <find>dism</find>
-      <find>google</find>
-      <find>new Sca</find>
-      <find>Theme</find>
-      <find>Scaffold</find>
-      <find>1h</find>
-      <find>Info</find>
-      <find>FavC</find>
-      <find>FavCrypto</find>
-      <find>default</find>
-      <find>defa</find>
-      <find>*</find>
+      <find>button</find>
+      <find>Colors.blueg</find>
+      <find>floating</find>
+      <find>.8</find>
+      <find>opacity</find>
       <find>Crypto</find>
-      <find>*(100)</find>
-      <find>*100</find>
-      <find>icon</find>
-      <find>filteredList.sort</find>
-      <find>onSubm</find>
-      <find>filteredList</find>
-      <find>onsubmit</find>
-      <find>.length</find>
-      <find>jumpT</find>
+      <find>Scaffold</find>
+      <find>cryptoList</find>
+      <find>mCap</find>
+      <find>CryptoList</find>
+      <find>Crpyto</find>
+      <find>favCr</find>
+      <find>FavCryptoState</find>
+      <find>bright?</find>
+      <find>CryptoListState</find>
+      <find>ItemInfo</find>
+      <find>Settings</find>
+      <find>if(dark</find>
+      <find>info.writ</find>
+      <find>themeInfo.</find>
+      <find>themeInfo.w</find>
+      <find>themeInfo.wr</find>
+      <find>RestartWidget.r</find>
+      <find>child</find>
+      <find>themeInfo</find>
+      <find>full re</find>
+      <find>charts.</find>
+      <find>print</find>
+      <find>textFiedl</find>
+      <find>maxLe</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -97,7 +93,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
+    <option name="y" value="173" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
@@ -639,8 +635,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="36" column="53" lean-forward="true" selection-start-line="36" selection-start-column="53" selection-end-line="36" selection-end-column="53" />
+        <state relative-caret-position="-113">
+          <caret line="1224" column="0" lean-forward="true" selection-start-line="1224" selection-start-column="0" selection-end-line="1224" selection-end-column="0" />
           <folding />
         </state>
       </provider>
