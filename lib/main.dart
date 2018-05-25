@@ -20,9 +20,11 @@ Map<String, dynamic> data;
 
 String response;
 
+bool bright = true;
+
 void main() {
   runApp(new MaterialApp(
-      theme: new ThemeData(fontFamily: "MavenPro"),
+      theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
       home: new HomePage()
   ));
 }
@@ -217,7 +219,7 @@ class HomePageState extends State<HomePage>{
                   }
               ),
               new Container(
-                padding: EdgeInsets.only(right:10.0),
+                padding: EdgeInsets.only(left:5.0,right:10.0),
                   child: new PopupMenuButton<String>(
                       itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
                         new PopupMenuItem<String>(
@@ -231,14 +233,12 @@ class HomePageState extends State<HomePage>{
                         new PopupMenuItem<String>(
                             child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
                         new PopupMenuItem<String>(
-                            child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Default"), value: "Default"),
+                            child: const Text("Market Cap Descending"), value: "Market Cap Descending")
                       ],
                       child: new Icon(Icons.filter_list),
                       onSelected:(s){
                         setState(() {
-                          scrollController.jumpTo(0.0);
+                          scrollController.jumpTo(1.0);
                           if(s=="Name Ascending"){
                             filteredList.sort((o1,o2){
                               if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
@@ -281,10 +281,6 @@ class HomePageState extends State<HomePage>{
                               }
                               return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
                             });
-                          }else if(s=="Default"){
-                            filteredList.sort((o1,o2) {
-                              return (o1 as FavCrypto).index - (o2 as FavCrypto).index;
-                            });
                           }
                         });
                       }
@@ -306,18 +302,27 @@ class HomePageState extends State<HomePage>{
                           )
                       )));
                     }else if(selected=="Rate us"){
-                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                          appBar: new AppBar(title:new Text("Settings"),backgroundColor: Colors.black54),
-                          body: new Container(
-                              child: new Center(
-                                  child: new Column(
-                                      children: <Widget>[
-                                        new Text("Please :(",style: new TextStyle(fontSize:25.0))
-                                      ]
-                                  )
-                              )
-                          )
-                      )));
+                      if(Platform.isIOS){
+                        launchIOS() async{
+                          const url = 'https://www.apple.com';
+                          if(await canLaunch(url)) {
+                            await launch(url);
+                          }else{
+                            throw 'Could not launch $url';
+                          }
+                        }
+                        launchIOS();
+                      }else if(Platform.isAndroid){
+                        launchAndroid() async{
+                          const url = 'https://www.google.com';
+                          if(await canLaunch(url)) {
+                            await launch(url);
+                          }else{
+                            throw 'Could not launch $url';
+                          }
+                        }
+                        launchAndroid();
+                      }
                     }else if(selected=="About"){
                       Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
                           appBar: new AppBar(title:new Text("About"),backgroundColor: Colors.black54),
@@ -368,6 +373,7 @@ class HomePageState extends State<HomePage>{
               completer = new Completer<Null>();
               completer.complete();
               Navigator.push(context,new MaterialPageRoute(builder: (context) => new CryptoList()));
+              buttonPressed = true;
             },
             child: new Icon(Icons.add)
         ):new Container(),
@@ -497,78 +503,30 @@ class CryptoListState extends State<CryptoList>{
 
   String selection;
 
-  final List<String> options = ["Name Ascending","Name Descending", "Price Ascending", "Price Descending","Market Cap Ascending","Market Cap Descending","Default"].toList();
-
-  void onChanged(String s){
-    //print("meme");
-    setState(() {
-      scrollController.jumpTo(1.0);
-      selection = s;
-      if(s=="Name Ascending"){
-        filteredList.sort((o1,o2){
-          if((o1 as Crypto).name.compareTo((o2 as Crypto).name)!=0){
-            return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-          }
-          return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
-        });
-      }else if(s=="Name Descending"){
-        filteredList.sort((o1,o2){
-          if((o1 as Crypto).name.compareTo((o2 as Crypto).name)!=0){
-            return (o2 as Crypto).name.compareTo((o1 as Crypto).name);
-          }
-          return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
-        });
-      }else if(s=="Price Ascending"){
-        filteredList.sort((o1,o2){
-          if(((o1 as Crypto).price!=(o2 as Crypto).price)){
-            return ((o1 as Crypto).price*1000000000-(o2 as Crypto).price*1000000000).round();
-          }
-          return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-        });
-      }else if(s=="Price Descending"){
-        filteredList.sort((o1,o2){
-          if(((o1 as Crypto).price!=(o2 as Crypto).price)){
-            return ((o2 as Crypto).price*1000000000-(o1 as Crypto).price*1000000000).round();
-          }
-          return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-        });
-      }else if(s=="Market Cap Ascending"){
-        filteredList.sort((o1,o2){
-          if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-            return ((o1 as Crypto).mCap*100-(o2 as Crypto).mCap*100).round();
-          }
-          return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-        });
-      }else if(s=="Market Cap Descending"){
-        filteredList.sort((o1,o2){
-          if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-            return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
-          }
-          return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-        });
-      }else if(s=="Default"){
-        filteredList.sort((o1,o2) {
-          return (o1 as Crypto).index - (o2 as Crypto).index;
-        });
-      }
-    });
-  }
+  var focusNode = new FocusNode();
 
   TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context){
 
-    final dropdownMenuOptions = options
-        .map((String item) =>
-    new DropdownMenuItem<String>(value: item, child: new Text(item))
-    ).toList();
 
     if(search==""){
       if(filteredList.length==0){
         filteredList.addAll(fullList);
       }
     }
+
+    if(buttonPressed){
+      filteredList.sort((o1,o2){
+        if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+          return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+        }
+        return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
+      });
+      buttonPressed = false;
+    }
+
     return new WillPopScope(
         child: new GestureDetector(
             onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
@@ -582,6 +540,7 @@ class CryptoListState extends State<CryptoList>{
                 ),
                 appBar: new AppBar(
                     title: new TextField(
+                        focusNode: focusNode,
                         controller: textController,
                         maxLength:20,
                         autocorrect: false,
@@ -605,38 +564,21 @@ class CryptoListState extends State<CryptoList>{
                               this.filteredList.add(fullList[i]);
                             }
                           }
+                          filteredList.sort((o1,o2){
+                            if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                              return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+                            }
+                            return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                          });
                           setState(() {});
                         }
                     ),
                     backgroundColor: Colors.black54,
-                    bottom: new PreferredSize(
-                        preferredSize: new Size(0.0,50.0),
-                        child: new Column(
-                            children: [
-                              new Container(
-                                  padding: EdgeInsets.only(left:5.0,right:5.0),
-                                  color: Colors.white,
-                                  child: new DropdownButton(
-                                      hint:new Text("Sort",style:new TextStyle(color:Colors.black)),
-                                      value: selection,
-                                      items: dropdownMenuOptions,
-                                      onChanged: (s){
-                                        FocusScope.of(context).requestFocus(new FocusNode());
-                                        onChanged(s);
-                                      }
-                                  )
-                              ),
-                              new Container(
-                                  padding: EdgeInsets.only(bottom:10.0)
-                              )
-                            ]
-                        )
-                    ),
                     actions: <Widget>[
                       new IconButton(
-                          icon: (search!=null&&search.length>0)?new Icon(Icons.close):new Icon(Icons.edit),
+                          icon: (search!=null&&search.length>0)?new Icon(Icons.close):new Icon(Icons.search),
                           onPressed: (){
-                            if(search.length>0){
+                            if(search!=null&&search.length>0){
                               selection = null;
                               setState((){
                                 search = null;
@@ -645,8 +587,85 @@ class CryptoListState extends State<CryptoList>{
                               scrollController.jumpTo(1.0);
                               filteredList.clear();
                               filteredList.addAll(fullList);
+                              filteredList.sort((o1,o2){
+                                if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                  return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+                                }
+                                return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                              });
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                            }else{
+                              FocusScope.of(context).requestFocus(focusNode);
                             }
                           }
+                      ),
+                      new Container(
+                          padding: EdgeInsets.only(right:10.0),
+                          child: new PopupMenuButton<String>(
+                              itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                                new PopupMenuItem<String>(
+                                    child: const Text("Name Ascending"), value: "Name Ascending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("Name Descending"), value: "Name Descending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("Price Ascending"), value: "Price Ascending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("Price Descending"), value: "Price Descending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("Market Cap Descending"), value: "Market Cap Descending")
+                              ],
+                              child: new Icon(Icons.filter_list),
+                              onSelected:(s){
+                                setState(() {
+                                  scrollController.jumpTo(1.0);
+                                  if(s=="Name Ascending"){
+                                    filteredList.sort((o1,o2){
+                                      if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
+                                        return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                      }
+                                      return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
+                                    });
+                                  }else if(s=="Name Descending"){
+                                    filteredList.sort((o1,o2){
+                                      if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
+                                        return (o2 as Crypto).name.toUpperCase().compareTo((o1 as Crypto).name.toUpperCase());
+                                      }
+                                      return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
+                                    });
+                                  }else if(s=="Price Ascending"){
+                                    filteredList.sort((o1,o2){
+                                      if(((o1 as Crypto).price!=(o2 as Crypto).price)){
+                                        return ((o1 as Crypto).price*1000000000-(o2 as Crypto).price*1000000000).round();
+                                      }
+                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                    });
+                                  }else if(s=="Price Descending"){
+                                    filteredList.sort((o1,o2){
+                                      if(((o1 as Crypto).price!=(o2 as Crypto).price)){
+                                        return ((o2 as Crypto).price*1000000000-(o1 as Crypto).price*1000000000).round();
+                                      }
+                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                    });
+                                  }else if(s=="Market Cap Ascending"){
+                                    filteredList.sort((o1,o2){
+                                      if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                        return ((o1 as Crypto).mCap*100-(o2 as Crypto).mCap*100).round();
+                                      }
+                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                    });
+                                  }else if(s=="Market Cap Descending"){
+                                    filteredList.sort((o1,o2){
+                                      if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                        return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+                                      }
+                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                    });
+                                  }
+                                });
+                              }
+                          )
                       )
                     ]
                 ),
@@ -698,6 +717,8 @@ class CryptoListState extends State<CryptoList>{
   }
   bool kill = false;
 }
+
+bool buttonPressed = false;
 
 Completer completer = new Completer<Null>()..complete();
 
@@ -792,8 +813,8 @@ class FavCryptoState extends State<FavCrypto>{
                     new Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          new Text((widget.price!=-1?widget.price>=1?"\$"+widget.price.toStringAsFixed(2):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0)),
-                          new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+widget.mCap.toStringAsFixed(0):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                          new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                          new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
                         ]
                     ),
                     new Expanded(
@@ -882,8 +903,8 @@ class CryptoState extends State<Crypto>{
                 new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      new Text((widget.price!=-1?widget.price>=1?"\$"+widget.price.toStringAsFixed(2):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0)),
-                      new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+widget.mCap.toStringAsFixed(0):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
+                      new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                      new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.black45,fontSize:12.0)),
                     ]
                 ),
                 new Expanded(
@@ -975,26 +996,26 @@ class ItemInfo extends StatelessWidget{
                         width: 350.0*MediaQuery.of(context).size.width/375.0,
                         child: new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,animate:false)
                       ),
-                      new Text("\nPrice: \$"+(price!=-1?price>=1?price.toStringAsFixed(2):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
-                      new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?mCap.toStringAsFixed(0):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
+                      new Text("\nPrice: \$"+(price!=-1?price>=1?new NumberFormat.currency(symbol:"",decimalDigits: 2).format(price):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
+                      new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
                       new Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          new Text("Change 1h: ",style: new TextStyle(fontSize:25.0)),
+                          new Text("Change 1H: ",style: new TextStyle(fontSize:25.0)),
                           oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
                         ]
                       ),
                       new Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            new Text("Change 1d: ",style: new TextStyle(fontSize:25.0)),
+                            new Text("Change 1D: ",style: new TextStyle(fontSize:25.0)),
                             twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
                           ]
                       ),
                       new Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            new Text("Change 1w: ",style: new TextStyle(fontSize:25.0)),
+                            new Text("Change 1W: ",style: new TextStyle(fontSize:25.0)),
                             sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
                           ]
                       )
@@ -1168,3 +1189,4 @@ class TimeSeriesPrice {
 
   TimeSeriesPrice(this.time, this.price);
 }
+
