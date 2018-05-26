@@ -20,16 +20,23 @@ final ThemeInfo themeInfo = new ThemeInfo();
 
 Map<String, dynamic> data;
 
+bool displayGraphs;
+
 String response;
 
 bool bright;
 
 void main() {
   themeInfo.readData().then((value){
-    if(value==1){
+    if(value[0]==1){
       bright = false;
     }else{
       bright = true;
+    }
+    if(value[1]==1){
+      displayGraphs = true;
+    }else{
+      displayGraphs = false;
     }
   });
   wait(){
@@ -100,16 +107,8 @@ class HomePageState extends State<HomePage>{
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
       data = json.decode(r.body);
-      //print(data);
-      //print(data["data"]["1"]);
-      //print(data["data"]);
       Map<String,dynamic> map = data["data"];
-      //print(map);
       for(Map<String,dynamic> s in map.values){
-        //print(s);
-        //print(s["id"]);
-        //(fullList[ids.indexOf(data["data"][i]["id"])] as Crypto).price = data["data"][i]["price"];
-        //print(s["quotes"]["USD"]["price"]);
         (fullList[ids.indexOf(s["id"])] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
@@ -306,63 +305,7 @@ class HomePageState extends State<HomePage>{
               new PopupMenuButton<String>(
                   onSelected: (String selected){
                     if(selected=="Settings"){
-                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                          appBar: new AppBar(title:new Text("Settings",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
-                          body: new Container(
-                              padding:EdgeInsets.only(bottom:10.0,top:10.0),
-                              child: new Center(
-                                  child: new Column(
-                                      children: <Widget>[
-                                        new Container(
-                                          color: bright?Colors.black12:Colors.black87,
-                                          child: new Row(
-                                              children: <Widget>[
-                                                new Expanded(
-                                                    child: new Text(" Dark Mode",style:new TextStyle(fontSize:20.0))
-                                                ),
-                                                new Switch(
-                                                    value: !bright,
-                                                    onChanged: (dark){
-                                                      showDialog(
-                                                          barrierDismissible: false,
-                                                          context:context,
-                                                          builder: (BuildContext context)=>new AlertDialog(
-                                                              title: new Text("Are you sure?"),
-                                                              content: new Text("The app will close if you select this option"),
-                                                              actions: <Widget>[
-                                                                new FlatButton(
-                                                                  onPressed: (){Navigator.of(context).pop(false);},
-                                                                  child: new Text('No'),
-                                                                ),
-                                                                new FlatButton(
-                                                                    onPressed: (){
-                                                                      if(dark==true){
-                                                                        themeInfo.writeData(1).then((file){
-                                                                          bright = false;
-                                                                          exit(0);
-                                                                        });
-                                                                      }else{
-                                                                        themeInfo.writeData(0).then((file){
-                                                                          bright = true;
-                                                                          exit(0);
-                                                                        });
-                                                                      }
-                                                                    },
-                                                                    child: new Text('Yes')
-                                                                )
-                                                              ]
-                                                          )
-                                                      );
-                                                    }
-                                                )
-                                              ]
-                                          )
-                                        )
-                                      ]
-                                  )
-                              )
-                          )
-                      )));
+                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Settings()));
                     }else if(selected=="Rate us"){
                       if(Platform.isIOS){
                         launchIOS() async{
@@ -393,22 +336,6 @@ class HomePageState extends State<HomePage>{
                                   child: new Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
-                                        new Text("\nHistorical data retrieved from",style: new TextStyle(fontSize:20.0)),
-                                        new RichText(
-                                          text: new TextSpan(
-                                            text: 'https://www.cryptocompare.com',
-                                            style: new TextStyle(color: Colors.blue,fontSize:20.0),
-                                            recognizer: new TapGestureRecognizer()
-                                              ..onTap = () async {
-                                                const url = 'https://www.cryptocompare.com';
-                                                if (await canLaunch(url)) {
-                                                  await launch(url);
-                                                } else {
-                                                  throw 'Could not launch $url';
-                                                }
-                                              },
-                                          ),
-                                        )
                                       ]
                                   )
                               )
@@ -494,6 +421,101 @@ class HomePageState extends State<HomePage>{
                       new LinearProgressIndicator(
                           value: realCount/itemCount
                       )
+                    ]
+                )
+            )
+        )
+    );
+  }
+}
+
+class Settings extends StatefulWidget{
+
+  @override
+  SettingsState createState() => new SettingsState();
+}
+
+class SettingsState extends State<Settings>{
+
+  @override
+  Widget build(BuildContext context){
+    return new Scaffold(
+        appBar: new AppBar(title:new Text("Settings",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
+        body: new Container(
+            padding:EdgeInsets.only(bottom:10.0,top:10.0),
+            child: new Center(
+                child: new Column(
+                    children: <Widget>[
+                      new Container(
+                          padding: EdgeInsets.only(top:5.0,bottom:5.0),
+                          color: bright?Colors.black12:Colors.black87,
+                          child: new Row(
+                              children: <Widget>[
+                                new Expanded(
+                                    child: new Text(" Dark Mode",style:new TextStyle(fontSize:20.0))
+                                ),
+                                new Switch(
+                                    value: !bright,
+                                    onChanged: (dark){
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context:context,
+                                          builder: (BuildContext context)=>new AlertDialog(
+                                              title: new Text("Are you sure?"),
+                                              content: new Text("The app will close if you select this option"),
+                                              actions: <Widget>[
+                                                new FlatButton(
+                                                  onPressed: (){Navigator.of(context).pop(false);},
+                                                  child: new Text('No'),
+                                                ),
+                                                new FlatButton(
+                                                    onPressed: (){
+                                                      if(dark==true){
+                                                        themeInfo.writeData("1"+(displayGraphs?" 1":" 0")).then((file){
+                                                          bright = false;
+                                                          exit(0);
+                                                        });
+                                                      }else{
+                                                        themeInfo.writeData("0"+(displayGraphs?" 1":" 0")).then((file){
+                                                          bright = true;
+                                                          exit(0);
+                                                        });
+                                                      }
+                                                    },
+                                                    child: new Text('Yes')
+                                                )
+                                              ]
+                                          )
+                                      );
+                                    }
+                                ),
+                              ]
+                          )
+                      ),
+                      new Container(
+                          padding: EdgeInsets.only(top:10.0),
+                          child: new Container(
+                              padding: EdgeInsets.only(top:5.0,bottom:5.0),
+                              color: bright?Colors.black12:Colors.black87,
+                              child: new Row(
+                                  children: <Widget>[
+                                    new Expanded(
+                                        child: new Text("  Disable 7 day graphs",style:new TextStyle(fontSize:20.0))
+                                    ),
+                                    new Switch(
+                                        value: !displayGraphs,
+                                        onChanged: (dark){
+                                          setState((){
+                                            displayGraphs = !displayGraphs;
+                                          });
+                                          themeInfo.writeData((bright?"0":"1")+(displayGraphs?" 1":" 0"));
+                                        }
+                                    ),
+                                  ]
+                              )
+                          )
+                      )
+
                     ]
                 )
             )
@@ -883,7 +905,7 @@ class FavCryptoState extends State<FavCrypto>{
                         children: [
                           new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                           new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
-                          widget.smallImage
+                          displayGraphs?widget.smallImage:new Container()
                         ]
                     ),
                     new Expanded(
@@ -976,7 +998,7 @@ class CryptoState extends State<Crypto>{
                     children: [
                       new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                       new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
-                      widget.smallImage
+                      displayGraphs?widget.smallImage:new Container()
                     ]
                 ),
                 new Expanded(
@@ -1349,7 +1371,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       seriesList,
       animate: animate,
       primaryMeasureAxis: new charts.NumericAxisSpec(
-        tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: price>1?5:0),
+        tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
           NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>1?0:2)
         ),
@@ -1370,7 +1392,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             )
         ),
         tickProviderSpec: new charts.DayTickProviderSpec(
-          increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[30]:[60]
+          increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[40]:[60]
         ),
         renderSpec: new charts.SmallTickRendererSpec(
           labelStyle: new charts.TextStyleSpec(
@@ -1405,7 +1427,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
     if(response.body!="null"&&response.body!="{}"){
       Map<String, dynamic> info = json.decode(response.body);
-      total = info["price"].length;
+      setState((){total = info["price"].length-1;});
       for(int i = total-1;i>-1;i--){
         data.insert(0,new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0));
         setState((){count++;});
@@ -1446,24 +1468,33 @@ class ThemeInfo{
     return new File('$path/themeinfo.txt');
   }
 
-  Future<int> readData() async {
+  Future<List<int>> readData() async {
     try {
       final file = await _localFile;
 
       // Read the file
       String contents = await file.readAsString();
 
-      return int.parse(contents);
+      List<String> list = contents.split(" ");
+
+      List<int> finalList = new List<int>();
+
+      for(int i = 0; i<2;i++){
+        finalList.add(int.parse(list[i]));
+      }
+
+      return finalList;
     } catch (e) {
       // If we encounter an error, return 0
       return null;
     }
   }
 
-  Future<File> writeData(int data) async {
+  Future<File> writeData(String data) async {
     final file = await _localFile;
     // Write the file
-    return file.writeAsString(data.toString());
+    return file.writeAsString(data);
   }
 
 }
+

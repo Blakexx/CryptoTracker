@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -20,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="1395" column="0" lean-forward="true" selection-start-line="1395" selection-start-column="0" selection-end-line="1395" selection-end-column="0" />
+            <state relative-caret-position="270">
+              <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -41,25 +42,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>if(dark</find>
-      <find>info.writ</find>
-      <find>themeInfo.</find>
-      <find>themeInfo.w</find>
-      <find>themeInfo.wr</find>
-      <find>RestartWidget.r</find>
-      <find>child</find>
-      <find>themeInfo</find>
-      <find>full re</find>
-      <find>charts.</find>
-      <find>print</find>
-      <find>textFiedl</find>
-      <find>maxLe</find>
-      <find>FavCrypto</find>
-      <find>favCr</find>
-      <find>favCryptoStat</find>
-      <find>FavCryptoSta</find>
-      <find>Image.net</find>
-      <find>FavCryptoState</find>
       <find>CryptoSt</find>
       <find>new Fav</find>
       <find>Crypto</find>
@@ -71,6 +53,25 @@
       <find>[5]</find>
       <find>tabs</find>
       <find>.5y</find>
+      <find>numerictic</find>
+      <find>count++</find>
+      <find>*100</find>
+      <find>date</find>
+      <find>name</find>
+      <find>cryptocompare</find>
+      <find>&quot;dd</find>
+      <find>tabBarVie</find>
+      <find>smallImage</find>
+      <find>widget.smallI`</find>
+      <find>Switch</find>
+      <find>themeInfo</find>
+      <find>themeInfo.read</find>
+      <find>themInfo.wr</find>
+      <find>themeInfo.wr</find>
+      <find>state&lt;set</find>
+      <find>Settings</find>
+      <find>'dd</find>
+      <find>disable</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -92,9 +93,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="173" />
     <option name="width" value="1440" />
-    <option name="height" value="877" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -112,8 +112,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="AndroidView" />
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -137,8 +138,7 @@
         </subPane>
         <option name="show-excluded-files" value="false" />
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -273,7 +273,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
+    <frame x="2" y="23" width="1440" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -316,7 +316,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5028612" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Dart Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -324,16 +324,16 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39897698" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32992327" sideWeight="0.49713877" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10801145" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -352,6 +352,22 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/lib/main.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="60" lean-forward="false" selection-start-line="22" selection-start-column="60" selection-end-line="22" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -634,8 +650,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="1395" column="0" lean-forward="true" selection-start-line="1395" selection-start-column="0" selection-end-line="1395" selection-end-column="0" />
+        <state relative-caret-position="270">
+          <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
           <folding />
         </state>
       </provider>
