@@ -73,7 +73,9 @@ class HomePageState extends State<HomePage>{
       // ignore: conflicting_dart_import
       fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new Image.network(
           'https://s2.coinmarketcap.com/static/img/coins/32x32/'+data["data"][i]["id"].toString()+".png"
-      ),data["data"][i]["symbol"]));
+      ),data["data"][i]["symbol"],new Image.network(
+        'https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/'+data["data"][i]["id"].toString()+'.png'
+      )));
       ids[i] = data["data"][i]["id"];
     }
     //print(fullList);
@@ -180,7 +182,7 @@ class HomePageState extends State<HomePage>{
           for(int i = 0; i<inds.length;i+=2){
             Crypto temp = (fullList[inds[i]] as Crypto);
             (fullList[inds[i]] as Crypto).favIndex = inds[i+1];
-            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName));
+            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.smallImage));
             (fullList[inds[i]] as Crypto).color = Colors.black26;
             //print(favList);
           }
@@ -788,6 +790,8 @@ Completer completer = new Completer<Null>()..complete();
 
 class FavCrypto extends StatefulWidget{
 
+  Image smallImage;
+
   String shortName;
 
   Image image;
@@ -808,7 +812,7 @@ class FavCrypto extends StatefulWidget{
 
   ObjectKey key;
 
-  FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
+  FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,this.smallImage);
 
   @override
   FavCryptoState createState() => new FavCryptoState();
@@ -879,6 +883,7 @@ class FavCryptoState extends State<FavCrypto>{
                         children: [
                           new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                           new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                          widget.smallImage
                         ]
                     ),
                     new Expanded(
@@ -902,6 +907,8 @@ class FavCryptoState extends State<FavCrypto>{
 
 class Crypto extends StatefulWidget{
 
+  Image smallImage;
+
   String shortName;
 
   Image image;
@@ -924,7 +931,7 @@ class Crypto extends StatefulWidget{
 
   int index;
 
-  Crypto(this.slug,this.color,this.index,this.name,this.id,this.image,this.shortName);
+  Crypto(this.slug,this.color,this.index,this.name,this.id,this.image,this.shortName,this.smallImage);
 
   @override
   CryptoState createState() => new CryptoState();
@@ -969,6 +976,7 @@ class CryptoState extends State<Crypto>{
                     children: [
                       new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                       new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                      widget.smallImage
                     ]
                 ),
                 new Expanded(
@@ -991,7 +999,7 @@ class CryptoState extends State<Crypto>{
                 Scaffold.of(context).removeCurrentSnackBar();
                 Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(widget.color==Colors.black26?"Added":"Removed"),duration: new Duration(milliseconds: 500)));
                 if(widget.color==Colors.black26){
-                  favList.add(new FavCrypto(widget.slug,favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName));
+                  favList.add(new FavCrypto(widget.slug,favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.smallImage));
                   widget.favIndex = favList.length-1;
                   String dataBuild = "";
                   for(int i = 0;i<favList.length;i++){
@@ -1021,7 +1029,9 @@ class CryptoState extends State<Crypto>{
   }
 }
 
-class ItemInfo extends StatelessWidget{
+class ItemInfo extends StatefulWidget{
+
+  bool firstBuild = true;
 
   Image image;
 
@@ -1036,57 +1046,199 @@ class ItemInfo extends StatelessWidget{
   ItemInfo(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
 
   @override
+  ItemInfoState createState() => new ItemInfoState(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
+}
+
+class ItemInfoState extends State<ItemInfo>{
+
+
+  List<SimpleTimeSeriesChart> graphs = [];
+
+  int selected;
+
+  bool firstBuild = true;
+
+  Image image;
+
+  String slug;
+
+  String name,shortName;
+
+  int id;
+
+  double price,oneHour,twentyFourHours,sevenDays,mCap;
+
+  ItemInfoState(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
+
+  @override
+  void initState(){
+    super.initState();
+    graphs.length = 5;
+    graphs[0]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,1,animate:false);
+    graphs[1]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,7,animate:false);
+    graphs[2]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,30,animate:false);
+    graphs[3]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,180,animate:false);
+    graphs[4]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,365,animate:false);
+    selected = 0;
+  }
+
+  @override
   Widget build(BuildContext context){
-    return new Scaffold(
-        appBar:new AppBar(
-            title:new Text(name),
+    return new DefaultTabController(
+      length:5,
+      child: new Scaffold(
+          appBar:new AppBar(
+            title:new Text(name,style:new TextStyle(fontSize:25.0)),
             backgroundColor: Colors.black54,
-          actions: [
-            new Row(
-              children: [
-                image,
-                new Text(" "+this.shortName)
+            bottom:new TabBar(
+              tabs: [
+                new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                new Tab(icon: new Text("7D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
               ]
-            )
-          ]
-        ),
-        body:new Container(
-            child:new Center(
-                child:new Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
+            ),
+            actions: [
+              new Row(
+                children: [
+                  image,
+                  new Text(" "+this.shortName)
+                ]
+              )
+            ]
+          ),
+          body:new TabBarView(
+            children: [
+              new Container(
+                child: new Center(
+                  child: new Column(
+                    children: [
                       new Container(
-                        height: 200.0,
-                        width: 350.0*MediaQuery.of(context).size.width/375.0,
-                        child: new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,animate:false)
+                          height: 200.0,
+                          width: 350.0*MediaQuery.of(context).size.width/375.0,
+                          child: graphs[0]
                       ),
-                      new Text("\nPrice: \$"+(price!=-1?price>=1?new NumberFormat.currency(symbol:"",decimalDigits: 2).format(price):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
-                      new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          new Text("Change 1H: ",style: new TextStyle(fontSize:25.0)),
-                          oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
-                        ]
-                      ),
-                      new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                    ]
+                  )
+                )
+              ),
+              new Container(
+                  child: new Center(
+                      child: new Column(
                           children: [
-                            new Text("Change 1D: ",style: new TextStyle(fontSize:25.0)),
-                            twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
-                          ]
-                      ),
-                      new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            new Text("Change 1W: ",style: new TextStyle(fontSize:25.0)),
-                            sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                            new Container(
+                                height: 200.0,
+                                width: 350.0*MediaQuery.of(context).size.width/375.0,
+                                child: graphs[1]
+                            ),
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
                           ]
                       )
-                    ]
-                )
+                  )
+              ),
+              new Container(
+                  child: new Center(
+                      child: new Column(
+                          children: [
+                            new Container(
+                                height: 200.0,
+                                width: 350.0*MediaQuery.of(context).size.width/375.0,
+                                child: graphs[2]
+                            ),
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                          ]
+                      )
+                  )
+              ),
+              new Container(
+                  child: new Center(
+                      child: new Column(
+                          children: [
+                            new Container(
+                                height: 200.0,
+                                width: 350.0*MediaQuery.of(context).size.width/375.0,
+                                child: graphs[3]
+                            ),
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                          ]
+                      )
+                  )
+              ),
+              new Container(
+                  child: new Center(
+                      child: new Column(
+                          children: [
+                            new Container(
+                                height: 200.0,
+                                width: 350.0*MediaQuery.of(context).size.width/375.0,
+                                child: graphs[4]
+                            ),
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                          ]
+                      )
+                  )
+              )
+            ]
+          )
+      )
+    );
+  }
+}
+
+class Info extends StatelessWidget{
+
+  List<SimpleTimeSeriesChart> graphs = [];
+
+  int selected;
+
+  bool firstBuild = true;
+
+  Image image;
+
+  String slug;
+
+  String name,shortName;
+
+  int id;
+
+  double price,oneHour,twentyFourHours,sevenDays,mCap;
+
+  Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
+
+  @override
+  Widget build(BuildContext context){
+    return new Container(
+      child: new Center(
+        child: new Column(
+          children: [
+            new Text("\nPrice: \$"+(price!=-1?price>=1?new NumberFormat.currency(symbol:"",decimalDigits: 2).format(price):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
+            new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  new Text("Change 1H: ",style: new TextStyle(fontSize:25.0)),
+                  oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                ]
+            ),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  new Text("Change 1D: ",style: new TextStyle(fontSize:25.0)),
+                  twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                ]
+            ),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  new Text("Change 1W: ",style: new TextStyle(fontSize:25.0)),
+                  sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
+                ]
             )
+          ]
         )
+      )
     );
   }
 }
@@ -1149,6 +1301,8 @@ class DataStorage {
 
 class SimpleTimeSeriesChart extends StatefulWidget{
 
+  int days;
+
   double price;
 
   String shortName;
@@ -1156,31 +1310,41 @@ class SimpleTimeSeriesChart extends StatefulWidget{
   List<charts.Series<TimeSeriesPrice,DateTime>> seriesList;
   final bool animate;
 
-  SimpleTimeSeriesChart(this.seriesList,this.shortName,this.price,{this.animate});
+  SimpleTimeSeriesChart(this.seriesList,this.shortName,this.price,this.days,{this.animate});
 
   @override
-  SimpleTimeSeriesChartState createState() => new SimpleTimeSeriesChartState(seriesList,shortName,price,animate:animate);
+  SimpleTimeSeriesChartState createState() => new SimpleTimeSeriesChartState(seriesList,shortName,price,days,animate:animate);
 }
 
 class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
+  int days;
   List<charts.Series<TimeSeriesPrice,DateTime>> seriesList;
   final bool animate;
   String shortName;
-  int count = 0;
+  double count = 0.0;
   double price;
+  http.Response response;
+  bool firstBuild = true;
+  int total = 100000;
 
-  SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,{this.animate});
+  SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,this.days,{this.animate});
 
 
   @override
   Widget build(BuildContext context) {
-    if(seriesList.length==0 && count==0){
-      createSampleData(shortName).then((value){
-        seriesList = value;
+    if(firstBuild){
+      http.get(
+          Uri.encodeFull("http://coincap.io/history/"+days.toString()+"day/"+shortName)
+      ).then((value){
+        response = value;
+        createChart(response,shortName).then((value){
+          seriesList = value;
+        });
         setState((){});
       });
+      firstBuild = false;
     }
-    return count==30?new charts.TimeSeriesChart(
+    return count>=total?new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
       primaryMeasureAxis: new charts.NumericAxisSpec(
@@ -1188,40 +1352,48 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
           NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>1?0:2)
         ),
-        renderSpec: new charts.SmallTickRendererSpec(
+        renderSpec: new charts.GridlineRendererSpec(
           labelStyle: new charts.TextStyleSpec(
               color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
           ),
+            lineStyle: new charts.LineStyleSpec(
+            color: bright?charts.MaterialPalette.gray.shade400:charts.MaterialPalette.white)
+
         )
       ),
       domainAxis: charts.DateTimeAxisSpec(
           tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
             day: new charts.TimeFormatterSpec(
                 format: 'd',
-                transitionFormat: 'MM/dd'
+                transitionFormat: days==1?'MM/dd':days==7?'MM/dd':days==30?'MM/dd':days==180?"YY/MM":"YY/MM"
             )
         ),
         tickProviderSpec: new charts.DayTickProviderSpec(
-          increments: [5]
+          increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[30]:[60]
         ),
         renderSpec: new charts.SmallTickRendererSpec(
           labelStyle: new charts.TextStyleSpec(
               color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
-          ),
+          ),lineStyle: new charts.LineStyleSpec(
+            color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white)
         )
       )
-    ):new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
+    ):total!=100000?new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Text(((count/30)*100).round().toString()+"%"),
+          new Text(((count/total)*100).round().toString()+"%"),
           new LinearProgressIndicator(
-            value: count/30
+            value: count/total
           )
         ]
-    ));
+    )):new Container(
+        child: new Center(
+          child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:20.0))
+        )
+    );
   }
 
-  Future<List<charts.Series<TimeSeriesPrice, DateTime>>> createSampleData(String s) async {
+  Future<List<charts.Series<TimeSeriesPrice, DateTime>>> createChart(http.Response response, String s) async {
 
 
     List<TimeSeriesPrice> data = [
@@ -1230,21 +1402,15 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
     DateTime d = DateTime.now().toUtc();
 
-
-    //d = d.add(new Duration(hours:-1*d.hour,minutes:-1*d.minute,seconds:-1*d.second,milliseconds: -1*d.millisecond,microseconds: -1*d.microsecond));
-    //d = d.add(new Duration(milliseconds: 10));
-
-    for(int i = 0; i<30;i++){
-      await http.get(
-          Uri.encodeFull("https://min-api.cryptocompare.com/data/pricehistorical?fsym="+s+"&tsyms=USD&ts="+(d.millisecondsSinceEpoch/1000).round().toString())
-      ).then((r){
-        Map<String, dynamic> info = json.decode(r.body);
-        double price = info[s]["USD"]*1.0;
-        data.insert(0,new TimeSeriesPrice(d, price));
-        d = d.add(new Duration(days:-1));
+    if(response.body!="null"&&response.body!="{}"){
+      Map<String, dynamic> info = json.decode(response.body);
+      setState((){total = info["price"].length;});
+      for(int i = total-1;i>-1;i--){
+        data.insert(0,new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0));
         setState((){count++;});
-      });
+      }
     }
+    setState((){});
     return [
       new charts.Series<TimeSeriesPrice, DateTime>(
         id: 'Prices',

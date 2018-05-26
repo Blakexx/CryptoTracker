@@ -21,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-113">
-              <caret line="1224" column="0" lean-forward="true" selection-start-line="1224" selection-start-column="0" selection-end-line="1224" selection-end-column="0" />
+            <state relative-caret-position="224">
+              <caret line="1401" column="0" lean-forward="true" selection-start-line="1401" selection-start-column="0" selection-end-line="1401" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -42,23 +42,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>button</find>
-      <find>Colors.blueg</find>
-      <find>floating</find>
-      <find>.8</find>
-      <find>opacity</find>
-      <find>Crypto</find>
-      <find>Scaffold</find>
-      <find>cryptoList</find>
-      <find>mCap</find>
-      <find>CryptoList</find>
-      <find>Crpyto</find>
-      <find>favCr</find>
-      <find>FavCryptoState</find>
-      <find>bright?</find>
-      <find>CryptoListState</find>
-      <find>ItemInfo</find>
-      <find>Settings</find>
       <find>if(dark</find>
       <find>info.writ</find>
       <find>themeInfo.</find>
@@ -72,6 +55,23 @@
       <find>print</find>
       <find>textFiedl</find>
       <find>maxLe</find>
+      <find>FavCrypto</find>
+      <find>favCr</find>
+      <find>favCryptoStat</find>
+      <find>FavCryptoSta</find>
+      <find>Image.net</find>
+      <find>FavCryptoState</find>
+      <find>CryptoSt</find>
+      <find>new Fav</find>
+      <find>Crypto</find>
+      <find>CryptoState</find>
+      <find>7d</find>
+      <find>Httpresponse</find>
+      <find>Httpresponse`</find>
+      <find>realCount</find>
+      <find>[5]</find>
+      <find>tabs</find>
+      <find>.5y</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -288,7 +288,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32992327" sideWeight="0.49713877" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992327" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -635,8 +635,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-113">
-          <caret line="1224" column="0" lean-forward="true" selection-start-line="1224" selection-start-column="0" selection-end-line="1224" selection-end-column="0" />
+        <state relative-caret-position="224">
+          <caret line="1401" column="0" lean-forward="true" selection-start-line="1401" selection-start-column="0" selection-end-line="1401" selection-end-column="0" />
           <folding />
         </state>
       </provider>
