@@ -1317,6 +1317,7 @@ class SimpleTimeSeriesChart extends StatefulWidget{
 }
 
 class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
+  bool canLoad = true;
   int days;
   List<charts.Series<TimeSeriesPrice,DateTime>> seriesList;
   final bool animate;
@@ -1378,7 +1379,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white)
         )
       )
-    ):total!=100000?new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
+    ):canLoad?new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(((count/total)*100).round().toString()+"%"),
@@ -1388,7 +1389,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         ]
     )):new Container(
         child: new Center(
-          child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:20.0))
+          child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
         )
     );
   }
@@ -1404,11 +1405,13 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
     if(response.body!="null"&&response.body!="{}"){
       Map<String, dynamic> info = json.decode(response.body);
-      setState((){total = info["price"].length;});
+      total = info["price"].length;
       for(int i = total-1;i>-1;i--){
         data.insert(0,new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0));
         setState((){count++;});
       }
+    }else{
+      setState((){canLoad = false;});
     }
     setState((){});
     return [
