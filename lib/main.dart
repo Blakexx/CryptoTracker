@@ -50,7 +50,7 @@ void main() {
                       new Text("This is a tutorial lol"),
                       new Text("This is a tutorial lol"),
                       new Text("This is a tutorial lol"),
-                      new Text("This is a tut;'['orial lol"),
+                      new Text("This is a tutorial lol"),
                       new Text("This is a tutorial lol"),
                       new Text("This is a tutorial lol"),
                       new Text("This is a tutorial lol"),
@@ -117,7 +117,7 @@ class HomePageState extends State<HomePage>{
       fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new Image.network(
           'https://s2.coinmarketcap.com/static/img/coins/32x32/'+data["data"][i]["id"].toString()+".png"
       ),data["data"][i]["symbol"],new Image.network(
-        'https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/'+data["data"][i]["id"].toString()+'.png'
+        'https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/'+data["data"][i]["id"].toString()+'.png',width:120.0
       )));
       ids[i] = data["data"][i]["id"];
     }
@@ -493,6 +493,7 @@ class SettingsState extends State<Settings>{
                                 new Switch(
                                     value: !bright,
                                     onChanged: (dark){
+                                      bright = !bright;
                                       showDialog(
                                           barrierDismissible: false,
                                           context:context,
@@ -501,19 +502,17 @@ class SettingsState extends State<Settings>{
                                               content: new Text("The app will close if you select this option"),
                                               actions: <Widget>[
                                                 new FlatButton(
-                                                  onPressed: (){Navigator.of(context).pop(false);},
+                                                  onPressed: (){bright = !bright;Navigator.of(context).pop(false);},
                                                   child: new Text('No'),
                                                 ),
                                                 new FlatButton(
                                                     onPressed: (){
                                                       if(dark==true){
                                                         themeInfo.writeData("1"+(displayGraphs?" 1":" 0")).then((file){
-                                                          bright = false;
                                                           exit(0);
                                                         });
                                                       }else{
                                                         themeInfo.writeData("0"+(displayGraphs?" 1":" 0")).then((file){
-                                                          bright = true;
                                                           exit(0);
                                                         });
                                                       }
