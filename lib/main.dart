@@ -1166,6 +1166,7 @@ class ItemInfoState extends State<ItemInfo>{
             ]
           ),
           body:new TabBarView(
+            physics: new NeverScrollableScrollPhysics(),
             children: [
               new Container(
                 child: new Center(
@@ -1435,7 +1436,13 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           ),lineStyle: new charts.LineStyleSpec(
             color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white)
         )
-      )
+      ),
+      behaviors: [
+        new charts.LinePointHighlighter(
+            showHorizontalFollowLine: true, showVerticalFollowLine: true),
+        new charts.SelectNearest(
+            eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
+      ]
     ):canLoad?new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

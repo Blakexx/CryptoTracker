@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -20,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
-              <caret line="96" column="1" lean-forward="false" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
+            <state relative-caret-position="422">
+              <caret line="1445" column="66" lean-forward="false" selection-start-line="1445" selection-start-column="66" selection-end-line="1445" selection-end-column="66" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -43,10 +44,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>CryptoState</find>
-      <find>7d</find>
-      <find>Httpresponse</find>
-      <find>Httpresponse`</find>
       <find>realCount</find>
       <find>[5]</find>
       <find>tabs</find>
@@ -73,6 +70,10 @@
       <find>new Scaffold</find>
       <find>realCount++</find>
       <find>SettingsSta</find>
+      <find>charts.</find>
+      <find>appBar</find>
+      <find>tabbar</find>
+      <find>.sales</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -699,8 +700,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="96" column="1" lean-forward="false" selection-start-line="96" selection-start-column="1" selection-end-line="96" selection-end-column="1" />
+        <state relative-caret-position="422">
+          <caret line="1445" column="66" lean-forward="false" selection-start-line="1445" selection-start-column="66" selection-end-line="1445" selection-end-column="66" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
