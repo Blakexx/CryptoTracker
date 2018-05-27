@@ -28,28 +28,64 @@ bool bright;
 
 void main() {
   themeInfo.readData().then((value){
-    if(value[0]==1){
-      bright = false;
+    if(value==null || value.length!=2){
+      themeInfo.writeData("0 1").then((f){
+        bright = true;
+        displayGraphs = true;
+        runApp(new MaterialApp(
+          theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+            home: new Scaffold(
+              body: new Container(
+                child: new Center(
+                  child: new Column(
+                    children: <Widget> [
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tut;'['orial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                      new Text("This is a tutorial lol"),
+                    ]
+                  )
+                )
+              )
+            )
+        ));
+        return;
+      });
     }else{
-      bright = true;
-    }
-    if(value[1]==1){
-      displayGraphs = true;
-    }else{
-      displayGraphs = false;
-    }
-  });
-  wait(){
-    if(bright!=null){
+      if(value[0]==1){
+        bright = false;
+      }else{
+        bright = true;
+      }
+      if(value[1]==1){
+        displayGraphs = true;
+      }else{
+        displayGraphs = false;
+      }
       runApp(new MaterialApp(
           theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
           home: new HomePage()
       ));
-    }else{
-      new Timer(Duration.zero,wait);
     }
-  }
-  wait();
+
+  });
 }
 
 int buildCount = 0;
@@ -1475,6 +1511,10 @@ class ThemeInfo{
       // Read the file
       String contents = await file.readAsString();
 
+      if(contents.length!=3){
+        return null;
+      }
+
       List<String> list = contents.split(" ");
 
       List<int> finalList = new List<int>();
@@ -1497,4 +1537,3 @@ class ThemeInfo{
   }
 
 }
-
