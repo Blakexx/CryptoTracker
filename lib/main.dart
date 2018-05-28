@@ -631,13 +631,16 @@ class CryptoListState extends State<CryptoList>{
   Widget build(BuildContext context){
 
 
-    if(search==""){
+    if(search==null||search==""){
       if(filteredList.length==0){
         filteredList.addAll(fullList);
       }
     }
 
     if(buttonPressed){
+      if(filteredList.length==0){
+        filteredList.addAll(fullList);
+      }
       filteredList.sort((o1,o2){
         if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
           return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
@@ -1448,8 +1451,8 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          new Text("Date: "+(selectedTime!=null?new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"__")),
-          new Text("Price: "+(selectedPrice!=-1.0?new NumberFormat.currency(symbol:"\$",decimalDigits: 2).format(selectedPrice):"__"))
+          new Text((selectedTime!=null?"Date: "+new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"")),
+          new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: 2).format(selectedPrice):""))
         ]
       )
     )
