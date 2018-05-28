@@ -13,11 +13,16 @@ dependencies:
   url_launcher:
   flutter_list_drag_and_drop:
   charts_flutter:
+  flutter_launcher_icons:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "icon/platypus2.png"
+  android: true
+  ios: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

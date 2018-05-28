@@ -649,7 +649,6 @@ class CryptoListState extends State<CryptoList>{
       });
       buttonPressed = false;
     }
-
     return new WillPopScope(
         child: new GestureDetector(
             onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
@@ -882,6 +881,10 @@ int removed = 0;
 
 class FavCryptoState extends State<FavCrypto>{
 
+  String displayedName;
+
+  bool wrap = false;
+
   @override
   void initState(){
     super.initState();
@@ -889,6 +892,15 @@ class FavCryptoState extends State<FavCrypto>{
 
   @override
   Widget build(BuildContext context){
+
+    if(!widget.name.contains(" ")){
+      displayedName = widget.name;
+      wrap = false;
+    }else{
+      displayedName = widget.name.replaceAll(" ","\n");
+      wrap = true;
+    }
+
     widget.key = new ObjectKey(widget.slug);
     return new Dismissible(
         direction: completer.isCompleted?DismissDirection.endToStart:null,
@@ -915,6 +927,7 @@ class FavCryptoState extends State<FavCrypto>{
         },
         background: new Container(color:Colors.red),
         child: new Container(
+            height: !wrap?displayGraphs?120.0:100.0:null,
             padding: EdgeInsets.only(top:10.0),
             child: new FlatButton(
                 padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
@@ -923,11 +936,11 @@ class FavCryptoState extends State<FavCrypto>{
                   children: <Widget>[
                     // ignore: conflicting_dart_import
                     new Expanded(child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           new Row(
                               children: [
-                                new Text(widget.name,style: new TextStyle(fontSize:((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0))
+                                new Text(!wrap?widget.name:displayedName,style: new TextStyle(fontSize:(!wrap?(((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0):16.0)))
                               ]
                           ),
                           new Row(
@@ -939,6 +952,7 @@ class FavCryptoState extends State<FavCrypto>{
                         ]
                     )),
                     new Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
@@ -948,6 +962,7 @@ class FavCryptoState extends State<FavCrypto>{
                     ),
                     new Expanded(
                         child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
@@ -999,6 +1014,11 @@ class Crypto extends StatefulWidget{
 
 class CryptoState extends State<Crypto>{
 
+
+  String displayedName;
+
+  bool wrap = false;
+
   @override
   void initState(){
     super.initState();
@@ -1006,7 +1026,17 @@ class CryptoState extends State<Crypto>{
 
   @override
   Widget build(BuildContext context){
+
+    if(!widget.name.contains(" ")){
+      displayedName = widget.name;
+      wrap = false;
+    }else{
+      displayedName = widget.name.replaceAll(" ","\n");
+      wrap = true;
+    }
+
     return new Container(
+        height: !wrap?displayGraphs?120.0:100.0:null,
         key: new ObjectKey("full"+widget.slug),
         padding: EdgeInsets.only(top:10.0),
         child: new FlatButton(
@@ -1016,11 +1046,12 @@ class CryptoState extends State<Crypto>{
               children: <Widget>[
                 // ignore: conflicting_dart_import
                 new Expanded(child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       new Row(
                           children: [
-                            new Text(widget.name,style: new TextStyle(fontSize:((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0))
+                            new Text(!wrap?widget.name:displayedName,style: new TextStyle(fontSize:(!wrap?(((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0):16.0)))
                           ]
                       ),
                       new Row(
@@ -1032,6 +1063,7 @@ class CryptoState extends State<Crypto>{
                     ]
                 )),
                 new Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
@@ -1041,6 +1073,7 @@ class CryptoState extends State<Crypto>{
                 ),
                 new Expanded(
                     child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
@@ -1254,7 +1287,8 @@ class Info extends StatelessWidget{
       child: new Center(
         child: new Column(
           children: [
-            new Text("\nPrice: \$"+(price!=-1?price>=1?new NumberFormat.currency(symbol:"",decimalDigits: 2).format(price):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
+            new Text("",style: new TextStyle(fontSize:5.0)),
+            new Text("Price: \$"+(price!=-1?price>=1?new NumberFormat.currency(symbol:"",decimalDigits: 2).format(price):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
             new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
             new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
