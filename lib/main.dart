@@ -1172,11 +1172,7 @@ class ItemInfoState extends State<ItemInfo>{
                 child: new Center(
                   child: new Column(
                     children: [
-                      new Container(
-                          height: 200.0,
-                          width: 350.0*MediaQuery.of(context).size.width/375.0,
-                          child: graphs[0]
-                      ),
+                      graphs[0],
                       new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
                     ]
                   )
@@ -1186,11 +1182,7 @@ class ItemInfoState extends State<ItemInfo>{
                   child: new Center(
                       child: new Column(
                           children: [
-                            new Container(
-                                height: 200.0,
-                                width: 350.0*MediaQuery.of(context).size.width/375.0,
-                                child: graphs[1]
-                            ),
+                            graphs[1],
                             new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
                           ]
                       )
@@ -1200,11 +1192,7 @@ class ItemInfoState extends State<ItemInfo>{
                   child: new Center(
                       child: new Column(
                           children: [
-                            new Container(
-                                height: 200.0,
-                                width: 350.0*MediaQuery.of(context).size.width/375.0,
-                                child: graphs[2]
-                            ),
+                            graphs[2],
                             new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
                           ]
                       )
@@ -1214,11 +1202,7 @@ class ItemInfoState extends State<ItemInfo>{
                   child: new Center(
                       child: new Column(
                           children: [
-                            new Container(
-                                height: 200.0,
-                                width: 350.0*MediaQuery.of(context).size.width/375.0,
-                                child: graphs[3]
-                            ),
+                            graphs[3],
                             new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
                           ]
                       )
@@ -1228,11 +1212,7 @@ class ItemInfoState extends State<ItemInfo>{
                   child: new Center(
                       child: new Column(
                           children: [
-                            new Container(
-                                height: 200.0,
-                                width: 350.0*MediaQuery.of(context).size.width/375.0,
-                                child: graphs[4]
-                            ),
+                            graphs[4],
                             new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
                           ]
                       )
@@ -1385,6 +1365,8 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   http.Response response;
   bool firstBuild = true;
   int total = 100000;
+  double selectedPrice = -1.0;
+  DateTime selectedTime;
 
   SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,this.days,{this.animate});
 
@@ -1403,7 +1385,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       });
       firstBuild = false;
     }
-    return count>=total?new charts.TimeSeriesChart(
+    return count>=total?new Column(children: [new Container(width: 350.0*MediaQuery.of(context).size.width/375.0,height:200.0,child: new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
       primaryMeasureAxis: new charts.NumericAxisSpec(
@@ -1424,7 +1406,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
             day: new charts.TimeFormatterSpec(
                 format: 'd',
-                transitionFormat: days==1?'MM/dd':days==7?'MM/dd':days==30?'MM/dd':days==180?"YY/MM":"YY/MM"
+                transitionFormat: days==1?'MM/dd hh/mm a':days==7?'MM/dd':days==30?'MM/dd':days==180?"YY/MM":"YY/MM"
             )
         ),
         tickProviderSpec: new charts.DayTickProviderSpec(
@@ -1442,8 +1424,28 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             showHorizontalFollowLine: true, showVerticalFollowLine: true),
         new charts.SelectNearest(
             eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
+      ],
+      selectionModels: [
+        new charts.SelectionModelConfig(
+          type: charts.SelectionModelType.info,
+          listener: (charts.SelectionModel model){
+            final selectedDatum = model.selectedDatum;
+            if(selectedDatum.isNotEmpty){
+              setState((){
+                selectedPrice = selectedDatum[0].datum.price;
+                selectedTime = selectedDatum[0].datum.time;
+              });
+            }else{
+              selectedPrice = -1.0;
+              selectedTime = null;
+            }
+          }
+        )
       ]
-    ):canLoad?new Container(padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
+    )),
+    new Text("Date: "+(selectedTime!=null?new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"__")),
+    new Text("Price: "+(selectedPrice!=-1.0?new NumberFormat.currency(symbol:"\$",decimalDigits: 2).format(selectedPrice):"__"))
+    ]):canLoad?new Container(height:231.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(((count/total)*100).round().toString()+"%"),
@@ -1452,6 +1454,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           )
         ]
     )):new Container(
+        height:231.0,
         child: new Center(
           child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
         )
