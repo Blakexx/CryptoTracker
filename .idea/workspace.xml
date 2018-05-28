@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -22,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="694" column="40" lean-forward="true" selection-start-line="694" selection-start-column="40" selection-end-line="694" selection-end-column="40" />
+            <state relative-caret-position="122">
+              <caret line="1459" column="41" lean-forward="true" selection-start-line="1459" selection-start-column="41" selection-end-line="1459" selection-end-column="41" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -45,13 +44,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>realCount++</find>
-      <find>SettingsSta</find>
-      <find>charts.</find>
-      <find>appBar</find>
-      <find>tabbar</find>
-      <find>.sales</find>
-      <find>model</find>
       <find>new Container(width</find>
       <find>new Container(</find>
       <find>selected</find>
@@ -75,6 +67,13 @@
       <find>.contain</find>
       <find>.contai</find>
       <find>.conta</find>
+      <find>count/totl</find>
+      <find>count/total</find>
+      <find>linear</find>
+      <find>width:120</find>
+      <find>LinearProg</find>
+      <find>count</find>
+      <find>count++</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -89,9 +88,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/pubspec.yaml" />
-        <option value="$PROJECT_DIR$/lib/main.dart" />
         <option value="$PROJECT_DIR$/ios/Runner/Info.plist" />
         <option value="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/lib/main.dart" />
       </list>
     </option>
   </component>
@@ -718,8 +717,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="265">
-          <caret line="694" column="40" lean-forward="true" selection-start-line="694" selection-start-column="40" selection-end-line="694" selection-end-column="40" />
+        <state relative-caret-position="122">
+          <caret line="1459" column="41" lean-forward="true" selection-start-line="1459" selection-start-column="41" selection-end-line="1459" selection-end-column="41" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

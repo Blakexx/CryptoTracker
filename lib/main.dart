@@ -1457,10 +1457,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     ]):canLoad?new Container(height:232.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Text(((count/total)*100).round().toString()+"%"),
-          new LinearProgressIndicator(
-            value: count/total
-          )
+          new CircularProgressIndicator()
         ]
     )):new Container(
         height:232.0,
