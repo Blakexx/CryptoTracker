@@ -1443,9 +1443,18 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         )
       ]
     )),
-    new Text("Date: "+(selectedTime!=null?new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"__")),
-    new Text("Price: "+(selectedPrice!=-1.0?new NumberFormat.currency(symbol:"\$",decimalDigits: 2).format(selectedPrice):"__"))
-    ]):canLoad?new Container(height:231.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
+    new Container(
+      height:32.0,
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          new Text("Date: "+(selectedTime!=null?new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"__")),
+          new Text("Price: "+(selectedPrice!=-1.0?new NumberFormat.currency(symbol:"\$",decimalDigits: 2).format(selectedPrice):"__"))
+        ]
+      )
+    )
+
+    ]):canLoad?new Container(height:232.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(((count/total)*100).round().toString()+"%"),
@@ -1454,7 +1463,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           )
         ]
     )):new Container(
-        height:231.0,
+        height:232.0,
         child: new Center(
           child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
         )
