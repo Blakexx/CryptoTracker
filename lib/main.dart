@@ -488,7 +488,7 @@ class SettingsState extends State<Settings>{
                           child: new Row(
                               children: <Widget>[
                                 new Expanded(
-                                    child: new Text(" Dark Mode",style:new TextStyle(fontSize:20.0))
+                                    child: new Text("  Dark Mode",style:new TextStyle(fontSize:20.0))
                                 ),
                                 new Switch(
                                     value: !bright,
