@@ -109,7 +109,6 @@ class HomePageState extends State<HomePage>{
         Uri.encodeFull("https://api.coinmarketcap.com/v2/listings")
     );
     data = json.decode(r.body);
-    //print(data.toString());
     int runs = data["metadata"]["num_cryptocurrencies"];
     itemCount = runs;
     ids.length = itemCount;
@@ -146,15 +145,16 @@ class HomePageState extends State<HomePage>{
       data = json.decode(r.body);
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
-        (fullList[ids.indexOf(s["id"])] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
+        int place = ids.indexOf(s["id"]);
+        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+        (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
+        (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
+        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+        (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+        (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+        (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
         realCount++;
         setState((){});
       }
@@ -587,43 +587,28 @@ class CryptoListState extends State<CryptoList>{
 
   Future<String> setUpData() async{
     int count = 0;
-    //print(count);
-    //print(itemCount);
     http.Response r;
     while(count<itemCount){
-      //print(count);
       r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
       data = json.decode(r.body);
-      //print(data);
-      //print(data["data"]["1"]);
-      //print(data["data"]);
       Map<String,dynamic> map = data["data"];
-      //print(map);
       for(Map<String,dynamic> s in map.values){
-        //print(s);
-        //print(s["id"]);
-        //(fullList[ids.indexOf(data["data"][i]["id"])] as Crypto).price = data["data"][i]["price"];
-        //print(s["quotes"]["USD"]["price"]);
-        (fullList[ids.indexOf(s["id"])] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-        (fullList[ids.indexOf(s["id"])] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
+        int place = ids.indexOf(s["id"]);
+        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+        (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
+        (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
+        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+        (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+        (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+        (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
       }
       count+=100;
     }
-    //print(count.toString()+" "+itemCount.toString());
-    //print("Data Retrieved and Processed");
-    //buildCount = 199;
-    //print(data.toString());
     done = true;
-    //print(fullList);
     setState((){});
     return new Future<String>((){return "0";});
   }
@@ -653,12 +638,20 @@ class CryptoListState extends State<CryptoList>{
     }
 
     if(buttonPressed){
+      for(Widget w in fullList){
+        if((w as Crypto).mCap==null){
+          print("Null mCap found: {");
+          print("\t"+(w as Crypto).name+" "+(w as Crypto).shortName);
+          print("\t"+(w as Crypto).price.toString());
+          print("}");
+        }
+      }
       if(filteredList.length==0){
         filteredList.addAll(fullList);
       }
       filteredList.sort((o1,o2){
         if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-          return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+          return (((o2 as Crypto).mCap*100.0)-((o1 as Crypto).mCap*100.0)).round();
         }
         return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
       });
@@ -943,24 +936,15 @@ class FavCryptoState extends State<FavCrypto>{
             key: widget.key,
             onDismissed: (direction){
               if(completer.isCompleted){
-                setState((){isRemoved = true;});
+                HomePageState.filteredList.remove(favList[widget.index]);
                 favList.removeAt(widget.index);
                 (fullList[widget.friendIndex] as Crypto).favIndex = null;
                 (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
-                if(HomePageState.filteredList.length==favList.length+1){
-                  HomePageState.filteredList.removeAt(widget.index);
-                }else{
-                  for(int i = 0; i<HomePageState.filteredList.length;i++){
-                    if((HomePageState.filteredList[i] as FavCrypto).name==widget.name && (HomePageState.filteredList[i] as FavCrypto).shortName==widget.shortName){
-                      HomePageState.filteredList.removeAt(i);
-                      break;
-                    }
-                  }
-                }
                 for(int i = 0;i<favList.length;i++){
                   (favList[i] as FavCrypto).index = i;
                   (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
                 }
+                isRemoved = true;
                 context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
                 String dataBuild = "";
                 for(int i = 0;i<favList.length;i++){
@@ -996,7 +980,7 @@ class FavCryptoState extends State<FavCrypto>{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                          new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                           new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                           displayGraphs?widget.smallImage:new Container()
                         ]
@@ -1115,7 +1099,7 @@ class CryptoState extends State<Crypto>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                      new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                       new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                       displayGraphs?widget.smallImage:new Container()
                     ]
@@ -1243,7 +1227,7 @@ class ItemInfoState extends State<ItemInfo>{
             bottom:new TabBar(
               tabs: [
                 new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                new Tab(icon: new Text("7D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
                 new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
                 new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
                 new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
@@ -1353,7 +1337,7 @@ class Info extends StatelessWidget{
         child: new Column(
           children: [
             new Text("",style: new TextStyle(fontSize:5.0)),
-            new InfoPiece("Price",price,fontSize,2,6),
+            new InfoPiece("Price",price,fontSize,2,price>.000001?6:7),
             new InfoPiece("Market Cap",mCap,fontSize,0,2),
             new Container(
               padding: EdgeInsets.only(top:5.0),
@@ -1525,8 +1509,11 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   double selectedPrice = -1.0;
   DateTime selectedTime;
 
+  double maxPrice = -1.0,minPrice = double.maxFinite;
+
   SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,this.days,{this.animate});
 
+  int numDec = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -1548,7 +1535,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       primaryMeasureAxis: new charts.NumericAxisSpec(
         tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>100?0:price>=1?2:6)
+          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: numDec)
         ),
         renderSpec: new charts.GridlineRendererSpec(
           labelStyle: new charts.TextStyleSpec(
@@ -1606,7 +1593,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           new Text((selectedTime!=null?"Date: "+new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"")),
-          new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: selectedPrice>1?2:6).format(selectedPrice):""))
+          new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: selectedPrice>1?2:selectedPrice>.000001?6:7).format(selectedPrice):""))
         ]
       )
     )
@@ -1631,17 +1618,46 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
     ];
 
-    DateTime d = DateTime.now().toUtc();
+    Map<String, dynamic> info = json.decode(response.body);
+    
+    DateTime temp = new DateTime.fromMillisecondsSinceEpoch(info["price"][info["price"].length-1][0]);
 
-    if(response.body!="null"&&response.body!="{}"){
-      Map<String, dynamic> info = json.decode(response.body);
+    temp = temp.add(new Duration(hours:-1*temp.hour,minutes:-1*temp.minute,seconds:-1*temp.second,milliseconds: -1*temp.millisecond,microseconds: -1*temp.microsecond));
+    
+    DateTime today = DateTime.now();
+
+    today = today.add(new Duration(hours:-1*today.hour,minutes:-1*today.minute,seconds:-1*today.second,milliseconds: -1*today.millisecond,microseconds: -1*today.microsecond));
+
+
+    if(response.body!="null"&&response.body!="{}"&&temp.isAtSameMomentAs(today)){
       setState((){total = info["price"].length-1;});
       for(int i = total-1;i>-1;i--){
+        maxPrice = maxPrice<info["price"][i][1]*1.0?info["price"][i][1]*1.0:maxPrice;
+        minPrice = minPrice>info["price"][i][1]*1.0?info["price"][i][1]*1.0:minPrice;
         data.insert(0,new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0));
         setState((){count++;});
       }
     }else{
       setState((){canLoad = false;});
+    }
+    if(minPrice<100){
+      if(minPrice>10){
+        numDec = 1;
+      }else if(minPrice>1){
+        numDec = 2;
+      }else{
+        List<String> s = new List<String>()..addAll(minPrice.toStringAsFixed(10).split(""));
+        s.removeAt(0);
+        s.removeAt(0);
+        int count = 1;
+        for(String digit in s){
+          if(int.parse(digit)!=0){
+            numDec = count+1;
+            break;
+          }
+          count++;
+        }
+      }
     }
     setState((){});
     return [
