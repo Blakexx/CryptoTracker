@@ -14,6 +14,8 @@ dependencies:
   flutter_list_drag_and_drop:
   charts_flutter:
   flutter_launcher_icons:
+  cached_network_image:
+  flutter_cache_manager:
 
 dev_dependencies:
   flutter_test:

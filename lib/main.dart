@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 int itemCount = 1;
 
@@ -114,14 +116,13 @@ class HomePageState extends State<HomePage>{
     ids.length = itemCount;
     for(int i = 0; i<runs;i++){
       // ignore: conflicting_dart_import
-      fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new Image.network(
-          'https://s2.coinmarketcap.com/static/img/coins/32x32/'+data["data"][i]["id"].toString()+".png"
-      ),data["data"][i]["symbol"],new Image.network(
-        'https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/'+data["data"][i]["id"].toString()+'.png',width:120.0
+      fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new CachedNetworkImage(
+          imageUrl: "https://s2.coinmarketcap.com/static/img/coins/32x32/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString())
+      ),data["data"][i]["symbol"],new CachedNetworkImage(
+        imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString())
       )));
       ids[i] = data["data"][i]["id"];
     }
-    //print(fullList);
     buildCount=100;
     setState((){});
     return new Future<String>((){return "0";});
@@ -667,6 +668,7 @@ class CryptoListState extends State<CryptoList>{
                     child: new Icon(Icons.arrow_upward),
                       onPressed: (){
                        scrollController.jumpTo(1.0);
+                       scrollController.jumpTo(1.0);
                       },
                       backgroundColor: bright?Colors.black26:Colors.tealAccent,
                     )
@@ -871,11 +873,11 @@ class FavCrypto extends StatefulWidget{
 
   double volume24h;
 
-  Image smallImage;
+  CachedNetworkImage smallImage;
 
   String shortName;
 
-  Image image;
+  CachedNetworkImage image;
 
   double mCap;
 
@@ -1015,11 +1017,11 @@ class Crypto extends StatefulWidget{
 
   double volume24h;
 
-  Image smallImage;
+  CachedNetworkImage smallImage;
 
   String shortName;
 
-  Image image;
+  CachedNetworkImage image;
 
   double mCap;
 
@@ -1167,7 +1169,7 @@ class ItemInfo extends StatefulWidget{
 
   bool firstBuild = true;
 
-  Image image;
+  CachedNetworkImage image;
 
   String slug;
 
@@ -1192,7 +1194,7 @@ class ItemInfoState extends State<ItemInfo>{
 
   bool firstBuild = true;
 
-  Image image;
+  CachedNetworkImage image;
 
   String slug;
 
@@ -1316,7 +1318,7 @@ class Info extends StatelessWidget{
 
   bool firstBuild = true;
 
-  Image image;
+  CachedNetworkImage image;
 
   String slug;
 
