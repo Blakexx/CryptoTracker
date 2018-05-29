@@ -11,6 +11,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:intl/intl.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/widgets.dart';
 
 int itemCount = 1;
 
@@ -150,6 +151,10 @@ class HomePageState extends State<HomePage>{
         (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
         realCount++;
         setState((){});
       }
@@ -217,7 +222,7 @@ class HomePageState extends State<HomePage>{
           for(int i = 0; i<inds.length;i+=2){
             Crypto temp = (fullList[inds[i]] as Crypto);
             (fullList[inds[i]] as Crypto).favIndex = inds[i+1];
-            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.smallImage));
+            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.smallImage,temp.circSupply,temp.totalSupply,temp.maxSupply,temp.volume24h));
             (fullList[inds[i]] as Crypto).color = Colors.black26;
             //print(favList);
           }
@@ -393,11 +398,13 @@ class HomePageState extends State<HomePage>{
         ),
         floatingActionButton: (done && completer.isCompleted)?new Opacity(opacity:.75,child:new FloatingActionButton(
             onPressed: (){
-              search = null;
               filteredList.clear();
               completer = new Completer<Null>();
               completer.complete();
               Navigator.push(context,new MaterialPageRoute(builder: (context) => new CryptoList()));
+              inSearch = false;
+              search = null;
+              hasSearched = false;
               buttonPressed = true;
             },
             child: new Icon(Icons.add)
@@ -428,6 +435,10 @@ class HomePageState extends State<HomePage>{
                           (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
                           (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
                           (favList[i] as FavCrypto).mCap = temp.mCap;
+                          (favList[i] as FavCrypto).circSupply = temp.circSupply;
+                          (favList[i] as FavCrypto).totalSupply = temp.totalSupply;
+                          (favList[i] as FavCrypto).maxSupply = temp.maxSupply;
+                          (favList[i] as FavCrypto).volume24h = temp.volume24h;
                         }
                         completer.complete();
                       } else {
@@ -499,7 +510,7 @@ class SettingsState extends State<Settings>{
                                           context:context,
                                           builder: (BuildContext context)=>new AlertDialog(
                                               title: new Text("Are you sure?"),
-                                              content: new Text("The app will close if you select this option"),
+                                              content: new Text("The application will close if you select this option"),
                                               actions: <Widget>[
                                                 new FlatButton(
                                                   onPressed: (){bright = !bright;Navigator.of(context).pop(false);},
@@ -600,6 +611,10 @@ class CryptoListState extends State<CryptoList>{
         (fullList[ids.indexOf(s["id"])] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
         (fullList[ids.indexOf(s["id"])] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+        (fullList[ids.indexOf(s["id"])] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
       }
       count+=100;
     }
@@ -816,6 +831,10 @@ class CryptoListState extends State<CryptoList>{
                                       (favList[i] as FavCrypto).twentyFourHours = temp.twentyFourHours;
                                       (favList[i] as FavCrypto).sevenDays = temp.sevenDays;
                                       (favList[i] as FavCrypto).mCap = temp.mCap;
+                                      (favList[i] as FavCrypto).circSupply = temp.circSupply;
+                                      (favList[i] as FavCrypto).totalSupply = temp.totalSupply;
+                                      (favList[i] as FavCrypto).maxSupply = temp.maxSupply;
+                                      (favList[i] as FavCrypto).volume24h = temp.volume24h;
                                     }
                                     completer.complete();
                                   } else {
@@ -849,6 +868,16 @@ Completer completer = new Completer<Null>()..complete();
 
 class FavCrypto extends StatefulWidget{
 
+  int filteredIndex;
+
+  double circSupply;
+
+  double totalSupply;
+
+  double maxSupply;
+
+  double volume24h;
+
   Image smallImage;
 
   String shortName;
@@ -871,7 +900,7 @@ class FavCrypto extends StatefulWidget{
 
   ObjectKey key;
 
-  FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,this.smallImage);
+  FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,this.smallImage,this.circSupply,this.totalSupply,this.maxSupply,this.volume24h);
 
   @override
   FavCryptoState createState() => new FavCryptoState();
@@ -883,7 +912,11 @@ class FavCryptoState extends State<FavCrypto>{
 
   String displayedName;
 
+  bool isRemoved = false;
+
   bool wrap = false;
+
+  bool done = false;
 
   @override
   void initState(){
@@ -902,33 +935,41 @@ class FavCryptoState extends State<FavCrypto>{
     }
 
     widget.key = new ObjectKey(widget.slug);
-    return new Dismissible(
-        direction: completer.isCompleted?DismissDirection.endToStart:null,
-        key: widget.key,
-        onDismissed: (direction){
-          if(completer.isCompleted){
-            widget.key = new ObjectKey("removed"+(removed++).toString());
-            favList.removeAt(widget.index);
-            (fullList[widget.friendIndex] as Crypto).favIndex = null;
-            for(int i = 0;i<favList.length;i++){
-              (favList[i] as FavCrypto).index = i;
-              (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
-              (favList[i] as FavCrypto).key = new ObjectKey((favList[i] as FavCrypto).slug);
-            }
-            (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
-            String dataBuild = "";
-            for(int i = 0;i<favList.length;i++){
-              dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
-            }
-            //setState((){});
-            //print(dataBuild)
-            storage.writeData(dataBuild);
-          }
-        },
-        background: new Container(color:Colors.red),
-        child: new Container(
-            height: !wrap?displayGraphs?120.0:100.0:null,
-            padding: EdgeInsets.only(top:10.0),
+    return new Container(
+        height: !wrap?displayGraphs?120.0:100.0:null,
+        padding: EdgeInsets.only(top:!isRemoved?10.0:0.0),
+        child: new Dismissible(
+            direction: completer.isCompleted?DismissDirection.endToStart:null,
+            key: widget.key,
+            onDismissed: (direction){
+              if(completer.isCompleted){
+                setState((){isRemoved = true;});
+                favList.removeAt(widget.index);
+                (fullList[widget.friendIndex] as Crypto).favIndex = null;
+                (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
+                if(HomePageState.filteredList.length==favList.length+1){
+                  HomePageState.filteredList.removeAt(widget.index);
+                }else{
+                  for(int i = 0; i<HomePageState.filteredList.length;i++){
+                    if((HomePageState.filteredList[i] as FavCrypto).name==widget.name && (HomePageState.filteredList[i] as FavCrypto).shortName==widget.shortName){
+                      HomePageState.filteredList.removeAt(i);
+                      break;
+                    }
+                  }
+                }
+                for(int i = 0;i<favList.length;i++){
+                  (favList[i] as FavCrypto).index = i;
+                  (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+                }
+                context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
+                String dataBuild = "";
+                for(int i = 0;i<favList.length;i++){
+                  dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                }
+                storage.writeData(dataBuild);
+              }
+            },
+            background: new Container(color:Colors.red),
             child: new FlatButton(
                 padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
                 color:bright?Colors.black12:Colors.black87,
@@ -955,8 +996,8 @@ class FavCryptoState extends State<FavCrypto>{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                          new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                          new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                          new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                           displayGraphs?widget.smallImage:new Container()
                         ]
                     ),
@@ -973,7 +1014,7 @@ class FavCryptoState extends State<FavCrypto>{
                     )
                   ],
                 ),
-                onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName)));}}
+                onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));}}
             )
         )
     );
@@ -981,6 +1022,14 @@ class FavCryptoState extends State<FavCrypto>{
 }
 
 class Crypto extends StatefulWidget{
+
+  double circSupply;
+
+  double totalSupply;
+
+  double maxSupply;
+
+  double volume24h;
 
   Image smallImage;
 
@@ -1066,8 +1115,8 @@ class CryptoState extends State<Crypto>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      new Text((widget.price!=-1?widget.price>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                      new Text((widget.mCap!=-1?widget.mCap>=1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                      new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+widget.price.toStringAsFixed(6):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                      new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                       displayGraphs?widget.smallImage:new Container()
                     ]
                 ),
@@ -1092,7 +1141,7 @@ class CryptoState extends State<Crypto>{
                 Scaffold.of(context).removeCurrentSnackBar();
                 Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(widget.color==Colors.black26?"Added":"Removed"),duration: new Duration(milliseconds: 500)));
                 if(widget.color==Colors.black26){
-                  favList.add(new FavCrypto(widget.slug,favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.smallImage));
+                  favList.add(new FavCrypto(widget.slug,favList.length,widget.index,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.smallImage,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h));
                   widget.favIndex = favList.length-1;
                   String dataBuild = "";
                   for(int i = 0;i<favList.length;i++){
@@ -1124,6 +1173,14 @@ class CryptoState extends State<Crypto>{
 
 class ItemInfo extends StatefulWidget{
 
+  double circSupply;
+
+  double totalSupply;
+
+  double maxSupply;
+
+  double volume24h;
+
   bool firstBuild = true;
 
   Image image;
@@ -1136,7 +1193,7 @@ class ItemInfo extends StatefulWidget{
 
   double price,oneHour,twentyFourHours,sevenDays,mCap;
 
-  ItemInfo(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
+  ItemInfo(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,this.circSupply,this.totalSupply,this.maxSupply,this.volume24h);
 
   @override
   ItemInfoState createState() => new ItemInfoState(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
@@ -1202,54 +1259,54 @@ class ItemInfoState extends State<ItemInfo>{
             ]
           ),
           body:new TabBarView(
-            physics: new NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             children: [
               new Container(
                 child: new Center(
-                  child: new Column(
+                  child: new ListView(
                     children: [
                       graphs[0],
-                      new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                      new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
                     ]
                   )
                 )
               ),
               new Container(
                   child: new Center(
-                      child: new Column(
+                      child: new ListView(
                           children: [
                             graphs[1],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
                           ]
                       )
                   )
               ),
               new Container(
                   child: new Center(
-                      child: new Column(
+                      child: new ListView(
                           children: [
                             graphs[2],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
                           ]
                       )
                   )
               ),
               new Container(
                   child: new Center(
-                      child: new Column(
+                      child: new ListView(
                           children: [
                             graphs[3],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
                           ]
                       )
                   )
               ),
               new Container(
                   child: new Center(
-                      child: new Column(
+                      child: new ListView(
                           children: [
                             graphs[4],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName)
+                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
                           ]
                       )
                   )
@@ -1263,7 +1320,13 @@ class ItemInfoState extends State<ItemInfo>{
 
 class Info extends StatelessWidget{
 
-  List<SimpleTimeSeriesChart> graphs = [];
+  double circSupply;
+
+  double totalSupply;
+
+  double maxSupply;
+
+  double volume24h;
 
   int selected;
 
@@ -1279,7 +1342,9 @@ class Info extends StatelessWidget{
 
   double price,oneHour,twentyFourHours,sevenDays,mCap;
 
-  Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName);
+  double fontSize = 20.0;
+
+  Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,this.circSupply,this.totalSupply,this.maxSupply,this.volume24h);
 
   @override
   Widget build(BuildContext context){
@@ -1288,32 +1353,87 @@ class Info extends StatelessWidget{
         child: new Column(
           children: [
             new Text("",style: new TextStyle(fontSize:5.0)),
-            new Text("Price: \$"+(price!=-1?price>=1?new NumberFormat.currency(symbol:"",decimalDigits: 2).format(price):price.toStringAsFixed(6):"N/A"),style:new TextStyle(fontSize: 25.0)),
-            new Text("Market Cap: \$"+(mCap!=-1?mCap>=1?new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):mCap.toStringAsFixed(2):"N/A"),style:new TextStyle(fontSize: 25.0)),
-            new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  new Text("Change 1H: ",style: new TextStyle(fontSize:25.0)),
-                  oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
-                ]
+            new InfoPiece("Price",price,fontSize,2,6),
+            new InfoPiece("Market Cap",mCap,fontSize,0,2),
+            new Container(
+              padding: EdgeInsets.only(top:5.0),
+              child: new Container(
+                color: bright?Colors.black12:Colors.black87,
+                padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      new Expanded(child:new Text("Change 1H",style: new TextStyle(fontSize:fontSize))),
+                      oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                    ]
+                )
+              )
             ),
-            new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  new Text("Change 1D: ",style: new TextStyle(fontSize:25.0)),
-                  twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
-                ]
+            new Container(
+                padding: EdgeInsets.only(top:5.0),
+                child: new Container(
+                    color: bright?Colors.black12:Colors.black87,
+                    padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                    child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          new Expanded(child:new Text("Change 1D",style: new TextStyle(fontSize:fontSize))),
+                          twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                        ]
+                    )
+                )
             ),
-            new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  new Text("Change 1W: ",style: new TextStyle(fontSize:25.0)),
-                  sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:25.0,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:25.0))
-                ]
-            )
+            new Container(
+                padding: EdgeInsets.only(top:5.0),
+                child: new Container(
+                    color: bright?Colors.black12:Colors.black87,
+                    padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                    child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          new Expanded(child:new Text("Change 1W",style: new TextStyle(fontSize:fontSize))),
+                          sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                        ]
+                    )
+                )
+            ),
+            new InfoPiece("Circulating Supply",circSupply,fontSize,0,2),
+            new InfoPiece("Total Supply",totalSupply,fontSize,0,2),
+            new InfoPiece("Max Supply",maxSupply,fontSize,0,2),
+            new InfoPiece("24H Volume",volume24h,fontSize,0,2),
           ]
         )
       )
+    );
+  }
+}
+
+class InfoPiece extends StatelessWidget{
+
+  double fontSize;
+
+  String name;
+
+  double info;
+
+  int first,second;
+
+  InfoPiece(this.name,this.info,this.fontSize,this.first,this.second);
+
+  @override
+  Widget build(BuildContext context){
+    return new Container(
+        padding: EdgeInsets.only(top:5.0),
+        child: new Container(
+          color: bright?Colors.black12:Colors.black87,
+          padding: EdgeInsets.only(top:10.0,bottom:10.0),
+          child: new Row(
+              children: [
+                new Expanded(child: new Text(" "+name,style:new TextStyle(fontSize:fontSize),textAlign: TextAlign.left)),
+                new Text((info!=-1?info>1?new NumberFormat.currency(symbol:"\$",decimalDigits: first).format(info):"\$"+info.toStringAsFixed(second):"N/A"),style:new TextStyle(fontSize: fontSize))
+              ]
+          ),
+        )
     );
   }
 }
@@ -1428,7 +1548,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       primaryMeasureAxis: new charts.NumericAxisSpec(
         tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>1?0:2)
+          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: price>100?0:price>=1?2:6)
         ),
         renderSpec: new charts.GridlineRendererSpec(
           labelStyle: new charts.TextStyleSpec(
@@ -1486,7 +1606,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           new Text((selectedTime!=null?"Date: "+new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"")),
-          new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: 2).format(selectedPrice):""))
+          new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: selectedPrice>1?2:6).format(selectedPrice):""))
         ]
       )
     )
