@@ -31,6 +31,8 @@ flutter_icons:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+    - icon/platypus2.png
   fonts:
     - family: MavenPro
       fonts:

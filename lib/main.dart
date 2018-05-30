@@ -38,31 +38,62 @@ void main() {
         runApp(new MaterialApp(
           theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
             home: new Scaffold(
+              appBar:new AppBar(title: new Text("Tutorial")),
               body: new Container(
                 child: new Center(
                   child: new Column(
                     children: <Widget> [
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
-                      new Text("This is a tutorial lol"),
+                      new Container(
+                      padding: EdgeInsets.only(top:10.0),
+                      child: new Container(height:120.0,child:new FlatButton(
+                      padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
+                        color:bright?Colors.black12:Colors.black87,
+                        child: new Row(
+                          children: <Widget>[
+                            // ignore: conflicting_dart_import
+                            new Expanded(child: new Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  new Row(
+                                      children: [
+                                        // ignore: conflicting_dart_import
+                                        new Text("Coin Name",style: new TextStyle(fontSize:22.0))
+                                      ]
+                                  ),
+                                  new Row(
+                                      children: [
+                                        // ignore: conflicting_dart_import
+                                        Image.asset("icon/platypus2.png",height:32.0,width:32.0),
+                                        new Text("Ticker",style: new TextStyle(fontSize:15.0))
+                                      ]
+                                  )
+                                ]
+                            )),
+                            new Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  new Text("Price",style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                                  new Text("Market Cap",style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                                  new Image.network("https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/1.png",width:120.0)
+                                ]
+                            ),
+                            new Expanded(
+                                child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    new Text("1H Change"),
+                                    new Text("1D Change"),
+                                    new Text("1W Change"),
+                                  ],
+                                )
+                            )
+                          ],
+                        ),
+                        onPressed: (){}
+                      ))
+                    )
                     ]
                   )
                 )
@@ -117,9 +148,10 @@ class HomePageState extends State<HomePage>{
     for(int i = 0; i<runs;i++){
       // ignore: conflicting_dart_import
       fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new CachedNetworkImage(
-          imageUrl: "https://s2.coinmarketcap.com/static/img/coins/32x32/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString())
+          // ignore: conflicting_dart_import
+          imageUrl: "https://s2.coinmarketcap.com/static/img/coins/64x64/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString()),placeholder: Image.asset("icon/platypus2.png",height:32.0,width:32.0),fadeInDuration: const Duration(milliseconds:100),height:32.0,width:32.0
       ),data["data"][i]["symbol"],new CachedNetworkImage(
-        imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString())
+        imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
       )));
       ids[i] = data["data"][i]["id"];
     }
@@ -291,7 +323,11 @@ class HomePageState extends State<HomePage>{
                         new PopupMenuItem<String>(
                             child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
                         new PopupMenuItem<String>(
-                            child: const Text("Market Cap Descending"), value: "Market Cap Descending")
+                            child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("24H Change Ascending"), value: "24H Change Ascending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("24H Change Descending"), value: "24H Change Descending")
                       ],
                       child: new Icon(Icons.filter_list),
                       onSelected:(s){
@@ -339,6 +375,20 @@ class HomePageState extends State<HomePage>{
                               }
                               return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
                             });
+                          }else if(s=="24H Change Ascending"){
+                            filteredList.sort((o1,o2){
+                              if(((o1 as FavCrypto).twentyFourHours!=(o2 as FavCrypto).twentyFourHours)){
+                                return ((o1 as FavCrypto).twentyFourHours*100-(o2 as FavCrypto).twentyFourHours*100).round();
+                              }
+                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                            });
+                          }else if(s=="24H Change Descending"){
+                            filteredList.sort((o1,o2){
+                              if(((o1 as FavCrypto).twentyFourHours!=(o2 as FavCrypto).twentyFourHours)){
+                                return ((o2 as FavCrypto).twentyFourHours*100-(o1 as FavCrypto).twentyFourHours*100).round();
+                              }
+                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                            });
                           }
                         });
                       }
@@ -370,6 +420,28 @@ class HomePageState extends State<HomePage>{
                         }
                         launchAndroid();
                       }
+                    }else if(selected=="Report a Bug"){
+                      if(Platform.isIOS){
+                        launchIOS() async{
+                          const url = 'mailto:blakeplatypus@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20below:%0A%0A%0AThanks%20for%20your%20report!';
+                          if(await canLaunch(url)) {
+                            await launch(url);
+                          }else{
+                            throw 'Could not launch $url';
+                          }
+                        }
+                        launchIOS();
+                      }else if(Platform.isAndroid){
+                        launchAndroid() async{
+                          const url = 'mailto:blakeplatypus@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20below:%0A%0A%0AThanks%20for%20your%20report!';
+                          if(await canLaunch(url)) {
+                            await launch(url);
+                          }else{
+                            throw 'Could not launch $url';
+                          }
+                        }
+                        launchAndroid();
+                      }
                     }else if(selected=="About"){
                       Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
                           appBar: new AppBar(title:new Text("About"),backgroundColor: Colors.black54),
@@ -378,6 +450,10 @@ class HomePageState extends State<HomePage>{
                                   child: new Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
+                                        new Text("\n"),
+                                        Image.asset("icon/platypus2.png",height:150.0*MediaQuery.of(context).size.width/375.0,width:150.0*MediaQuery.of(context).size.width/375.0),
+                                        new Text("\nPlatypus Crypto V1.0.3"),
+                                        new Text("2018© Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
                                       ]
                                   )
                               )
@@ -390,6 +466,8 @@ class HomePageState extends State<HomePage>{
                         child: const Text("Settings"), value: "Settings"),
                     new PopupMenuItem<String>(
                         child: const Text("Rate us"), value: "Rate us"),
+                    new PopupMenuItem<String>(
+                        child: const Text("Report a Bug"), value: "Report a Bug"),
                     new PopupMenuItem<String>(
                         child: const Text("About"), value: "About"),
                   ],
@@ -587,9 +665,9 @@ class CryptoList extends StatefulWidget{
 class CryptoListState extends State<CryptoList>{
 
   Future<String> setUpData() async{
-    int count = 0;
+    int count = 1;
     http.Response r;
-    while(count<itemCount){
+    while(count<itemCount+1){
       r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
@@ -639,20 +717,12 @@ class CryptoListState extends State<CryptoList>{
     }
 
     if(buttonPressed){
-      for(Widget w in fullList){
-        if((w as Crypto).mCap==null){
-          print("Null mCap found: {");
-          print("\t"+(w as Crypto).name+" "+(w as Crypto).shortName);
-          print("\t"+(w as Crypto).price.toString());
-          print("}");
-        }
-      }
       if(filteredList.length==0){
         filteredList.addAll(fullList);
       }
       filteredList.sort((o1,o2){
         if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-          return (((o2 as Crypto).mCap*100.0)-((o1 as Crypto).mCap*100.0)).round();
+          return ((((o2 as Crypto).mCap!=null?(o2 as Crypto).mCap:-1)*100.0)-(((o1 as Crypto).mCap!=null?(o1 as Crypto).mCap:-1)*100.0)).round();
         }
         return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
       });
@@ -748,7 +818,11 @@ class CryptoListState extends State<CryptoList>{
                                 new PopupMenuItem<String>(
                                     child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
                                 new PopupMenuItem<String>(
-                                    child: const Text("Market Cap Descending"), value: "Market Cap Descending")
+                                    child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("24H Change Ascending"), value: "24H Change Ascending"),
+                                new PopupMenuItem<String>(
+                                    child: const Text("24H Change Descending"), value: "24H Change Descending")
                               ],
                               child: new Icon(Icons.filter_list),
                               onSelected:(s){
@@ -795,6 +869,20 @@ class CryptoListState extends State<CryptoList>{
                                         return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
                                       }
                                       return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                    });
+                                  }else if(s=="24H Change Ascending"){
+                                    filteredList.sort((o1,o2){
+                                      if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
+                                        return ((o1 as Crypto).twentyFourHours*100-(o2 as Crypto).twentyFourHours*100).round();
+                                      }
+                                      return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
+                                    });
+                                  }else if(s=="24H Change Descending"){
+                                    filteredList.sort((o1,o2){
+                                      if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
+                                        return ((o2 as Crypto).twentyFourHours*100-(o1 as Crypto).twentyFourHours*100).round();
+                                      }
+                                      return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
                                     });
                                   }
                                 });
@@ -920,7 +1008,6 @@ class FavCryptoState extends State<FavCrypto>{
 
   @override
   Widget build(BuildContext context){
-
     if(!widget.name.contains(" ")){
       displayedName = widget.name;
       wrap = false;
@@ -1621,15 +1708,18 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     ];
 
     Map<String, dynamic> info = json.decode(response.body);
-    
-    DateTime temp = new DateTime.fromMillisecondsSinceEpoch(info["price"][info["price"].length-1][0]);
 
-    temp = temp.add(new Duration(hours:-1*temp.hour,minutes:-1*temp.minute,seconds:-1*temp.second,milliseconds: -1*temp.millisecond,microseconds: -1*temp.microsecond));
-    
+    DateTime temp = DateTime.now();
+
     DateTime today = DateTime.now();
 
-    today = today.add(new Duration(hours:-1*today.hour,minutes:-1*today.minute,seconds:-1*today.second,milliseconds: -1*today.millisecond,microseconds: -1*today.microsecond));
+    if(response.body!="null"){
+      temp = new DateTime.fromMillisecondsSinceEpoch(info["price"][info["price"].length-1][0]);
 
+      temp = temp.add(new Duration(hours:-1*temp.hour,minutes:-1*temp.minute,seconds:-1*temp.second,milliseconds: -1*temp.millisecond,microseconds: -1*temp.microsecond));
+
+      today = today.add(new Duration(hours:-1*today.hour,minutes:-1*today.minute,seconds:-1*today.second,milliseconds: -1*today.millisecond,microseconds: -1*today.microsecond));
+    }
 
     if(response.body!="null"&&response.body!="{}"&&temp.isAtSameMomentAs(today)){
       setState((){total = info["price"].length-1;});
@@ -1639,27 +1729,27 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         data.insert(0,new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0));
         setState((){count++;});
       }
-    }else{
-      setState((){canLoad = false;});
-    }
-    if(minPrice<100){
-      if(minPrice>10){
-        numDec = 1;
-      }else if(minPrice>1){
-        numDec = 2;
-      }else{
-        List<String> s = new List<String>()..addAll(minPrice.toStringAsFixed(10).split(""));
-        s.removeAt(0);
-        s.removeAt(0);
-        int count = 1;
-        for(String digit in s){
-          if(int.parse(digit)!=0){
-            numDec = count+1;
-            break;
+      if(minPrice<100){
+        if(minPrice>10){
+          numDec = 1;
+        }else if(minPrice>1){
+          numDec = 2;
+        }else{
+          List<String> s = new List<String>()..addAll(minPrice.toStringAsFixed(10).split(""));
+          s.removeAt(0);
+          s.removeAt(0);
+          int count = 1;
+          for(String digit in s){
+            if(int.parse(digit)!=0){
+              numDec = count+2;
+              break;
+            }
+            count++;
           }
-          count++;
         }
       }
+    }else{
+      setState((){canLoad = false;});
     }
     setState((){});
     return [
