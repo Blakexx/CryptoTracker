@@ -1047,7 +1047,7 @@ class FavCryptoState extends State<FavCrypto>{
                   isInSwap = true;
                   friendSwap = widget.index;
                   wait(){
-                    if(!isInSwap){
+                    if(widget.index!=friendSwap){
                       setState((){});
                     }else{
                       new Timer(Duration.zero,wait);
