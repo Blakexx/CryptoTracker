@@ -230,7 +230,7 @@ class HomePageState extends State<HomePage>{
 
   bool firstLoad = false;
 
-  bool inSearch = false;
+  static bool inSearch = false;
 
   ScrollController scrollController = new ScrollController();
 
@@ -238,7 +238,7 @@ class HomePageState extends State<HomePage>{
 
   String search = null;
 
-  bool hasSearched = false;
+  static bool hasSearched = false;
 
   @override
   Widget build(BuildContext context){
@@ -1130,7 +1130,7 @@ class FavCryptoState extends State<FavCrypto>{
                         Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));
                       }else{
                         setState((){
-                          if(favList.length==HomePageState.filteredList.length && friendSwap!=-1){
+                          if(friendSwap!=-1){
                             isInSwap = false;
                             FavCrypto temp = (favList[friendSwap] as FavCrypto);
                             temp.color = bright?Colors.black12:Colors.black87;
@@ -1141,6 +1141,8 @@ class FavCryptoState extends State<FavCrypto>{
                             favList[temp.index] = temp;
                             (fullList[temp.friendIndex] as Crypto).favIndex = temp.index;
                             friendSwap = -1;
+                            HomePageState.inSearch = false;
+                            HomePageState.hasSearched = false;
                             context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){
                               HomePageState.filteredList.clear();
                               HomePageState.filteredList.addAll(favList);
