@@ -17,6 +17,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 int itemCount = 1;
 
+bool isInSwap = false;
+
 final DataStorage storage = new DataStorage();
 
 final ThemeInfo themeInfo = new ThemeInfo();
@@ -42,58 +44,67 @@ void main() {
               body: new Container(
                 child: new Center(
                   child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget> [
+                      new Padding(
+                        padding: EdgeInsets.only(top: 10.0)
+                      ),
+                      // ignore: conflicting_dart_import
+                      new Text("Format for Items",style:new TextStyle(fontSize:20.0)),
                       new Container(
                       padding: EdgeInsets.only(top:10.0),
-                      child: new Container(height:120.0,child:new FlatButton(
-                      padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-                        color:bright?Colors.black12:Colors.black87,
-                        child: new Row(
-                          children: <Widget>[
-                            // ignore: conflicting_dart_import
-                            new Expanded(child: new Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  new Row(
-                                      children: [
-                                        // ignore: conflicting_dart_import
-                                        new Text("Coin Name",style: new TextStyle(fontSize:22.0))
-                                      ]
-                                  ),
-                                  new Row(
-                                      children: [
-                                        // ignore: conflicting_dart_import
-                                        Image.asset("icon/platypus2.png",height:32.0,width:32.0),
-                                        new Text("Ticker",style: new TextStyle(fontSize:15.0))
-                                      ]
-                                  )
-                                ]
-                            )),
-                            new Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  new Text("Price",style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                                  new Text("Market Cap",style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
-                                  new Image.network("https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/1.png",width:120.0)
-                                ]
-                            ),
-                            new Expanded(
-                                child: new Column(
+                      child: new Container(
+                          height:120.0,
+                          child:new FlatButton(
+                          padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
+                          color:bright?Colors.black12:Colors.black87,
+                          child: new Row(
+                            children: <Widget>[
+                              // ignore: conflicting_dart_import
+                              new Expanded(child: new Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    new Text("1H Change"),
-                                    new Text("1D Change"),
-                                    new Text("1W Change"),
-                                  ],
-                                )
-                            )
-                          ],
+                                  children: [
+                                    new Row(
+                                        children: [
+                                          // ignore: conflicting_dart_import
+                                          new Text("Coin Name",style: new TextStyle(fontSize:22.0))
+                                        ]
+                                    ),
+                                    new Row(
+                                        children: [
+                                          // ignore: conflicting_dart_import
+                                          Image.asset("icon/platypus2.png",height:32.0,width:32.0),
+                                          new Text("Ticker",style: new TextStyle(fontSize:15.0))
+                                        ]
+                                    )
+                                  ]
+                              )),
+                              new Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    new Text("Price",style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                                    new Text("Market Cap",style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                                    new Image.network("https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/1.png",width:120.0)
+                                  ]
+                              ),
+                              new Expanded(
+                                  child: new Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: <Widget>[
+                                      new Text("1H Change"),
+                                      new Text("1D Change"),
+                                      new Text("1W Change"),
+                                    ],
+                                  )
+                              )
+                            ]
                         ),
                         onPressed: (){}
-                      ))
-                    )
+                        )
+                      )
+                      )
                     ]
                   )
                 )
@@ -118,7 +129,6 @@ void main() {
           home: new HomePage()
       ));
     }
-
   });
 }
 
@@ -983,6 +993,8 @@ class FavCrypto extends StatefulWidget{
 
   ObjectKey key;
 
+  Color color = bright?Colors.black12:Colors.black87;
+
   FavCrypto(this.slug,this.index,this.friendIndex,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,this.smallImage,this.circSupply,this.totalSupply,this.maxSupply,this.volume24h);
 
   @override
@@ -991,11 +1003,11 @@ class FavCrypto extends StatefulWidget{
 
 int removed = 0;
 
+int friendSwap = -1;
+
 class FavCryptoState extends State<FavCrypto>{
 
   String displayedName;
-
-  bool isRemoved = false;
 
   bool wrap = false;
 
@@ -1019,78 +1031,133 @@ class FavCryptoState extends State<FavCrypto>{
     widget.key = new ObjectKey(widget.slug);
     return new Container(
         height: !wrap?displayGraphs?120.0:100.0:null,
-        padding: EdgeInsets.only(top:!isRemoved?10.0:0.0),
-        child: new Dismissible(
-            direction: completer.isCompleted?DismissDirection.endToStart:null,
-            key: widget.key,
-            onDismissed: (direction){
-              if(completer.isCompleted){
-                HomePageState.filteredList.remove(favList[widget.index]);
-                favList.removeAt(widget.index);
-                (fullList[widget.friendIndex] as Crypto).favIndex = null;
-                (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
-                for(int i = 0;i<favList.length;i++){
-                  (favList[i] as FavCrypto).index = i;
-                  (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
-                }
-                isRemoved = true;
-                context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
-                String dataBuild = "";
-                for(int i = 0;i<favList.length;i++){
-                  dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
-                }
-                storage.writeData(dataBuild);
+        padding: EdgeInsets.only(top:10.0),
+        child: new GestureDetector(
+          onLongPress: (){
+            if(!isInSwap && favList.length==HomePageState.filteredList.length){
+              if(widget.color==Colors.black12||widget.color==Colors.black54){
+                setState((){
+                  widget.color = bright?Colors.black26:Colors.black87;
+                  isInSwap = false;
+                  friendSwap = -1;
+                });
+              }else{
+                setState((){
+                  widget.color = bright?Colors.black12:Colors.black54;
+                  isInSwap = true;
+                  friendSwap = widget.index;
+                  wait(){
+                    if(widget.index!=friendSwap){
+                      setState((){});
+                    }else{
+                      new Timer(Duration.zero,wait);
+                    }
+                  }
+                  wait();
+                });
               }
-            },
-            background: new Container(color:Colors.red),
-            child: new FlatButton(
-                padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-                color:bright?Colors.black12:Colors.black87,
-                child: new Row(
-                  children: <Widget>[
-                    // ignore: conflicting_dart_import
-                    new Expanded(child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          new Row(
-                              children: [
-                                new Text(!wrap?widget.name:displayedName,style: new TextStyle(fontSize:(!wrap?(((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0):16.0)))
-                              ]
-                          ),
-                          new Row(
-                              children: [
-                                widget.image,
-                                new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
-                              ]
-                          )
-                        ]
-                    )),
-                    new Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                          new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
-                          displayGraphs?widget.smallImage:new Container()
-                        ]
-                    ),
-                    new Expanded(
-                        child: new Column(
+            }
+          },
+          child: new Dismissible(
+              direction: completer.isCompleted?DismissDirection.endToStart:null,
+              key: widget.key,
+              onDismissed: (direction){
+                if(completer.isCompleted){
+                  HomePageState.filteredList.remove(favList[widget.index]);
+                  favList.removeAt(widget.index);
+                  (fullList[widget.friendIndex] as Crypto).favIndex = null;
+                  (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
+                  for(int i = 0;i<favList.length;i++){
+                    (favList[i] as FavCrypto).index = i;
+                    (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+                  }
+                  context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
+                  String dataBuild = "";
+                  for(int i = 0;i<favList.length;i++){
+                    dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                  }
+                  storage.writeData(dataBuild);
+                }
+              },
+              background: new Container(color:Colors.red),
+              child: new FlatButton(
+                  padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
+                  color: widget.color,
+                  child: new Row(
+                    children: <Widget>[
+                      // ignore: conflicting_dart_import
+                      new Expanded(child: new Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                            widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                            widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
-                          ],
-                        )
-                    )
-                  ],
-                ),
-                onPressed: (){if(completer.isCompleted){Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));}}
-            )
-        )
-    );
+                          children: [
+                            new Row(
+                                children: [
+                                  new Text(!wrap?widget.name:displayedName,style: new TextStyle(fontSize:(!wrap?(((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0):16.0)))
+                                ]
+                            ),
+                            new Row(
+                                children: [
+                                  widget.image,
+                                  new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
+                                ]
+                            )
+                          ]
+                      )),
+                      new Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                            new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                            displayGraphs?widget.smallImage:new Container()
+                          ]
+                      ),
+                      new Expanded(
+                          child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: <Widget>[
+                              widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                              widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                              widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                            ],
+                          )
+                      )
+                    ],
+                  ),
+                  onPressed: (){
+                    if(completer.isCompleted){
+                      if(!isInSwap){
+                        Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));
+                      }else{
+                        setState((){
+                          if(favList.length==HomePageState.filteredList.length && friendSwap!=-1){
+                            isInSwap = false;
+                            FavCrypto temp = (favList[friendSwap] as FavCrypto);
+                            temp.color = bright?Colors.black26:Colors.black87;
+                            temp.index = widget.index;
+                            favList[friendSwap] = favList[widget.index];
+                            widget.index = friendSwap;
+                            (fullList[(favList[friendSwap] as FavCrypto).friendIndex] as Crypto).favIndex == friendSwap;
+                            favList[temp.index] = temp;
+                            (fullList[temp.friendIndex] as Crypto).favIndex = temp.index;
+                            friendSwap = -1;
+                            context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){
+                              HomePageState.filteredList.clear();
+                              HomePageState.filteredList.addAll(favList);
+                            });
+                            String dataBuild = "";
+                            for(int i = 0;i<favList.length;i++){
+                              dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                            }
+                            storage.writeData(dataBuild);
+                          }
+                        });
+                      }
+                    }
+                  }
+              )
+          )
+    ));
   }
 }
 
@@ -1787,8 +1854,6 @@ class ThemeInfo{
   Future<List<int>> readData() async {
     try {
       final file = await _localFile;
-
-      // Read the file
       String contents = await file.readAsString();
 
       if(contents.length!=3){
@@ -1805,14 +1870,12 @@ class ThemeInfo{
 
       return finalList;
     } catch (e) {
-      // If we encounter an error, return 0
       return null;
     }
   }
 
   Future<File> writeData(String data) async {
     final file = await _localFile;
-    // Write the file
     return file.writeAsString(data);
   }
 
