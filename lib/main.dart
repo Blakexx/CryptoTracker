@@ -1035,19 +1035,19 @@ class FavCryptoState extends State<FavCrypto>{
         child: new GestureDetector(
           onLongPress: (){
             if(!isInSwap && favList.length==HomePageState.filteredList.length){
-              if(widget.color==Colors.black12||widget.color==Colors.black54){
+              if(widget.color==Colors.black26||widget.color==Colors.black54){
                 setState((){
-                  widget.color = bright?Colors.black26:Colors.black87;
+                  widget.color = bright?Colors.black12:Colors.black87;
                   isInSwap = false;
                   friendSwap = -1;
                 });
               }else{
                 setState((){
-                  widget.color = bright?Colors.black12:Colors.black54;
+                  widget.color = bright?Colors.black26:Colors.black54;
                   isInSwap = true;
                   friendSwap = widget.index;
                   wait(){
-                    if(widget.index!=friendSwap){
+                    if(!isInSwap){
                       setState((){});
                     }else{
                       new Timer(Duration.zero,wait);
@@ -1133,7 +1133,7 @@ class FavCryptoState extends State<FavCrypto>{
                           if(favList.length==HomePageState.filteredList.length && friendSwap!=-1){
                             isInSwap = false;
                             FavCrypto temp = (favList[friendSwap] as FavCrypto);
-                            temp.color = bright?Colors.black26:Colors.black87;
+                            temp.color = bright?Colors.black12:Colors.black87;
                             temp.index = widget.index;
                             favList[friendSwap] = favList[widget.index];
                             widget.index = friendSwap;
