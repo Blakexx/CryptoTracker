@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter/scheduler.dart';
 
 int itemCount = 1;
 
@@ -337,7 +338,9 @@ class HomePageState extends State<HomePage>{
                         new PopupMenuItem<String>(
                             child: const Text("24H Change Ascending"), value: "24H Change Ascending"),
                         new PopupMenuItem<String>(
-                            child: const Text("24H Change Descending"), value: "24H Change Descending")
+                            child: const Text("24H Change Descending"), value: "24H Change Descending"),
+                        new PopupMenuItem<String>(
+                            child: const Text("Default"), value: "Default")
                       ],
                       child: new Icon(Icons.filter_list),
                       onSelected:(s){
@@ -399,6 +402,9 @@ class HomePageState extends State<HomePage>{
                               }
                               return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
                             });
+                          }else if(s=="Default"){
+                            filteredList.clear();
+                            filteredList.addAll(favList);
                           }
                         });
                       }
@@ -461,7 +467,7 @@ class HomePageState extends State<HomePage>{
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
                                         new Text("\n"),
-                                        Image.asset("icon/platypus2.png",height:150.0*MediaQuery.of(context).size.width/375.0,width:150.0*MediaQuery.of(context).size.width/375.0),
+                                        Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
                                         new Text("\nPlatypus Crypto V1.0.3"),
                                         new Text("2018© Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
                                       ]
@@ -948,7 +954,7 @@ class CryptoListState extends State<CryptoList>{
         onWillPop: (){
           kill = true;
           HomePageState.filteredList.clear();
-          return (completer.isCompleted && done)?new Future((){return true;}):new Future((){return false;});
+          return new Future((){return completer.isCompleted && done;});
         }
     );
   }
@@ -1408,7 +1414,7 @@ class ItemInfoState extends State<ItemInfo>{
               )
             ]
           ),
-          body:new TabBarView(
+          body:/*new TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
               new Container(
@@ -1461,6 +1467,20 @@ class ItemInfoState extends State<ItemInfo>{
                       )
                   )
               )
+            ]
+          )*/new ListView(
+            children:[
+              new Container(
+                width: double.infinity,
+                height: 232.0,
+                child: new TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      graphs[0],graphs[1],graphs[2],graphs[3],graphs[4]
+                    ]
+                )
+              ),
+              new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
             ]
           )
       )
