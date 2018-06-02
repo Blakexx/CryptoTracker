@@ -1135,11 +1135,19 @@ class FavCryptoState extends State<FavCrypto>{
                             FavCrypto temp = (favList[friendSwap] as FavCrypto);
                             temp.color = bright?Colors.black12:Colors.black87;
                             temp.index = widget.index;
+                            /*
                             favList[friendSwap] = favList[widget.index];
                             widget.index = friendSwap;
                             (fullList[(favList[friendSwap] as FavCrypto).friendIndex] as Crypto).favIndex == friendSwap;
                             favList[temp.index] = temp;
                             (fullList[temp.friendIndex] as Crypto).favIndex = temp.index;
+                            */
+                            favList.removeAt(friendSwap);
+                            favList.insert(widget.index,temp);
+                            for(int i = 0; i<favList.length;i++){
+                              (favList[i] as FavCrypto).index = i;
+                              (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+                            }
                             friendSwap = -1;
                             HomePageState.inSearch = false;
                             HomePageState.hasSearched = false;
