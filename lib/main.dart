@@ -47,7 +47,7 @@ bool firstTime = false;
 void main() {
   timeDilation = 1.0;
   themeInfo.readData().then((value){
-    if(true || value==null || value.length!=2){
+    if(value==null || value.length!=2){
       themeInfo.writeData("0 1").then((f){
         bright = true;
         displayGraphs = true;
