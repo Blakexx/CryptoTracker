@@ -16,6 +16,7 @@ dependencies:
   flutter_launcher_icons:
   cached_network_image:
   flutter_cache_manager:
+  fluttery:
 
 dev_dependencies:
   flutter_test:
