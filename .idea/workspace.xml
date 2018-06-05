@@ -21,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="270" column="61" lean-forward="true" selection-start-line="270" selection-start-column="61" selection-end-line="270" selection-end-column="61" />
+            <state relative-caret-position="205">
+              <caret line="570" column="52" lean-forward="true" selection-start-line="570" selection-start-column="52" selection-end-line="570" selection-end-column="52" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -44,20 +44,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>temp.</find>
-      <find>setSt</find>
-      <find>new Fav</find>
-      <find>key:</find>
-      <find>new FavCr</find>
-      <find>!isIn</find>
-      <find>as C</find>
-      <find>search</find>
-      <find>onSubm</find>
-      <find>Colors.</find>
-      <find>FavCryptoSt</find>
-      <find>HomePage</find>
-      <find>hasSearch</find>
-      <find>hasS</find>
       <find>context.</find>
       <find>market cap</find>
       <find>onWillPop</find>
@@ -74,6 +60,20 @@
       <find>storage.writeData</find>
       <find>inds[i]</find>
       <find>storage.read</find>
+      <find>Formatter</find>
+      <find>.toU</find>
+      <find>kill me</find>
+      <find>.jumpTo</find>
+      <find>.jumpTO</find>
+      <find>idIndex</find>
+      <find>ids[i</find>
+      <find>dex</find>
+      <find>indesOf</find>
+      <find>indexOf</find>
+      <find>realCount</find>
+      <find>putIfAb</find>
+      <find>value:</find>
+      <find>LinearProg</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -779,8 +779,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="270" column="61" lean-forward="true" selection-start-line="270" selection-start-column="61" selection-end-line="270" selection-end-column="61" />
+        <state relative-caret-position="205">
+          <caret line="570" column="52" lean-forward="true" selection-start-line="570" selection-start-column="52" selection-end-line="570" selection-end-column="52" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

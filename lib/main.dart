@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:collection';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/scheduler.dart';
@@ -23,6 +24,8 @@ bool isInSwap = false;
 final DataStorage storage = new DataStorage();
 
 final ThemeInfo themeInfo = new ThemeInfo();
+
+HashMap<int, int> idIndex = new HashMap<int, int>();
 
 Map<String, dynamic> data;
 
@@ -166,6 +169,7 @@ class HomePageState extends State<HomePage>{
         imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
       ));
       ids[i] = data["data"][i]["id"];
+      idIndex.putIfAbsent(ids[i], ()=>i);
     }
     buildCount=100;
     setState((){});
@@ -190,7 +194,7 @@ class HomePageState extends State<HomePage>{
       data = json.decode(r.body);
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
-        int place = ids.indexOf(s["id"]);
+        int place = idIndex.putIfAbsent(s["id"], ()=>-1);
         (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
         (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
         (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
@@ -265,7 +269,7 @@ class HomePageState extends State<HomePage>{
           favList = new List<Widget>();
           favList.length = (inds.length/2).floor();
           for(int i = 0; i<inds.length;i+=2){
-            int dex = ids.indexOf(inds[i]);
+            int dex = idIndex.putIfAbsent(inds[i], ()=>-1);
             if(dex!=-1){
               Crypto temp = (fullList[dex] as Crypto);
               (fullList[dex] as Crypto).favIndex = inds[i+1];
@@ -295,7 +299,7 @@ class HomePageState extends State<HomePage>{
                   search = s;
                 },
                 onSubmitted: (s){
-                  scrollController.jumpTo((1.0));
+                  scrollController.jumpTo(1.0);
                   filteredList.clear();
                   search = s;
                   for(int i = 0; i<favList.length;i++){
@@ -693,7 +697,7 @@ class CryptoListState extends State<CryptoList>{
       data = json.decode(r.body);
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
-        int place = ids.indexOf(s["id"]);
+        int place = idIndex.putIfAbsent(s["id"], ()=>-1);
         (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
         (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
         (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
@@ -756,8 +760,8 @@ class CryptoListState extends State<CryptoList>{
                     child: new FloatingActionButton(
                     child: new Icon(Icons.arrow_upward),
                       onPressed: (){
-                       scrollController.jumpTo(1.0);
-                       scrollController.jumpTo(1.0);
+                        scrollController.jumpTo(1.0);
+                        scrollController.jumpTo(1.0);
                       },
                       backgroundColor: bright?Colors.black26:Colors.tealAccent,
                     )
