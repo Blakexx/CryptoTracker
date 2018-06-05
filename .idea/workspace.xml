@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -20,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="164">
-              <caret line="944" column="108" lean-forward="false" selection-start-line="944" selection-start-column="108" selection-end-line="944" selection-end-column="108" />
+            <state relative-caret-position="340">
+              <caret line="1148" column="21" lean-forward="true" selection-start-line="1148" selection-start-column="21" selection-end-line="1148" selection-end-column="21" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -72,24 +73,9 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>features[0</find>
-      <find>appBar</find>
-      <find>describedFeatureOve</find>
-      <find>described</find>
-      <find>features.sub</find>
-      <find>context.</find>
-      <find>NAvigator.of(C</find>
-      <find>NAvigator.of(</find>
-      <find>if(firstTime</find>
-      <find>Home</find>
-      <find>favList</find>
-      <find>favList.clear</find>
-      <find>HomePageState</find>
-      <find>as FavCrypto</find>
       <find>Feature</find>
       <find>favCrypto</find>
       <find>favCryptoSta</find>
-      <find>ListView.bui</find>
       <find>FeatureDis</find>
       <find>describedFea</find>
       <find>doAction</find>
@@ -99,9 +85,24 @@
       <find>listview.bu</find>
       <find>doActio</find>
       <find>i==</find>
-      <find>ListView.build</find>
       <find>Default</find>
       <find>favList.cl</find>
+      <find>ListView.build</find>
+      <find>dism</find>
+      <find>Listview.bu</find>
+      <find>onRefre</find>
+      <find>dismis</find>
+      <find>Dismis</find>
+      <find>`</find>
+      <find>ListView.bui</find>
+      <find>features[4</find>
+      <find>new ListView</find>
+      <find>featureCount</find>
+      <find>dismiss</find>
+      <find>if(firstTim</find>
+      <find>dismi</find>
+      <find>floatingAction</find>
+      <find>firsttime = false;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -814,8 +815,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="944" column="108" lean-forward="false" selection-start-line="944" selection-start-column="108" selection-end-line="944" selection-end-column="108" />
+        <state relative-caret-position="340">
+          <caret line="1148" column="21" lean-forward="true" selection-start-line="1148" selection-start-column="21" selection-end-line="1148" selection-end-column="21" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

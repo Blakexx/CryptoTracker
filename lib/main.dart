@@ -47,7 +47,7 @@ bool firstTime = false;
 void main() {
   timeDilation = 1.0;
   themeInfo.readData().then((value){
-    if(value==null || value.length!=2){
+    if(true || value==null || value.length!=2){
       themeInfo.writeData("0 1").then((f){
         bright = true;
         displayGraphs = true;
@@ -386,6 +386,7 @@ class HomePageState extends State<HomePage>{
               new DescribedFeatureOverlay(
                   doAction: (f){
                     featureCount++;
+                    setState((){});
                     f();
                   },
                   featureId: features[4],
@@ -494,6 +495,9 @@ class HomePageState extends State<HomePage>{
             },
             child: new Opacity(opacity:.75,child:new FloatingActionButton(
                 onPressed: (){
+                  if(firstTime){
+                    setState((){firstTime = false;featureCount = 100;});
+                  }
                   filteredList.clear();
                   completer = new Completer<Null>();
                   completer.complete();
@@ -509,7 +513,7 @@ class HomePageState extends State<HomePage>{
             color: bright?Colors.white:Colors.grey[700],
             child: new Center(
                 child: new RefreshIndicator(
-                  child: new ListView.builder(
+                  child: featureCount==5?new ListView.builder(
                       itemCount: filteredList.length,
                       itemBuilder: (bc,i){
                           if(firstTime && i==0){
@@ -524,6 +528,7 @@ class HomePageState extends State<HomePage>{
                                   f();
                                   FavCrypto temp = (filteredList[0] as FavCrypto);
                                   firstTime = false;
+                                  featureCount++;
                                   Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(temp.slug,temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.circSupply,temp.totalSupply,temp.maxSupply,temp.volume24h)));
                                 }
                             );
@@ -533,9 +538,15 @@ class HomePageState extends State<HomePage>{
                       },
                       controller: scrollController,
                       physics: new AlwaysScrollableScrollPhysics()
+                  ):new ListView(
+                    children: [new Column(
+                      children: filteredList
+                    )],
+                    controller: scrollController,
+                    physics: new AlwaysScrollableScrollPhysics(),
                   ),
                   onRefresh: (){
-                    completer = new Completer<Null>();
+                    setState((){completer = new Completer<Null>();});
                     done = false;
                     setUpData();
                     wait() {
@@ -1125,6 +1136,9 @@ class FavCryptoState extends State<FavCrypto>{
                 key: widget.key,
                 onDismissed: (direction){
                   if(completer.isCompleted){
+                    if(firstTime){
+                      context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){firstTime = false;featureCount = 100;});
+                    }
                     HomePageState.filteredList.remove(favList[widget.index]);
                     favList.removeAt(widget.index);
                     (fullList[widget.friendIndex] as Crypto).favIndex = null;
@@ -1139,6 +1153,7 @@ class FavCryptoState extends State<FavCrypto>{
                       dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                     }
                     storage.writeData(dataBuild);
+                    context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
                   }
                 },
                 background: new Container(color:Colors.red),
