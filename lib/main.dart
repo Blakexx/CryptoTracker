@@ -18,8 +18,6 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:crypto_tracker/feature_discovery.dart';
 
-//
-
 int itemCount = 1;
 
 bool isInSwap = false;
