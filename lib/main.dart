@@ -35,87 +35,19 @@ String response;
 
 bool bright;
 
+bool firstTime = false;
+
 void main() {
   themeInfo.readData().then((value){
     if(value==null || value.length!=2){
       themeInfo.writeData("0 1").then((f){
         bright = true;
         displayGraphs = true;
+        firstTime = true;
         runApp(new MaterialApp(
-          theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-            home: new Scaffold(
-              appBar:new AppBar(title: new Text("Tutorial")),
-              body: new Container(
-                child: new Center(
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget> [
-                      new Padding(
-                        padding: EdgeInsets.only(top: 10.0)
-                      ),
-                      // ignore: conflicting_dart_import
-                      new Text("Format for Items",style:new TextStyle(fontSize:20.0)),
-                      new Container(
-                      padding: EdgeInsets.only(top:10.0),
-                      child: new Container(
-                          height:120.0,
-                          child:new FlatButton(
-                          padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-                          color:bright?Colors.black12:Colors.black87,
-                          child: new Row(
-                            children: <Widget>[
-                              // ignore: conflicting_dart_import
-                              new Expanded(child: new Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    new Row(
-                                        children: [
-                                          // ignore: conflicting_dart_import
-                                          new Text("Coin Name",style: new TextStyle(fontSize:22.0))
-                                        ]
-                                    ),
-                                    new Row(
-                                        children: [
-                                          // ignore: conflicting_dart_import
-                                          Image.asset("icon/platypus2.png",height:32.0,width:32.0),
-                                          new Text("Ticker",style: new TextStyle(fontSize:15.0))
-                                        ]
-                                    )
-                                  ]
-                              )),
-                              new Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    new Text("Price",style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                                    new Text("Market Cap",style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
-                                    new Image.network("https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/1.png",width:120.0)
-                                  ]
-                              ),
-                              new Expanded(
-                                  child: new Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: <Widget>[
-                                      new Text("1H Change"),
-                                      new Text("1D Change"),
-                                      new Text("1W Change"),
-                                    ],
-                                  )
-                              )
-                            ]
-                        ),
-                        onPressed: (){}
-                        )
-                      )
-                      )
-                    ]
-                  )
-                )
-              )
-            )
+            theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+            home: new HomePage()
         ));
-        return;
       });
     }else{
       if(value[0]==1){
@@ -144,21 +76,18 @@ class HomePage extends StatefulWidget{
   HomePageState createState() => new HomePageState();
 }
 
-List<int> ids;
 
 class HomePageState extends State<HomePage>{
 
   static List<Widget> filteredList = new List<Widget>();
 
   Future<String> getData() async{
-    ids = new List<int>();
     http.Response r = await http.get(
         Uri.encodeFull("https://api.coinmarketcap.com/v2/listings")
     );
     data = json.decode(r.body);
     int runs = data["metadata"]["num_cryptocurrencies"];
     itemCount = runs;
-    ids.length = itemCount;
     fullList.length = itemCount;
     for(int i = 0; i<runs;i++){
       // ignore: conflicting_dart_import
@@ -168,8 +97,7 @@ class HomePageState extends State<HomePage>{
       ),data["data"][i]["symbol"],new CachedNetworkImage(
         imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
       ));
-      ids[i] = data["data"][i]["id"];
-      idIndex.putIfAbsent(ids[i], ()=>i);
+      idIndex.putIfAbsent(data["data"][i]["id"], ()=>i);
     }
     buildCount=100;
     setState((){});
@@ -522,7 +450,7 @@ class HomePageState extends State<HomePage>{
                       )
                     ],
                     controller: scrollController,
-                    physics: new AlwaysScrollableScrollPhysics(),
+                    physics: new AlwaysScrollableScrollPhysics()
                   ),
                   onRefresh: (){
                     completer = new Completer<Null>();
@@ -1403,15 +1331,6 @@ class ItemInfoState extends State<ItemInfo>{
           appBar:new AppBar(
             title:new Text(name,style:new TextStyle(fontSize:25.0)),
             backgroundColor: Colors.black54,
-            bottom:new TabBar(
-              tabs: [
-                new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
-              ]
-            ),
             actions: [
               new Row(
                 children: [
@@ -1421,64 +1340,21 @@ class ItemInfoState extends State<ItemInfo>{
               )
             ]
           ),
-          body:/*new TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [
+          body:new ListView(
+            children:[
               new Container(
-                child: new Center(
-                  child: new ListView(
-                    children: [
-                      graphs[0],
-                      new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
+                color: Colors.black54,
+                child: new TabBar(
+                    tabs: [
+                      new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                      new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                      new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                      new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                      new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
                     ]
-                  )
                 )
               ),
               new Container(
-                  child: new Center(
-                      child: new ListView(
-                          children: [
-                            graphs[1],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
-                          ]
-                      )
-                  )
-              ),
-              new Container(
-                  child: new Center(
-                      child: new ListView(
-                          children: [
-                            graphs[2],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
-                          ]
-                      )
-                  )
-              ),
-              new Container(
-                  child: new Center(
-                      child: new ListView(
-                          children: [
-                            graphs[3],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
-                          ]
-                      )
-                  )
-              ),
-              new Container(
-                  child: new Center(
-                      child: new ListView(
-                          children: [
-                            graphs[4],
-                            new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
-                          ]
-                      )
-                  )
-              )
-            ]
-          )*/new ListView(
-            children:[
-              new Container(
-                width: double.infinity,
                 height: 232.0,
                 child: new TabBarView(
                     physics: NeverScrollableScrollPhysics(),
@@ -1706,8 +1582,6 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
   SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,this.days,{this.animate});
 
-  int numDec = 0;
-
   @override
   Widget build(BuildContext context) {
     if(firstBuild){
@@ -1728,7 +1602,6 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       primaryMeasureAxis: new charts.NumericAxisSpec(
         tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-          //NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: numDec)
           new NumberFormat("\$###,###,###,###,###.###########","en_US")
         ),
         renderSpec: new charts.GridlineRendererSpec(
@@ -1834,25 +1707,6 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         data[i] = new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0);
         setState((){count++;});
       }
-      if(minPrice<100){
-        if(minPrice>10){
-          numDec = 1;
-        }else if(minPrice>1){
-          numDec = 2;
-        }else{
-          List<String> s = new List<String>()..addAll(minPrice.toStringAsFixed(10).split(""));
-          s.removeAt(0);
-          s.removeAt(0);
-          int count = 1;
-          for(String digit in s){
-            if(int.parse(digit)!=0){
-              numDec = count+2;
-              break;
-            }
-            count++;
-          }
-        }
-      }
     }else{
       setState((){canLoad = false;});
     }
@@ -1869,7 +1723,6 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   }
 }
 
-/// Sample time series data type.
 class TimeSeriesPrice {
   final DateTime time;
   final double price;

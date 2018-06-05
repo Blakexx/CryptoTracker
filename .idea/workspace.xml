@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="570" column="52" lean-forward="true" selection-start-line="570" selection-start-column="52" selection-end-line="570" selection-end-column="52" />
+            <state relative-caret-position="216">
+              <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -44,19 +43,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>context.</find>
-      <find>market cap</find>
-      <find>onWillPop</find>
-      <find>kill</find>
-      <find>inse</find>
-      <find>insert</find>
-      <find>*Medi</find>
-      <find>MediaQue</find>
-      <find>InfoP</find>
-      <find>.insert</find>
-      <find>data[i</find>
-      <find>.saveD</find>
-      <find>storage.write</find>
       <find>storage.writeData</find>
       <find>inds[i]</find>
       <find>storage.read</find>
@@ -74,6 +60,19 @@
       <find>putIfAb</find>
       <find>value:</find>
       <find>LinearProg</find>
+      <find>TabBar</find>
+      <find>dec</find>
+      <find>numDec</find>
+      <find>writeData</find>
+      <find>ids</find>
+      <find>i</find>
+      <find>id</find>
+      <find>linear</find>
+      <find>Tranf</find>
+      <find>Transform</find>
+      <find>initSta</find>
+      <find>height:</find>
+      <find>ListView</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -779,8 +778,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="570" column="52" lean-forward="true" selection-start-line="570" selection-start-column="52" selection-end-line="570" selection-end-column="52" />
+        <state relative-caret-position="216">
+          <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
