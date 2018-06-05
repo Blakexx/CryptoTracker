@@ -312,7 +312,7 @@ class HomePageState extends State<HomePage>{
                           new PopupMenuItem<String>(
                               child: const Text("24H Change Descending"), value: "24H Change Descending"),
                           new PopupMenuItem<String>(
-                              child: const Text("Default"), value: "Default")
+                              child: const Text("Custom Order"), value: "Default")
                         ],
                         child: new Icon(Icons.filter_list),
                         onSelected:(s){
