@@ -156,14 +156,15 @@ class HomePageState extends State<HomePage>{
     int runs = data["metadata"]["num_cryptocurrencies"];
     itemCount = runs;
     ids.length = itemCount;
+    fullList.length = itemCount;
     for(int i = 0; i<runs;i++){
       // ignore: conflicting_dart_import
-      fullList.add(new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new CachedNetworkImage(
+      fullList[i] = new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new CachedNetworkImage(
           // ignore: conflicting_dart_import
           imageUrl: "https://s2.coinmarketcap.com/static/img/coins/64x64/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString()),placeholder: Image.asset("icon/platypus2.png",height:32.0,width:32.0),fadeInDuration: const Duration(milliseconds:100),height:32.0,width:32.0
       ),data["data"][i]["symbol"],new CachedNetworkImage(
         imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
-      )));
+      ));
       ids[i] = data["data"][i]["id"];
     }
     buildCount=100;
@@ -264,11 +265,13 @@ class HomePageState extends State<HomePage>{
           favList = new List<Widget>();
           favList.length = (inds.length/2).floor();
           for(int i = 0; i<inds.length;i+=2){
-            Crypto temp = (fullList[inds[i]] as Crypto);
-            (fullList[inds[i]] as Crypto).favIndex = inds[i+1];
-            favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],inds[i],temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.smallImage,temp.circSupply,temp.totalSupply,temp.maxSupply,temp.volume24h));
-            (fullList[inds[i]] as Crypto).color = Colors.black26;
-            //print(favList);
+            int dex = ids.indexOf(inds[i]);
+            if(dex!=-1){
+              Crypto temp = (fullList[dex] as Crypto);
+              (fullList[dex] as Crypto).favIndex = inds[i+1];
+              favList[inds[i+1]]=(new FavCrypto(temp.slug,inds[i+1],dex,temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.smallImage,temp.circSupply,temp.totalSupply,temp.maxSupply,temp.volume24h));
+              (fullList[dex] as Crypto).color = Colors.black26;
+            }
           }
         }
         buildCount = 300;
@@ -1080,7 +1083,7 @@ class FavCryptoState extends State<FavCrypto>{
                   context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
                   String dataBuild = "";
                   for(int i = 0;i<favList.length;i++){
-                    dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                    dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                   }
                   storage.writeData(dataBuild);
                 }
@@ -1163,7 +1166,7 @@ class FavCryptoState extends State<FavCrypto>{
                             });
                             String dataBuild = "";
                             for(int i = 0;i<favList.length;i++){
-                              dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                              dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                             }
                             storage.writeData(dataBuild);
                           }
@@ -1301,7 +1304,7 @@ class CryptoState extends State<Crypto>{
                   widget.favIndex = favList.length-1;
                   String dataBuild = "";
                   for(int i = 0;i<favList.length;i++){
-                    dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                    dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                   }
                   //print(dataBuild);
                   storage.writeData(dataBuild);
@@ -1315,7 +1318,7 @@ class CryptoState extends State<Crypto>{
                   }
                   String dataBuild = "";
                   for(int i = 0;i<favList.length;i++){
-                    dataBuild+=(favList[i] as FavCrypto).friendIndex.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                    dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                   }
                   //print(dataBuild);
                   storage.writeData(dataBuild);
@@ -1721,7 +1724,8 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       primaryMeasureAxis: new charts.NumericAxisSpec(
         tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
         tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-          NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: numDec)
+          //NumberFormat.currency(locale:"en_US",symbol:"\$",decimalDigits: numDec)
+          new NumberFormat("\$###,###,###,###,###.###########","en_US")
         ),
         renderSpec: new charts.GridlineRendererSpec(
           labelStyle: new charts.TextStyleSpec(
@@ -1729,7 +1733,6 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           ),
             lineStyle: new charts.LineStyleSpec(
             color: bright?charts.MaterialPalette.gray.shade400:charts.MaterialPalette.white)
-
         )
       ),
       domainAxis: charts.DateTimeAxisSpec(
@@ -1820,10 +1823,11 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
 
     if(response.body!="null"&&response.body!="{}"&&temp.isAtSameMomentAs(today)){
       setState((){total = info["price"].length-1;});
-      for(int i = total-1;i>-1;i--){
+      data.length = total;
+      for(int i = 0;i<total;i++){
         maxPrice = maxPrice<info["price"][i][1]*1.0?info["price"][i][1]*1.0:maxPrice;
         minPrice = minPrice>info["price"][i][1]*1.0?info["price"][i][1]*1.0:minPrice;
-        data.insert(0,new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0));
+        data[i] = new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0);
         setState((){count++;});
       }
       if(minPrice<100){
