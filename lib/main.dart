@@ -16,14 +16,21 @@ import 'dart:collection';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:crypto_tracker/feature_discovery.dart';
 
 int itemCount = 1;
 
 bool isInSwap = false;
 
+List<String> features = ["f1","f2","f3","f4","f5","f6"];
+
+int featureCount = 0;
+
 final DataStorage storage = new DataStorage();
 
 final ThemeInfo themeInfo = new ThemeInfo();
+
+bool wentBack = false;
 
 HashMap<int, int> idIndex = new HashMap<int, int>();
 
@@ -38,6 +45,7 @@ bool bright;
 bool firstTime = false;
 
 void main() {
+  timeDilation = 1.0;
   themeInfo.readData().then((value){
     if(value==null || value.length!=2){
       themeInfo.writeData("0 1").then((f){
@@ -46,7 +54,7 @@ void main() {
         firstTime = true;
         runApp(new MaterialApp(
             theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-            home: new HomePage()
+            home: new FeatureDiscovery(child: new HomePage())
         ));
       });
     }else{
@@ -62,7 +70,7 @@ void main() {
       }
       runApp(new MaterialApp(
           theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-          home: new HomePage()
+          home: new FeatureDiscovery(child: new HomePage())
       ));
     }
   });
@@ -92,10 +100,10 @@ class HomePageState extends State<HomePage>{
     for(int i = 0; i<runs;i++){
       // ignore: conflicting_dart_import
       fullList[i] = new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new CachedNetworkImage(
-          // ignore: conflicting_dart_import
+        // ignore: conflicting_dart_import
           imageUrl: "https://s2.coinmarketcap.com/static/img/coins/64x64/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString()),placeholder: Image.asset("icon/platypus2.png",height:32.0,width:32.0),fadeInDuration: const Duration(milliseconds:100),height:32.0,width:32.0
       ),data["data"][i]["symbol"],new CachedNetworkImage(
-        imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
+          imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:120.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
       ));
       idIndex.putIfAbsent(data["data"][i]["id"], ()=>i);
     }
@@ -174,6 +182,8 @@ class HomePageState extends State<HomePage>{
 
   static bool hasSearched = false;
 
+  bool loadGood = true;
+
   @override
   Widget build(BuildContext context){
 
@@ -208,8 +218,14 @@ class HomePageState extends State<HomePage>{
         }
         buildCount = 300;
         firstLoad = true;
+        if(firstTime){
+          FeatureDiscovery.discoverFeatures(context, [features[0]]);
+        }
         setState((){});
       });
+    }
+    if(firstTime && featureCount==2 && loadGood){
+      new Timer(new Duration(seconds:1),(){FeatureDiscovery.discoverFeatures(context, features.sublist(2,features.length));loadGood = false;});
     }
     return firstLoad?new Scaffold(
         appBar:new AppBar(
@@ -241,216 +257,282 @@ class HomePageState extends State<HomePage>{
             ),
             backgroundColor: Colors.black54,
             actions: [
-              new IconButton(
-                  icon: new Icon(!hasSearched?Icons.search:Icons.clear),
-                  onPressed: (){
-                    if(hasSearched){
-                      filteredList.clear();
-                      filteredList.addAll(favList);
-                      hasSearched = false;
-                      setState((){inSearch = false;});
-                    }else{
-                      setState((){inSearch = true;});
+              new DescribedFeatureOverlay(
+                featureId: features[2],
+                color: Colors.blue,
+                title: 'Searching',
+                icon: Icons.search,
+                description: 'Tap here to search your favorites list',
+                child: new IconButton(
+                    icon: new Icon(!hasSearched?Icons.search:Icons.clear),
+                    onPressed: (){
+                      if(hasSearched){
+                        filteredList.clear();
+                        filteredList.addAll(favList);
+                        hasSearched = false;
+                        setState((){inSearch = false;});
+                      }else{
+                        setState((){inSearch = true;});
+                      }
                     }
-                  }
+                ),
+                doAction: (f){
+                  featureCount++;
+                  f();
+                }
               ),
-              new Container(
-                padding: EdgeInsets.only(left:5.0,right:10.0),
-                  child: new PopupMenuButton<String>(
-                      itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
-                        new PopupMenuItem<String>(
-                            child: const Text("Name Ascending"), value: "Name Ascending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Name Descending"), value: "Name Descending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Price Ascending"), value: "Price Ascending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Price Descending"), value: "Price Descending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("24H Change Ascending"), value: "24H Change Ascending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("24H Change Descending"), value: "24H Change Descending"),
-                        new PopupMenuItem<String>(
-                            child: const Text("Default"), value: "Default")
-                      ],
-                      child: new Icon(Icons.filter_list),
-                      onSelected:(s){
-                        setState(() {
-                          scrollController.jumpTo(1.0);
-                          if(s=="Name Ascending"){
-                            filteredList.sort((o1,o2){
-                              if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
-                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                              }
-                              return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
-                            });
-                          }else if(s=="Name Descending"){
-                            filteredList.sort((o1,o2){
-                              if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
-                                return (o2 as FavCrypto).name.compareTo((o1 as FavCrypto).name);
-                              }
-                              return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
-                            });
-                          }else if(s=="Price Ascending"){
-                            filteredList.sort((o1,o2){
-                              if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
-                                return ((o1 as FavCrypto).price*1000000000-(o2 as FavCrypto).price*1000000000).round();
-                              }
-                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                            });
-                          }else if(s=="Price Descending"){
-                            filteredList.sort((o1,o2){
-                              if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
-                                return ((o2 as FavCrypto).price*1000000000-(o1 as FavCrypto).price*1000000000).round();
-                              }
-                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                            });
-                          }else if(s=="Market Cap Ascending"){
-                            filteredList.sort((o1,o2){
-                              if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
-                                return ((o1 as FavCrypto).mCap*100-(o2 as FavCrypto).mCap*100).round();
-                              }
-                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                            });
-                          }else if(s=="Market Cap Descending"){
-                            filteredList.sort((o1,o2){
-                              if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
-                                return ((o2 as FavCrypto).mCap*100-(o1 as FavCrypto).mCap*100).round();
-                              }
-                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                            });
-                          }else if(s=="24H Change Ascending"){
-                            filteredList.sort((o1,o2){
-                              if(((o1 as FavCrypto).twentyFourHours!=(o2 as FavCrypto).twentyFourHours)){
-                                return ((o1 as FavCrypto).twentyFourHours*100-(o2 as FavCrypto).twentyFourHours*100).round();
-                              }
-                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                            });
-                          }else if(s=="24H Change Descending"){
-                            filteredList.sort((o1,o2){
-                              if(((o1 as FavCrypto).twentyFourHours!=(o2 as FavCrypto).twentyFourHours)){
-                                return ((o2 as FavCrypto).twentyFourHours*100-(o1 as FavCrypto).twentyFourHours*100).round();
-                              }
-                              return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
-                            });
-                          }else if(s=="Default"){
-                            filteredList.clear();
-                            filteredList.addAll(favList);
-                          }
-                        });
-                      }
-                  )
-              ),
-              new PopupMenuButton<String>(
-                  onSelected: (String selected){
-                    if(selected=="Settings"){
-                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Settings()));
-                    }else if(selected=="Rate us"){
-                      if(Platform.isIOS){
-                        launchIOS() async{
-                          const url = 'https://www.apple.com';
-                          if(await canLaunch(url)) {
-                            await launch(url);
-                          }else{
-                            throw 'Could not launch $url';
-                          }
-                        }
-                        launchIOS();
-                      }else if(Platform.isAndroid){
-                        launchAndroid() async{
-                          const url = 'https://www.google.com';
-                          if(await canLaunch(url)) {
-                            await launch(url);
-                          }else{
-                            throw 'Could not launch $url';
-                          }
-                        }
-                        launchAndroid();
-                      }
-                    }else if(selected=="Report a Bug"){
-                      if(Platform.isIOS){
-                        launchIOS() async{
-                          const url = 'mailto:blakeplatypus@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20below:%0A%0A%0AThanks%20for%20your%20report!';
-                          if(await canLaunch(url)) {
-                            await launch(url);
-                          }else{
-                            throw 'Could not launch $url';
-                          }
-                        }
-                        launchIOS();
-                      }else if(Platform.isAndroid){
-                        launchAndroid() async{
-                          const url = 'mailto:blakeplatypus@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20below:%0A%0A%0AThanks%20for%20your%20report!';
-                          if(await canLaunch(url)) {
-                            await launch(url);
-                          }else{
-                            throw 'Could not launch $url';
-                          }
-                        }
-                        launchAndroid();
-                      }
-                    }else if(selected=="About"){
-                      Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
-                          appBar: new AppBar(title:new Text("About"),backgroundColor: Colors.black54),
-                          body: new Container(
-                              child: new Center(
-                                  child: new Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        new Text("\n"),
-                                        Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
-                                        new Text("\nPlatypus Crypto V1.0.3"),
-                                        new Text("2018© Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
-                                      ]
-                                  )
-                              )
-                          )
-                      )));
-                    }
+              new DescribedFeatureOverlay(
+                  doAction: (f){
+                    featureCount++;
+                    f();
                   },
-                  itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
-                    new PopupMenuItem<String>(
-                        child: const Text("Settings"), value: "Settings"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Rate us"), value: "Rate us"),
-                    new PopupMenuItem<String>(
-                        child: const Text("Report a Bug"), value: "Report a Bug"),
-                    new PopupMenuItem<String>(
-                        child: const Text("About"), value: "About"),
-                  ],
-                  child: new Icon(Icons.more_vert)
+                  featureId: features[3],
+                  color: Colors.blue,
+                  title: 'Sorting',
+                  icon: Icons.filter_list,
+                  description: 'Tap here to sort your favorites list',
+                  child: new Container(
+                    padding: EdgeInsets.only(left:5.0,right:10.0),
+                    child: new PopupMenuButton<String>(
+                        itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                          new PopupMenuItem<String>(
+                              child: const Text("Name Ascending"), value: "Name Ascending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("Name Descending"), value: "Name Descending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("Price Ascending"), value: "Price Ascending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("Price Descending"), value: "Price Descending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("Market Cap Ascending"), value: "Market Cap Ascending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("Market Cap Descending"), value: "Market Cap Descending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("24H Change Ascending"), value: "24H Change Ascending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("24H Change Descending"), value: "24H Change Descending"),
+                          new PopupMenuItem<String>(
+                              child: const Text("Default"), value: "Default")
+                        ],
+                        child: new Icon(Icons.filter_list),
+                        onSelected:(s){
+                          setState(() {
+                            scrollController.jumpTo(1.0);
+                            if(s=="Name Ascending"){
+                              filteredList.sort((o1,o2){
+                                if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
+                                  return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                                }
+                                return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
+                              });
+                            }else if(s=="Name Descending"){
+                              filteredList.sort((o1,o2){
+                                if((o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name)!=0){
+                                  return (o2 as FavCrypto).name.compareTo((o1 as FavCrypto).name);
+                                }
+                                return ((o1 as FavCrypto).price-(o2 as FavCrypto).price).floor().toInt();
+                              });
+                            }else if(s=="Price Ascending"){
+                              filteredList.sort((o1,o2){
+                                if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
+                                  return ((o1 as FavCrypto).price*1000000000-(o2 as FavCrypto).price*1000000000).round();
+                                }
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              });
+                            }else if(s=="Price Descending"){
+                              filteredList.sort((o1,o2){
+                                if(((o1 as FavCrypto).price!=(o2 as FavCrypto).price)){
+                                  return ((o2 as FavCrypto).price*1000000000-(o1 as FavCrypto).price*1000000000).round();
+                                }
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              });
+                            }else if(s=="Market Cap Ascending"){
+                              filteredList.sort((o1,o2){
+                                if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
+                                  return ((o1 as FavCrypto).mCap*100-(o2 as FavCrypto).mCap*100).round();
+                                }
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              });
+                            }else if(s=="Market Cap Descending"){
+                              filteredList.sort((o1,o2){
+                                if(((o1 as FavCrypto).mCap!=(o2 as FavCrypto).mCap)){
+                                  return ((o2 as FavCrypto).mCap*100-(o1 as FavCrypto).mCap*100).round();
+                                }
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              });
+                            }else if(s=="24H Change Ascending"){
+                              filteredList.sort((o1,o2){
+                                if(((o1 as FavCrypto).twentyFourHours!=(o2 as FavCrypto).twentyFourHours)){
+                                  return ((o1 as FavCrypto).twentyFourHours*100-(o2 as FavCrypto).twentyFourHours*100).round();
+                                }
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              });
+                            }else if(s=="24H Change Descending"){
+                              filteredList.sort((o1,o2){
+                                if(((o1 as FavCrypto).twentyFourHours!=(o2 as FavCrypto).twentyFourHours)){
+                                  return ((o2 as FavCrypto).twentyFourHours*100-(o1 as FavCrypto).twentyFourHours*100).round();
+                                }
+                                return (o1 as FavCrypto).name.compareTo((o2 as FavCrypto).name);
+                              });
+                            }else if(s=="Default"){
+                              filteredList.clear();
+                              filteredList.addAll(favList);
+                            }
+                          });
+                        }
+                    )
+                )
+              ),
+              new DescribedFeatureOverlay(
+                  doAction: (f){
+                    featureCount++;
+                    f();
+                  },
+                  featureId: features[4],
+                  color: Colors.blue,
+                  title: 'Extra',
+                  icon: Icons.more_vert,
+                  description: 'Tap here to open settings, report a bug, or submit a review',
+                  child: new PopupMenuButton<String>(
+                    onSelected: (String selected){
+                      if(selected=="Settings"){
+                        Navigator.push(context,new MaterialPageRoute(builder: (context) => new Settings()));
+                      }else if(selected=="Rate us"){
+                        if(Platform.isIOS){
+                          launchIOS() async{
+                            const url = 'https://www.apple.com';
+                            if(await canLaunch(url)) {
+                              await launch(url);
+                            }else{
+                              throw 'Could not launch $url';
+                            }
+                          }
+                          launchIOS();
+                        }else if(Platform.isAndroid){
+                          launchAndroid() async{
+                            const url = 'https://www.google.com';
+                            if(await canLaunch(url)) {
+                              await launch(url);
+                            }else{
+                              throw 'Could not launch $url';
+                            }
+                          }
+                          launchAndroid();
+                        }
+                      }else if(selected=="Report a Bug"){
+                        if(Platform.isIOS){
+                          launchIOS() async{
+                            const url = 'mailto:blakeplatypus@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20below:%0A%0A%0AThanks%20for%20your%20report!';
+                            if(await canLaunch(url)) {
+                              await launch(url);
+                            }else{
+                              throw 'Could not launch $url';
+                            }
+                          }
+                          launchIOS();
+                        }else if(Platform.isAndroid){
+                          launchAndroid() async{
+                            const url = 'mailto:blakeplatypus@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20below:%0A%0A%0AThanks%20for%20your%20report!';
+                            if(await canLaunch(url)) {
+                              await launch(url);
+                            }else{
+                              throw 'Could not launch $url';
+                            }
+                          }
+                          launchAndroid();
+                        }
+                      }else if(selected=="About"){
+                        Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
+                            appBar: new AppBar(title:new Text("About"),backgroundColor: Colors.black54),
+                            body: new Container(
+                                child: new Center(
+                                    child: new Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          new Text("\n"),
+                                          Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
+                                          new Text("\nPlatypus Crypto V1.0.3"),
+                                          new Text("2018© Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
+                                        ]
+                                    )
+                                )
+                            )
+                        )));
+                      }
+                    },
+                    itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
+                      new PopupMenuItem<String>(
+                          child: const Text("Settings"), value: "Settings"),
+                      new PopupMenuItem<String>(
+                          child: const Text("Rate us"), value: "Rate us"),
+                      new PopupMenuItem<String>(
+                          child: const Text("Report a Bug"), value: "Report a Bug"),
+                      new PopupMenuItem<String>(
+                          child: const Text("About"), value: "About"),
+                    ],
+                    child: new Icon(Icons.more_vert)
+                )
               )
             ]
         ),
-        floatingActionButton: (done && completer.isCompleted)?new Opacity(opacity:.75,child:new FloatingActionButton(
-            onPressed: (){
-              filteredList.clear();
+        floatingActionButton: (done && completer.isCompleted)?new DescribedFeatureOverlay(
+            featureId: features[0],
+            color: Colors.blue,
+            title: 'Adding',
+            icon: Icons.add,
+            description: 'Tap here to add a crypto currency to your favorites list',
+            doAction: (f){
+              featureCount++;
               completer = new Completer<Null>();
               completer.complete();
-              Navigator.push(context,new MaterialPageRoute(builder: (context) => new CryptoList()));
+              Navigator.push(context,new MaterialPageRoute(builder: (context) => new FeatureDiscovery(child:new CryptoList())));
               inSearch = false;
               search = null;
               hasSearched = false;
               buttonPressed = true;
+              f();
             },
-            child: new Icon(Icons.add)
-        )):new Container(),
+            child: new Opacity(opacity:.75,child:new FloatingActionButton(
+                onPressed: (){
+                  filteredList.clear();
+                  completer = new Completer<Null>();
+                  completer.complete();
+                  Navigator.push(context,new MaterialPageRoute(builder: (context) => new FeatureDiscovery(child:new CryptoList())));
+                  inSearch = false;
+                  search = null;
+                  hasSearched = false;
+                  buttonPressed = true;
+                },
+                child: new Icon(Icons.add)
+            ))):new Container(),
         body: new Container(
             color: bright?Colors.white:Colors.grey[700],
             child: new Center(
                 child: new RefreshIndicator(
-                  child: new ListView(
-                    children: <Widget>[
-                      new Column(
-                          children: filteredList
-                      )
-                    ],
-                    controller: scrollController,
-                    physics: new AlwaysScrollableScrollPhysics()
+                  child: new ListView.builder(
+                      itemCount: filteredList.length,
+                      itemBuilder: (bc,i){
+                          if(firstTime && i==0){
+                            return new DescribedFeatureOverlay(
+                                featureId: features[5],
+                                color: Colors.blue,
+                                icon: Icons.info,
+                                title: "More Info",
+                                description: "Click on an item for more info and graphs. Swipe to the left to remove an item and press and hold and click on another item to change its position",
+                                child: filteredList[0],
+                                doAction: (f){
+                                  f();
+                                  FavCrypto temp = (filteredList[0] as FavCrypto);
+                                  firstTime = false;
+                                  Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(temp.slug,temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.circSupply,temp.totalSupply,temp.maxSupply,temp.volume24h)));
+                                }
+                            );
+                          }
+                          return filteredList[i];
+
+                      },
+                      controller: scrollController,
+                      physics: new AlwaysScrollableScrollPhysics()
                   ),
                   onRefresh: (){
                     completer = new Completer<Null>();
@@ -678,7 +760,13 @@ class CryptoListState extends State<CryptoList>{
         return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
       });
       buttonPressed = false;
+      if(firstTime && featureCount==1){
+        Timer t = new Timer(const Duration(seconds:4),(){
+          FeatureDiscovery.discoverFeatures(context, [features[1]]);
+        });
+      }
     }
+
     return new WillPopScope(
         child: new GestureDetector(
             onTap: (){FocusScope.of(context).requestFocus(new FocusNode());},
@@ -686,7 +774,7 @@ class CryptoListState extends State<CryptoList>{
                 floatingActionButton: new Opacity(
                     opacity: bright?1.0:.75,
                     child: new FloatingActionButton(
-                    child: new Icon(Icons.arrow_upward),
+                      child: new Icon(Icons.arrow_upward),
                       onPressed: (){
                         scrollController.jumpTo(1.0);
                         scrollController.jumpTo(1.0);
@@ -849,7 +937,35 @@ class CryptoListState extends State<CryptoList>{
                             child: new ListView.builder(
                                 controller: scrollController,
                                 itemCount: filteredList.length,
-                                itemBuilder: (BuildContext context,int index) => filteredList[index]
+                                itemBuilder: (BuildContext context,int index){
+                                  if(firstTime && index==0){
+                                    return new DescribedFeatureOverlay(
+                                        doAction: (f){
+                                          favList.clear();
+                                          featureCount++;
+                                          wentBack = true;
+                                          Crypto temp = (filteredList[0] as Crypto);
+                                          setState((){temp.color = temp.color==Colors.black12?Colors.black26:Colors.black12;});
+                                          favList.add(new FavCrypto(temp.slug,favList.length,temp.index,temp.name,temp.id,temp.oneHour,temp.twentyFourHours,temp.sevenDays,temp.price,temp.mCap,temp.image,temp.shortName,temp.smallImage,temp.circSupply,temp.totalSupply,temp.maxSupply,temp.volume24h));
+                                          temp.favIndex = favList.length-1;
+                                          String dataBuild = "";
+                                          for(int i = 0;i<favList.length;i++){
+                                            dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                                          }
+                                          storage.writeData(dataBuild);
+                                          HomePageState.filteredList.clear();
+                                          Navigator.of(context).pop();
+                                        },
+                                        featureId: features[1],
+                                        color: Colors.blue,
+                                        icon: Icons.add,
+                                        title: "Items",
+                                        description: "Just click on an item in the list to add it! The format for each item is as follows: Price in the middle in bold, Market cap below price, 1H change on right of box on top, 1D change in middle, and 1W change on bottom",
+                                        child: filteredList[index]
+                                    );
+                                  }
+                                  return filteredList[index];
+                                }
                             ),
                             onRefresh: (){
                               if(!kill){
@@ -974,141 +1090,134 @@ class FavCryptoState extends State<FavCrypto>{
         height: !wrap?displayGraphs?120.0:100.0:null,
         padding: EdgeInsets.only(top:10.0),
         child: new GestureDetector(
-          onLongPress: (){
-            if(!isInSwap && favList.length==HomePageState.filteredList.length){
-              if(widget.color==Colors.black26||widget.color==Colors.black54){
-                setState((){
-                  widget.color = bright?Colors.black12:Colors.black87;
-                  isInSwap = false;
-                  friendSwap = -1;
-                });
-              }else{
-                setState((){
-                  widget.color = bright?Colors.black26:Colors.black54;
-                  isInSwap = true;
-                  friendSwap = widget.index;
-                  wait(){
-                    if(widget.index!=friendSwap){
-                      setState((){});
-                    }else{
-                      new Timer(Duration.zero,wait);
-                    }
-                  }
-                  wait();
-                });
-              }
-            }
-          },
-          child: new Dismissible(
-              direction: completer.isCompleted?DismissDirection.endToStart:null,
-              key: widget.key,
-              onDismissed: (direction){
-                if(completer.isCompleted){
-                  HomePageState.filteredList.remove(favList[widget.index]);
-                  favList.removeAt(widget.index);
-                  (fullList[widget.friendIndex] as Crypto).favIndex = null;
-                  (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
-                  for(int i = 0;i<favList.length;i++){
-                    (favList[i] as FavCrypto).index = i;
-                    (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
-                  }
-                  context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
-                  String dataBuild = "";
-                  for(int i = 0;i<favList.length;i++){
-                    dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
-                  }
-                  storage.writeData(dataBuild);
-                }
-              },
-              background: new Container(color:Colors.red),
-              child: new FlatButton(
-                  padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-                  color: widget.color,
-                  child: new Row(
-                    children: <Widget>[
-                      // ignore: conflicting_dart_import
-                      new Expanded(child: new Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            new Row(
-                                children: [
-                                  new Text(!wrap?widget.name:displayedName,style: new TextStyle(fontSize:(!wrap?(((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0):16.0)))
-                                ]
-                            ),
-                            new Row(
-                                children: [
-                                  widget.image,
-                                  new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
-                                ]
-                            )
-                          ]
-                      )),
-                      new Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                            new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
-                            displayGraphs?widget.smallImage:new Container()
-                          ]
-                      ),
-                      new Expanded(
-                          child: new Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                              widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                              widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
-                            ],
-                          )
-                      )
-                    ],
-                  ),
-                  onPressed: (){
-                    if(completer.isCompleted){
-                      if(!isInSwap){
-                        Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));
+            onLongPress: (){
+              if(!isInSwap && favList.length==HomePageState.filteredList.length){
+                if(widget.color==Colors.black26||widget.color==Colors.black54){
+                  setState((){
+                    widget.color = bright?Colors.black12:Colors.black87;
+                    isInSwap = false;
+                    friendSwap = -1;
+                  });
+                }else{
+                  setState((){
+                    widget.color = bright?Colors.black26:Colors.black54;
+                    isInSwap = true;
+                    friendSwap = widget.index;
+                    wait(){
+                      if(widget.index!=friendSwap){
+                        setState((){});
                       }else{
-                        setState((){
-                          if(friendSwap!=-1){
-                            isInSwap = false;
-                            FavCrypto temp = (favList[friendSwap] as FavCrypto);
-                            temp.color = bright?Colors.black12:Colors.black87;
-                            temp.index = widget.index;
-                            /*
-                            favList[friendSwap] = favList[widget.index];
-                            widget.index = friendSwap;
-                            (fullList[(favList[friendSwap] as FavCrypto).friendIndex] as Crypto).favIndex == friendSwap;
-                            favList[temp.index] = temp;
-                            (fullList[temp.friendIndex] as Crypto).favIndex = temp.index;
-                            */
-                            favList.removeAt(friendSwap);
-                            favList.insert(widget.index,temp);
-                            for(int i = 0; i<favList.length;i++){
-                              (favList[i] as FavCrypto).index = i;
-                              (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
-                            }
-                            friendSwap = -1;
-                            HomePageState.inSearch = false;
-                            HomePageState.hasSearched = false;
-                            context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){
-                              HomePageState.filteredList.clear();
-                              HomePageState.filteredList.addAll(favList);
-                            });
-                            String dataBuild = "";
-                            for(int i = 0;i<favList.length;i++){
-                              dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
-                            }
-                            storage.writeData(dataBuild);
-                          }
-                        });
+                        new Timer(Duration.zero,wait);
                       }
                     }
+                    wait();
+                  });
+                }
+              }
+            },
+            child: new Dismissible(
+                direction: completer.isCompleted?DismissDirection.endToStart:null,
+                key: widget.key,
+                onDismissed: (direction){
+                  if(completer.isCompleted){
+                    HomePageState.filteredList.remove(favList[widget.index]);
+                    favList.removeAt(widget.index);
+                    (fullList[widget.friendIndex] as Crypto).favIndex = null;
+                    (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
+                    for(int i = 0;i<favList.length;i++){
+                      (favList[i] as FavCrypto).index = i;
+                      (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+                    }
+                    context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
+                    String dataBuild = "";
+                    for(int i = 0;i<favList.length;i++){
+                      dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                    }
+                    storage.writeData(dataBuild);
                   }
-              )
-          )
-    ));
+                },
+                background: new Container(color:Colors.red),
+                child: new FlatButton(
+                    padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
+                    color: widget.color,
+                    child: new Row(
+                      children: <Widget>[
+                        // ignore: conflicting_dart_import
+                        new Expanded(child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              new Row(
+                                  children: [
+                                    new Text(!wrap?widget.name:displayedName,style: new TextStyle(fontSize:(!wrap?(((6/widget.name.length)<1)?(22.0*6/widget.name.length):22.0):16.0)))
+                                  ]
+                              ),
+                              new Row(
+                                  children: [
+                                    widget.image,
+                                    new Text(" "+widget.shortName,style: new TextStyle(fontSize:((5/widget.shortName.length)<1)?(15.0*5/widget.name.length):15.0))
+                                  ]
+                              )
+                            ]
+                        )),
+                        new Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                              new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                              displayGraphs?widget.smallImage:new Container()
+                            ]
+                        ),
+                        new Expanded(
+                            child: new Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                widget.oneHour!=-1?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                                widget.twentyFourHours!=-1?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                                widget.sevenDays!=-1?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                              ],
+                            )
+                        )
+                      ],
+                    ),
+                    onPressed: (){
+                      if(completer.isCompleted){
+                        if(!isInSwap){
+                          Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));
+                        }else{
+                          setState((){
+                            if(friendSwap!=-1){
+                              isInSwap = false;
+                              FavCrypto temp = (favList[friendSwap] as FavCrypto);
+                              temp.color = bright?Colors.black12:Colors.black87;
+                              temp.index = widget.index;
+                              favList.removeAt(friendSwap);
+                              favList.insert(widget.index,temp);
+                              for(int i = 0; i<favList.length;i++){
+                                (favList[i] as FavCrypto).index = i;
+                                (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+                              }
+                              friendSwap = -1;
+                              HomePageState.inSearch = false;
+                              HomePageState.hasSearched = false;
+                              context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){
+                                HomePageState.filteredList.clear();
+                                HomePageState.filteredList.addAll(favList);
+                              });
+                              String dataBuild = "";
+                              for(int i = 0;i<favList.length;i++){
+                                dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                              }
+                              storage.writeData(dataBuild);
+                            }
+                          });
+                        }
+                      }
+                    }
+                )
+            )
+        ));
   }
 }
 
@@ -1238,7 +1347,6 @@ class CryptoState extends State<Crypto>{
                   for(int i = 0;i<favList.length;i++){
                     dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                   }
-                  //print(dataBuild);
                   storage.writeData(dataBuild);
                 }else{
                   //print(widget.favIndex);
@@ -1326,47 +1434,47 @@ class ItemInfoState extends State<ItemInfo>{
   @override
   Widget build(BuildContext context){
     return new DefaultTabController(
-      length:5,
-      child: new Scaffold(
-          appBar:new AppBar(
-            title:new Text(name,style:new TextStyle(fontSize:25.0)),
-            backgroundColor: Colors.black54,
-            actions: [
-              new Row(
-                children: [
-                  image,
-                  new Text(" "+this.shortName)
+        length:5,
+        child: new Scaffold(
+            appBar:new AppBar(
+                title:new Text(name,style:new TextStyle(fontSize:25.0)),
+                backgroundColor: Colors.black54,
+                actions: [
+                  new Row(
+                      children: [
+                        image,
+                        new Text(" "+this.shortName)
+                      ]
+                  )
                 ]
-              )
-            ]
-          ),
-          body:new ListView(
-            children:[
-              new Container(
-                color: Colors.black54,
-                child: new TabBar(
-                    tabs: [
-                      new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                      new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                      new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                      new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                      new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
-                    ]
-                )
-              ),
-              new Container(
-                height: 232.0,
-                child: new TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      graphs[0],graphs[1],graphs[2],graphs[3],graphs[4]
-                    ]
-                )
-              ),
-              new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
-            ]
-          )
-      )
+            ),
+            body:new ListView(
+                children:[
+                  new Container(
+                      color: Colors.black54,
+                      child: new TabBar(
+                          tabs: [
+                            new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
+                          ]
+                      )
+                  ),
+                  new Container(
+                      height: 232.0,
+                      child: new TabBarView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            graphs[0],graphs[1],graphs[2],graphs[3],graphs[4]
+                          ]
+                      )
+                  ),
+                  new Info(this.slug,this.name,this.id,this.oneHour,this.twentyFourHours,this.sevenDays,this.price,this.mCap,this.image,this.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)
+                ]
+            )
+        )
     );
   }
 }
@@ -1402,61 +1510,61 @@ class Info extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return new Container(
-      child: new Center(
-        child: new Column(
-          children: [
-            new Text("",style: new TextStyle(fontSize:5.0)),
-            new InfoPiece("Price",price,fontSize,2,price>.000001?6:7),
-            new InfoPiece("Market Cap",mCap,fontSize,0,2),
-            new Container(
-              padding: EdgeInsets.only(top:5.0),
-              child: new Container(
-                color: bright?Colors.black12:Colors.black87,
-                padding: EdgeInsets.only(top:10.0,bottom:10.0),
-                child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      new Expanded(child:new Text("Change 1H",style: new TextStyle(fontSize:fontSize))),
-                      oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
-                    ]
-                )
-              )
-            ),
-            new Container(
-                padding: EdgeInsets.only(top:5.0),
-                child: new Container(
-                    color: bright?Colors.black12:Colors.black87,
-                    padding: EdgeInsets.only(top:10.0,bottom:10.0),
-                    child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          new Expanded(child:new Text("Change 1D",style: new TextStyle(fontSize:fontSize))),
-                          twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
-                        ]
-                    )
-                )
-            ),
-            new Container(
-                padding: EdgeInsets.only(top:5.0),
-                child: new Container(
-                    color: bright?Colors.black12:Colors.black87,
-                    padding: EdgeInsets.only(top:10.0,bottom:10.0),
-                    child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          new Expanded(child:new Text("Change 1W",style: new TextStyle(fontSize:fontSize))),
-                          sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
-                        ]
-                    )
-                )
-            ),
-            new InfoPiece("Circulating Supply",circSupply,fontSize,0,2),
-            new InfoPiece("Total Supply",totalSupply,fontSize,0,2),
-            new InfoPiece("Max Supply",maxSupply,fontSize,0,2),
-            new InfoPiece("24H Volume",volume24h,fontSize,0,2),
-          ]
+        child: new Center(
+            child: new Column(
+                children: [
+                  new Text("",style: new TextStyle(fontSize:5.0)),
+                  new InfoPiece("Price",price,fontSize,2,price>.000001?6:7),
+                  new InfoPiece("Market Cap",mCap,fontSize,0,2),
+                  new Container(
+                      padding: EdgeInsets.only(top:5.0),
+                      child: new Container(
+                          color: bright?Colors.black12:Colors.black87,
+                          padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                          child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                new Expanded(child:new Text("Change 1H",style: new TextStyle(fontSize:fontSize))),
+                                oneHour!=-1?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                              ]
+                          )
+                      )
+                  ),
+                  new Container(
+                      padding: EdgeInsets.only(top:5.0),
+                      child: new Container(
+                          color: bright?Colors.black12:Colors.black87,
+                          padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                          child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                new Expanded(child:new Text("Change 1D",style: new TextStyle(fontSize:fontSize))),
+                                twentyFourHours!=-1?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                              ]
+                          )
+                      )
+                  ),
+                  new Container(
+                      padding: EdgeInsets.only(top:5.0),
+                      child: new Container(
+                          color: bright?Colors.black12:Colors.black87,
+                          padding: EdgeInsets.only(top:10.0,bottom:10.0),
+                          child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                new Expanded(child:new Text("Change 1W",style: new TextStyle(fontSize:fontSize))),
+                                sevenDays!=-1?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                              ]
+                          )
+                      )
+                  ),
+                  new InfoPiece("Circulating Supply",circSupply,fontSize,0,2),
+                  new InfoPiece("Total Supply",totalSupply,fontSize,0,2),
+                  new InfoPiece("Max Supply",maxSupply,fontSize,0,2),
+                  new InfoPiece("24H Volume",volume24h,fontSize,0,2),
+                ]
+            )
         )
-      )
     );
   }
 }
@@ -1597,71 +1705,71 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       firstBuild = false;
     }
     return count>=total?new Column(children: [new Container(width: 350.0*MediaQuery.of(context).size.width/375.0,height:200.0,child: new charts.TimeSeriesChart(
-      seriesList,
-      animate: animate,
-      primaryMeasureAxis: new charts.NumericAxisSpec(
-        tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
-        tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-          new NumberFormat("\$###,###,###,###,###.###########","en_US")
-        ),
-        renderSpec: new charts.GridlineRendererSpec(
-          labelStyle: new charts.TextStyleSpec(
-              color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
-          ),
-            lineStyle: new charts.LineStyleSpec(
-            color: bright?charts.MaterialPalette.gray.shade400:charts.MaterialPalette.white)
-        )
-      ),
-      domainAxis: charts.DateTimeAxisSpec(
-          tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
-            day: new charts.TimeFormatterSpec(
-                format: 'd',
-                transitionFormat: days==1?'MM/dd hh/mm a':days==7?'MM/dd':days==30?'MM/dd':days==180?"YY/MM":"YY/MM"
+        seriesList,
+        animate: animate,
+        primaryMeasureAxis: new charts.NumericAxisSpec(
+            tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
+            tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
+                new NumberFormat("\$###,###,###,###,###.###########","en_US")
+            ),
+            renderSpec: new charts.GridlineRendererSpec(
+                labelStyle: new charts.TextStyleSpec(
+                    color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
+                ),
+                lineStyle: new charts.LineStyleSpec(
+                    color: bright?charts.MaterialPalette.gray.shade400:charts.MaterialPalette.white)
             )
         ),
-        tickProviderSpec: new charts.DayTickProviderSpec(
-          increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[40]:[60]
+        domainAxis: charts.DateTimeAxisSpec(
+            tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                day: new charts.TimeFormatterSpec(
+                    format: 'd',
+                    transitionFormat: days==1?'MM/dd hh/mm a':days==7?'MM/dd':days==30?'MM/dd':days==180?"YY/MM":"YY/MM"
+                )
+            ),
+            tickProviderSpec: new charts.DayTickProviderSpec(
+                increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[40]:[60]
+            ),
+            renderSpec: new charts.SmallTickRendererSpec(
+                labelStyle: new charts.TextStyleSpec(
+                    color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
+                ),lineStyle: new charts.LineStyleSpec(
+                color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white)
+            )
         ),
-        renderSpec: new charts.SmallTickRendererSpec(
-          labelStyle: new charts.TextStyleSpec(
-              color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
-          ),lineStyle: new charts.LineStyleSpec(
-            color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white)
-        )
-      ),
-      behaviors: [
-        new charts.LinePointHighlighter(
-            showHorizontalFollowLine: true, showVerticalFollowLine: true),
-        new charts.SelectNearest(
-            eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
-      ],
-      selectionModels: [
-        new charts.SelectionModelConfig(
-          type: charts.SelectionModelType.info,
-          listener: (charts.SelectionModel model){
-            final selectedDatum = model.selectedDatum;
-            if(selectedDatum.isNotEmpty){
-              setState((){
-                selectedPrice = selectedDatum[0].datum.price;
-                selectedTime = selectedDatum[0].datum.time;
-              });
-            }else{
-              selectedPrice = -1.0;
-              selectedTime = null;
-            }
-          }
-        )
-      ]
+        behaviors: [
+          new charts.LinePointHighlighter(
+              showHorizontalFollowLine: true, showVerticalFollowLine: true),
+          new charts.SelectNearest(
+              eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
+        ],
+        selectionModels: [
+          new charts.SelectionModelConfig(
+              type: charts.SelectionModelType.info,
+              listener: (charts.SelectionModel model){
+                final selectedDatum = model.selectedDatum;
+                if(selectedDatum.isNotEmpty){
+                  setState((){
+                    selectedPrice = selectedDatum[0].datum.price;
+                    selectedTime = selectedDatum[0].datum.time;
+                  });
+                }else{
+                  selectedPrice = -1.0;
+                  selectedTime = null;
+                }
+              }
+          )
+        ]
     )),
     new Container(
-      height:32.0,
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          new Text((selectedTime!=null?"Date: "+new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"")),
-          new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: selectedPrice>1?2:selectedPrice>.000001?6:7).format(selectedPrice):""))
-        ]
-      )
+        height:32.0,
+        child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              new Text((selectedTime!=null?"Date: "+new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"")),
+              new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: selectedPrice>1?2:selectedPrice>.000001?6:7).format(selectedPrice):""))
+            ]
+        )
     )
 
     ]):canLoad?new Container(height:232.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
@@ -1672,7 +1780,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     )):new Container(
         height:232.0,
         child: new Center(
-          child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
+            child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
         )
     );
   }
@@ -1771,3 +1879,4 @@ class ThemeInfo{
   }
 
 }
+
