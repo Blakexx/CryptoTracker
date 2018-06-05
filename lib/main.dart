@@ -941,6 +941,11 @@ class CryptoListState extends State<CryptoList>{
                                   if(firstTime && index==0){
                                     return new DescribedFeatureOverlay(
                                         doAction: (f){
+                                          for(int i = 0; i<favList.length;i++){
+                                            Crypto temp = (fullList[((favList[i] as FavCrypto).friendIndex)] as Crypto);
+                                            temp.color = temp.color==Colors.black12?Colors.black26:Colors.black12;
+                                            temp.favIndex = null;
+                                          }
                                           favList.clear();
                                           featureCount++;
                                           wentBack = true;
