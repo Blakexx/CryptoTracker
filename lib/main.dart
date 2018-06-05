@@ -266,6 +266,9 @@ class HomePageState extends State<HomePage>{
                 child: new IconButton(
                     icon: new Icon(!hasSearched?Icons.search:Icons.clear),
                     onPressed: (){
+                      if(firstTime){
+                        setState((){firstTime = false;featureCount = 100;});
+                      }
                       if(hasSearched){
                         filteredList.clear();
                         filteredList.addAll(favList);
@@ -316,6 +319,9 @@ class HomePageState extends State<HomePage>{
                         ],
                         child: new Icon(Icons.filter_list),
                         onSelected:(s){
+                          if(firstTime){
+                            setState((){firstTime = false;featureCount = 100;});
+                          }
                           setState(() {
                             scrollController.jumpTo(1.0);
                             if(s=="Name Ascending"){
@@ -396,6 +402,9 @@ class HomePageState extends State<HomePage>{
                   description: 'Tap here to open settings, report a bug, or submit a review',
                   child: new PopupMenuButton<String>(
                     onSelected: (String selected){
+                      if(firstTime){
+                        setState((){firstTime = false;featureCount = 100;});
+                      }
                       if(selected=="Settings"){
                         Navigator.push(context,new MaterialPageRoute(builder: (context) => new Settings()));
                       }else if(selected=="Rate us"){
@@ -539,9 +548,11 @@ class HomePageState extends State<HomePage>{
                       controller: scrollController,
                       physics: new AlwaysScrollableScrollPhysics()
                   ):new ListView(
-                    children: [new Column(
-                      children: filteredList
-                    )],
+                    children: [
+                      new Column(
+                        children: filteredList
+                      )
+                    ],
                     controller: scrollController,
                     physics: new AlwaysScrollableScrollPhysics(),
                   ),
@@ -1107,6 +1118,9 @@ class FavCryptoState extends State<FavCrypto>{
         padding: EdgeInsets.only(top:10.0),
         child: new GestureDetector(
             onLongPress: (){
+              if(firstTime){
+                context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){firstTime = false;featureCount = 100;});
+              }
               if(!isInSwap && favList.length==HomePageState.filteredList.length){
                 if(widget.color==Colors.black26||widget.color==Colors.black54){
                   setState((){
@@ -1153,7 +1167,6 @@ class FavCryptoState extends State<FavCrypto>{
                       dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                     }
                     storage.writeData(dataBuild);
-                    context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
                   }
                 },
                 background: new Container(color:Colors.red),
@@ -1202,6 +1215,9 @@ class FavCryptoState extends State<FavCrypto>{
                       ],
                     ),
                     onPressed: (){
+                      if(firstTime){
+                        context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){firstTime = false;featureCount = 100;});
+                      }
                       if(completer.isCompleted){
                         if(!isInSwap){
                           Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));

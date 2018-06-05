@@ -20,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="523" column="51" lean-forward="true" selection-start-line="523" selection-start-column="51" selection-end-line="523" selection-end-column="51" />
+            <state relative-caret-position="235">
+              <caret line="52" column="29" lean-forward="false" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="29" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -72,17 +72,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>favCrypto</find>
-      <find>favCryptoSta</find>
-      <find>FeatureDis</find>
-      <find>describedFea</find>
-      <find>doAction</find>
-      <find>ListView</find>
-      <find>List</find>
-      <find>ListView.builder</find>
-      <find>listview.bu</find>
-      <find>doActio</find>
-      <find>i==</find>
       <find>Default</find>
       <find>favList.cl</find>
       <find>ListView.build</find>
@@ -97,11 +86,22 @@
       <find>new ListView</find>
       <find>featureCount</find>
       <find>dismiss</find>
-      <find>if(firstTim</find>
       <find>dismi</find>
       <find>floatingAction</find>
       <find>firsttime = false;</find>
       <find>Listview.build</find>
+      <find>if(Firs</find>
+      <find>if(firstTim</find>
+      <find>onLongP</find>
+      <find>if(firstTime){</find>
+      <find>actionsp</find>
+      <find>actions</find>
+      <find>FavCryptoSta</find>
+      <find>context.ans</find>
+      <find>context.</find>
+      <find>context.ancestorw</find>
+      <find>context.an</find>
+      <find>if(true</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -814,8 +814,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="523" column="51" lean-forward="true" selection-start-line="523" selection-start-column="51" selection-end-line="523" selection-end-column="51" />
+        <state relative-caret-position="235">
+          <caret line="52" column="29" lean-forward="false" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="29" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
