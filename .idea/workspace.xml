@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="483" column="220" lean-forward="true" selection-start-line="483" selection-start-column="220" selection-end-line="483" selection-end-column="220" />
+            <state relative-caret-position="388">
+              <caret line="1291" column="19" lean-forward="true" selection-start-line="1291" selection-start-column="19" selection-end-line="1291" selection-end-column="19" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -73,7 +72,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>if(firstTim</find>
       <find>onLongP</find>
       <find>if(firstTime){</find>
       <find>actionsp</find>
@@ -103,6 +101,7 @@
       <find>%1</find>
       <find>TKR</find>
       <find>mailto</find>
+      <find>dismissible</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -815,8 +814,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="483" column="220" lean-forward="true" selection-start-line="483" selection-start-column="220" selection-end-line="483" selection-end-column="220" />
+        <state relative-caret-position="388">
+          <caret line="1291" column="19" lean-forward="true" selection-start-line="1291" selection-start-column="19" selection-end-line="1291" selection-end-column="19" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
