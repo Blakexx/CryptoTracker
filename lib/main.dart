@@ -285,11 +285,12 @@ class HomePageState extends State<HomePage>{
         }
         buildCount = 300;
         int dex = 0;
+        print(dex);
         for(Widget w in fullList){
+          dex++;
           if((w as Crypto).price==null){
             http.Response r;
             getSpecificData((w as Crypto).id).then((re){
-              dex++;
               r = re;
               Map<String, dynamic> s = json.decode(r.body)["data"];
               Crypto temp = (w as Crypto);
