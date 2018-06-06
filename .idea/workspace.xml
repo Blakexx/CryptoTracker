@@ -17,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="475" column="41" lean-forward="false" selection-start-line="475" selection-start-column="41" selection-end-line="475" selection-end-column="41" />
+            <state relative-caret-position="334">
+              <caret line="1023" column="35" lean-forward="true" selection-start-line="1023" selection-start-column="35" selection-end-line="1023" selection-end-column="35" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -29,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="feature_discovery.dart" pinned="false" current-in-tab="false">
+      <file leaf-file-name="feature_discovery.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/feature_discovery.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6405">
-              <caret line="428" column="0" lean-forward="false" selection-start-line="428" selection-start-column="0" selection-end-line="428" selection-end-column="0" />
+            <state relative-caret-position="274">
+              <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -72,11 +72,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>onRefre</find>
-      <find>dismis</find>
-      <find>Dismis</find>
-      <find>`</find>
-      <find>ListView.bui</find>
       <find>features[4</find>
       <find>new ListView</find>
       <find>featureCount</find>
@@ -102,6 +97,11 @@
       <find>getData</find>
       <find>readData</find>
       <find>mailto</find>
+      <find>crypto cu</find>
+      <find>click</find>
+      <find>tap</find>
+      <find>descri</find>
+      <find>description</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -802,20 +802,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/feature_discovery.dart">
+    <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6405">
-          <caret line="428" column="0" lean-forward="false" selection-start-line="428" selection-start-column="0" selection-end-line="428" selection-end-column="0" />
+        <state relative-caret-position="334">
+          <caret line="1023" column="35" lean-forward="true" selection-start-line="1023" selection-start-column="35" selection-end-line="1023" selection-end-column="35" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/main.dart">
+    <entry file="file://$PROJECT_DIR$/lib/feature_discovery.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="475" column="41" lean-forward="false" selection-start-line="475" selection-start-column="41" selection-end-line="475" selection-end-column="41" />
+        <state relative-caret-position="274">
+          <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

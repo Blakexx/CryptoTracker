@@ -293,7 +293,7 @@ class HomePageState extends State<HomePage>{
                 color: Colors.blue,
                 title: 'Searching',
                 icon: Icons.search,
-                description: 'Tap here to search your favorites list',
+                description: 'Tap here to search your favorites list.',
                 child: new IconButton(
                     icon: new Icon(!hasSearched?Icons.search:Icons.clear),
                     onPressed: (){
@@ -324,7 +324,7 @@ class HomePageState extends State<HomePage>{
                   color: Colors.blue,
                   title: 'Sorting',
                   icon: Icons.filter_list,
-                  description: 'Tap here to sort your favorites list',
+                  description: 'Tap here to sort your favorites list.',
                   child: new Container(
                     padding: EdgeInsets.only(left:5.0,right:10.0),
                     child: new PopupMenuButton<String>(
@@ -430,7 +430,7 @@ class HomePageState extends State<HomePage>{
                   color: Colors.blue,
                   title: 'Extra',
                   icon: Icons.more_vert,
-                  description: 'Tap here to open settings, report a bug, or submit a review',
+                  description: 'Tap here to open settings, report a bug, or submit a review.',
                   child: new PopupMenuButton<String>(
                     onSelected: (String selected){
                       if(firstTime){
@@ -521,7 +521,7 @@ class HomePageState extends State<HomePage>{
             color: Colors.blue,
             title: 'Adding',
             icon: Icons.add,
-            description: 'Tap here to add a crypto currency to your favorites list',
+            description: 'Tap here to add a cryptocurrency to your Favorites list.',
             doAction: (f){
               featureCount++;
               completer = new Completer<Null>();
@@ -562,7 +562,7 @@ class HomePageState extends State<HomePage>{
                                 color: Colors.blue,
                                 icon: Icons.info,
                                 title: "More Info",
-                                description: "Click on an item for more info and graphs. Swipe to the left to remove an item and press and hold and click on another item to change its position",
+                                description: "Tap on an item for more info and graphs. Swipe to the left to remove an item and press and hold and tap on another item to change its position.",
                                 child: filteredList[0],
                                 doAction: (f){
                                   f();
@@ -1018,7 +1018,7 @@ class CryptoListState extends State<CryptoList>{
                                         color: Colors.blue,
                                         icon: Icons.add,
                                         title: "Items",
-                                        description: "Just click on an item in the list to add it! The format for each item is as follows: Price in the middle in bold, Market cap below price, 1H change on right of box on top, 1D change in middle, and 1W change on bottom",
+                                        description: "Tap on an item in the list to add it. The format for each item is as follows: Price in the middle in bold, Market cap below price, 1H change on right of box on top, 1D change in middle, and 1W change on bottom.",
                                         child: filteredList[index]
                                     );
                                   }
