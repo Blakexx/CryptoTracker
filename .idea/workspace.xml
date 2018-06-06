@@ -20,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="853" column="83" lean-forward="false" selection-start-line="853" selection-start-column="83" selection-end-line="853" selection-end-column="83" />
+            <state relative-caret-position="324">
+              <caret line="287" column="34" lean-forward="false" selection-start-line="287" selection-start-column="34" selection-end-line="287" selection-end-column="34" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -40,11 +40,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>\$</find>
-      <find>Dropdown</find>
-      <find>SettingsSt</find>
-      <find>dropdow</find>
-      <find>getSpec</find>
       <find>dropdown</find>
       <find>Dropdo</find>
       <find>dropdownmenuit</find>
@@ -70,6 +65,11 @@
       <find>usdRate =</find>
       <find>print(</find>
       <find>DropD</find>
+      <find>price</find>
+      <find>&gt;=0</find>
+      <find>HomePageState</find>
+      <find>price&gt;</find>
+      <find>dex++</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -810,8 +810,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="853" column="83" lean-forward="false" selection-start-line="853" selection-start-column="83" selection-end-line="853" selection-end-column="83" />
+        <state relative-caret-position="324">
+          <caret line="287" column="34" lean-forward="false" selection-start-line="287" selection-start-column="34" selection-end-line="287" selection-end-column="34" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
