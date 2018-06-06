@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4343">
-              <caret line="1863" column="31" lean-forward="true" selection-start-line="1863" selection-start-column="31" selection-end-line="1863" selection-end-column="31" />
+            <state relative-caret-position="175">
+              <caret line="853" column="83" lean-forward="false" selection-start-line="853" selection-start-column="83" selection-end-line="853" selection-end-column="83" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -41,15 +40,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>DropdownBu</find>
-      <find>FavCryptoSt</find>
-      <find>CryptoSt</find>
-      <find>Dropd</find>
-      <find>Drop</find>
-      <find>sy</find>
-      <find>&quot;\$&quot;</find>
-      <find>MYR</find>
-      <find>MXN</find>
       <find>\$</find>
       <find>Dropdown</find>
       <find>SettingsSt</find>
@@ -63,7 +53,6 @@
       <find>CustomSin</find>
       <find>symbol</find>
       <find>onRefresh</find>
-      <find>setUpDa</find>
       <find>setUpData() a</find>
       <find>*rate</find>
       <find>fir</find>
@@ -71,6 +60,16 @@
       <find>*usdR</find>
       <find>-1</find>
       <find>!=-1</find>
+      <find>DropDown</find>
+      <find>onRef</find>
+      <find>1000000</find>
+      <find>onRefr</find>
+      <find>setUpDa</find>
+      <find>setUpData() as</find>
+      <find>dropDown</find>
+      <find>usdRate =</find>
+      <find>print(</find>
+      <find>DropD</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -804,15 +803,15 @@
         <state relative-caret-position="5205">
           <caret line="350" column="19" lean-forward="true" selection-start-line="350" selection-start-column="19" selection-end-line="350" selection-end-column="19" />
           <folding>
-            <element signature="e#0#22693#0" expanded="true" />
+            <element signature="e#0#22693#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4343">
-          <caret line="1863" column="31" lean-forward="true" selection-start-line="1863" selection-start-column="31" selection-end-line="1863" selection-end-column="31" />
+        <state relative-caret-position="175">
+          <caret line="853" column="83" lean-forward="false" selection-start-line="853" selection-start-column="83" selection-end-line="853" selection-end-column="83" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

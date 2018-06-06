@@ -293,9 +293,9 @@ class HomePageState extends State<HomePage>{
               Map<String, dynamic> s = json.decode(r.body)["data"];
               Crypto temp = (fullList[dex] as Crypto);
               temp.price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*usdRate:-1.0;
-              temp.oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1000000;
-              temp.twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1000000;
-              temp.sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1000000;
+              temp.oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1000000.0;
+              temp.twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1000000.0;
+              temp.sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1000000.0;
               temp.mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*usdRate:-1.0;
               temp.circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
               temp.totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
@@ -851,7 +851,7 @@ class SettingsState extends State<Settings>{
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [new Container(
                                           padding: EdgeInsets.only(right:5.0),
-                                          color: bright? Colors.white:Colors.black54,
+                                          color: bright?Colors.white:Colors.white12,
                                           child: new MyDropdown.DropdownButtonHideUnderline(
                                             child: new ButtonTheme(alignedDropdown: true,minWidth: 0.0,child: new MyDropdown.DropdownButton<String>(
                                                 items: [
@@ -969,9 +969,9 @@ class CryptoListState extends State<CryptoList>{
       for(Map<String,dynamic> s in map.values){
         int place = idIndex.putIfAbsent(s["id"], ()=>-1);
         (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*usdRate:-1.0;
-        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1000000;
-        (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1000000;
-        (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1000000;
+        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1000000.0;
+        (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1000000.0;
+        (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1000000.0;
         (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*usdRate:-1.0;
         (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
         (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
@@ -1505,9 +1505,9 @@ class FavCryptoState extends State<FavCrypto>{
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
-                                widget.oneHour!=-1000000?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                                widget.twentyFourHours!=-1000000?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                                widget.sevenDays!=-1000000?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                                widget.oneHour!=-1000000.0?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                                widget.twentyFourHours!=-1000000.0?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                                widget.sevenDays!=-1000000.0?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
                               ],
                             )
                         )
@@ -1660,9 +1660,9 @@ class CryptoState extends State<Crypto>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        widget.oneHour!=-1000000?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                        widget.twentyFourHours!=-1000000?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                        widget.sevenDays!=-1000000?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
+                        widget.oneHour!=-1000000.0?new Text(((widget.oneHour>=0)?"+":"")+widget.oneHour.toString()+"\%",style:new TextStyle(color:((widget.oneHour>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                        widget.twentyFourHours!=-1000000.0?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
+                        widget.sevenDays!=-1000000.0?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
                       ],
                     )
                 ),
@@ -1860,7 +1860,7 @@ class Info extends StatelessWidget{
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 new Expanded(child:new Text("Change 1H",style: new TextStyle(fontSize:fontSize))),
-                                oneHour!=-1000000?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                                oneHour!=-1000000.0?new Text(((oneHour>=0)?"+":"")+oneHour.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((oneHour>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
                               ]
                           )
                       )
@@ -1874,7 +1874,7 @@ class Info extends StatelessWidget{
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 new Expanded(child:new Text("Change 1D",style: new TextStyle(fontSize:fontSize))),
-                                twentyFourHours!=-1000000?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                                twentyFourHours!=-1000000.0?new Text(((twentyFourHours>=0)?"+":"")+twentyFourHours.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
                               ]
                           )
                       )
@@ -1888,7 +1888,7 @@ class Info extends StatelessWidget{
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 new Expanded(child:new Text("Change 1W",style: new TextStyle(fontSize:fontSize))),
-                                sevenDays!=-1000000?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
+                                sevenDays!=-1000000.0?new Text(((sevenDays>=0)?"+":"")+sevenDays.toString()+"\%",style:new TextStyle(fontSize:fontSize,color:((sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A",style: new TextStyle(fontSize:fontSize))
                               ]
                           )
                       )
