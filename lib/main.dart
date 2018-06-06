@@ -84,10 +84,15 @@ class HomePage extends StatefulWidget{
   HomePageState createState() => new HomePageState();
 }
 
-
 class HomePageState extends State<HomePage>{
 
   static List<Widget> filteredList = new List<Widget>();
+
+  Future<http.Response> getSpecificData(int id) async{
+    return await http.get(
+        Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/"+id.toString())
+    );
+  }
 
   Future<String> getData() async{
     http.Response r = await http.get(
@@ -217,11 +222,37 @@ class HomePageState extends State<HomePage>{
           }
         }
         buildCount = 300;
-        firstLoad = true;
-        if(firstTime){
-          FeatureDiscovery.discoverFeatures(context, [features[0]]);
+        int dex = 0;
+        for(dex = 0; dex<fullList.length;dex++){
+          if((fullList[dex] as Crypto).price==null){
+            http.Response r;
+            getSpecificData((fullList[dex] as Crypto).id).then((re){
+              r = re;
+              Map<String, dynamic> s = json.decode(r.body);
+              (fullList[dex] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+              (fullList[dex] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+              (fullList[dex] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
+              (fullList[dex] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
+              (fullList[dex] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+              (fullList[dex] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+              (fullList[dex] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+              (fullList[dex] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+              (fullList[dex] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
+            });
+          }
         }
-        setState((){});
+        wait(){
+          if(dex==fullList.length){
+            firstLoad = true;
+            if(firstTime){
+              FeatureDiscovery.discoverFeatures(context, [features[0]]);
+            }
+            setState((){});
+          }else{
+            new Timer(Duration.zero,wait);
+          }
+        }
+        wait();
       });
     }
     if(firstTime && featureCount==2 && loadGood){
