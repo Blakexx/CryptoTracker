@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="847" column="109" lean-forward="false" selection-start-line="847" selection-start-column="109" selection-end-line="847" selection-end-column="109" />
+            <state relative-caret-position="302">
+              <caret line="301" column="72" lean-forward="false" selection-start-line="301" selection-start-column="72" selection-end-line="301" selection-end-column="72" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -34,7 +33,7 @@
         <entry file="file://$PROJECT_DIR$/lib/mydropdown.dart">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="250">
-              <caret line="358" column="37" lean-forward="true" selection-start-line="358" selection-start-column="37" selection-end-line="358" selection-end-column="37" />
+              <caret line="358" column="37" lean-forward="false" selection-start-line="358" selection-start-column="37" selection-end-line="358" selection-end-column="37" />
               <folding>
                 <element signature="e#0#22693#0" expanded="true" />
               </folding>
@@ -95,11 +94,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ThemeInfo</find>
-      <find>S</find>
-      <find>currency = s</find>
-      <find>Map&lt;String,dn</find>
-      <find>getSpecificData</find>
       <find>json.decode(r.body)</find>
       <find>json.decode(res</find>
       <find>map[qu</find>
@@ -125,6 +119,11 @@
       <find>underlin</find>
       <find>DropDownMenuItem</find>
       <find>CustomSin</find>
+      <find>symbol</find>
+      <find>onRefresh</find>
+      <find>setUpDa</find>
+      <find>setUpData() a</find>
+      <find>*rate</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -856,7 +855,7 @@
     <entry file="file://$PROJECT_DIR$/lib/mydropdown.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
-          <caret line="358" column="37" lean-forward="true" selection-start-line="358" selection-start-column="37" selection-end-line="358" selection-end-column="37" />
+          <caret line="358" column="37" lean-forward="false" selection-start-line="358" selection-start-column="37" selection-end-line="358" selection-end-column="37" />
           <folding>
             <element signature="e#0#22693#0" expanded="true" />
           </folding>
@@ -865,8 +864,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="847" column="109" lean-forward="false" selection-start-line="847" selection-start-column="109" selection-end-line="847" selection-end-column="109" />
+        <state relative-caret-position="302">
+          <caret line="301" column="72" lean-forward="false" selection-start-line="301" selection-start-column="72" selection-end-line="301" selection-end-column="72" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

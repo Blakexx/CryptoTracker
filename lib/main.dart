@@ -198,15 +198,15 @@ class HomePageState extends State<HomePage>{
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
         int place = idIndex.putIfAbsent(s["id"], ()=>-1);
-        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*rate:-1.0;
+        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*usdRate:-1.0;
         (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
         (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*rate:-1.0;
-        (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]*rate:-1.0;
-        (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]*rate:-1.0;
-        (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]*rate:-1.0;
-        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*rate:-1.0;
+        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*usdRate:-1.0;
+        (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+        (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+        (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*usdRate:-1.0;
         realCount++;
         setState((){});
       }
@@ -291,15 +291,28 @@ class HomePageState extends State<HomePage>{
             getSpecificData((fullList[dex] as Crypto).id).then((re){
               r = re;
               Map<String, dynamic> s = json.decode(r.body)["data"];
-              (fullList[dex] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*rate:-1.0;
-              (fullList[dex] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
-              (fullList[dex] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
-              (fullList[dex] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-              (fullList[dex] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*rate:-1.0;
-              (fullList[dex] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
-              (fullList[dex] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
-              (fullList[dex] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-              (fullList[dex] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*rate:-1.0;
+              Crypto temp = (fullList[dex] as Crypto);
+              temp.price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*usdRate:-1.0;
+              temp.oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+              temp.twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
+              temp.sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
+              temp.mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*usdRate:-1.0;
+              temp.circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
+              temp.totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
+              temp.maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
+              temp.volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*usdRate:-1.0;
+              if((fullList[dex] as Crypto).favIndex!=null && (fullList[dex] as Crypto).favIndex>=0){
+                FavCrypto temperino = favList[(fullList[dex] as Crypto).favIndex] as FavCrypto;
+                temperino.price = temp.price;
+                temperino.oneHour = temp.oneHour;
+                temperino.twentyFourHours = temp.twentyFourHours;
+                temperino.sevenDays = temp.sevenDays;
+                temperino.mCap = temp.mCap;
+                temperino.circSupply = temp.circSupply;
+                temperino.totalSupply = temp.totalSupply;
+                temperino.maxSupply = temp.maxSupply;
+                temperino.volume24h = temp.volume24h;
+              }
             });
           }
         }
@@ -955,15 +968,15 @@ class CryptoListState extends State<CryptoList>{
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
         int place = idIndex.putIfAbsent(s["id"], ()=>-1);
-        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*rate:-1.0;
-        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]*rate:-1.0;
+        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*usdRate:-1.0;
+        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
         (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*rate:-1.0;
+        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*usdRate:-1.0;
         (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
         (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
         (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*rate:-1.0;
+        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*usdRate:-1.0;
       }
       count+=100;
     }
@@ -1482,7 +1495,7 @@ class FavCryptoState extends State<FavCrypto>{
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              new Text((widget.price!=-1?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                              new Text((widget.price!=-1?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold)),
                               new Text((widget.mCap!=-1?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                               displayGraphs?widget.smallImage:new Container()
                             ]
