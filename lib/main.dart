@@ -1651,7 +1651,7 @@ class CryptoState extends State<Crypto>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      new Text((widget.price>=0?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                      new Text((widget.price>=0?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: widget.price<1000000?2:0).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                       new Text((widget.mCap>=0?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                       displayGraphs?widget.smallImage:new Container()
                     ]
