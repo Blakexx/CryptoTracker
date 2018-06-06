@@ -101,7 +101,7 @@ class DescribedFeatureOverlay extends StatefulWidget {
   final IconData icon;
   final Color color;
   final String title;
-  final String description;
+  final Widget description;
   final Function(VoidCallback onActionComplete) doAction;
   final Widget child;
 
@@ -412,7 +412,7 @@ class _Content extends StatelessWidget {
   final Offset anchor;
   final Size screenSize;
   final String title;
-  final String description;
+  final Widget description;
   final double touchTargetRadius;
   final double touchTargetToContentPadding;
 
@@ -502,13 +502,7 @@ class _Content extends StatelessWidget {
                               ),
                             ),
                           ),
-                          new Text(
-                            description,
-                            style: new TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white.withOpacity(0.9),
-                            ),
-                          ),
+                          description,
                         ],
                       ))),
             ),

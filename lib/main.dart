@@ -293,7 +293,13 @@ class HomePageState extends State<HomePage>{
                 color: Colors.blue,
                 title: 'Searching',
                 icon: Icons.search,
-                description: 'Tap here to search your favorites list.',
+                  description: new Text(
+                      'Tap here to search your favorites list.',
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
                 child: new IconButton(
                     icon: new Icon(!hasSearched?Icons.search:Icons.clear),
                     onPressed: (){
@@ -324,7 +330,13 @@ class HomePageState extends State<HomePage>{
                   color: Colors.blue,
                   title: 'Sorting',
                   icon: Icons.filter_list,
-                  description: 'Tap here to sort your favorites list.',
+                  description: new Text(
+                    'Tap here to sort your favorites list.',
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
                   child: new Container(
                     padding: EdgeInsets.only(left:5.0,right:10.0),
                     child: new PopupMenuButton<String>(
@@ -430,7 +442,13 @@ class HomePageState extends State<HomePage>{
                   color: Colors.blue,
                   title: 'Extra',
                   icon: Icons.more_vert,
-                  description: 'Tap here to open settings, report a bug, or submit a review.',
+                  description: new Text(
+                    'Tap here to open settings, report a bug, or submit a review.',
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
                   child: new PopupMenuButton<String>(
                     onSelected: (String selected){
                       if(firstTime){
@@ -521,7 +539,13 @@ class HomePageState extends State<HomePage>{
             color: Colors.blue,
             title: 'Adding',
             icon: Icons.add,
-            description: 'Tap here to add a cryptocurrency to your Favorites list.',
+            description: new Text(
+              'Tap here to add a cryptocurrency to your Favorites list.',
+              style: new TextStyle(
+                fontSize: 16.0,
+                color: Colors.white.withOpacity(0.9),
+              ),
+            ),
             doAction: (f){
               featureCount++;
               completer = new Completer<Null>();
@@ -562,7 +586,13 @@ class HomePageState extends State<HomePage>{
                                 color: Colors.blue,
                                 icon: Icons.info,
                                 title: "More Info",
-                                description: "Tap on an item for more info and graphs. Swipe to the left to remove an item and press and hold and tap on another item to change its position.",
+                                description: new Text(
+                                  "Tap on an item for more info and graphs. Swipe to the left to remove an item and press and hold and tap on another item to change its position.",
+                                  style: new TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                ),
                                 child: filteredList[0],
                                 doAction: (f){
                                   f();
@@ -1018,7 +1048,68 @@ class CryptoListState extends State<CryptoList>{
                                         color: Colors.blue,
                                         icon: Icons.add,
                                         title: "Items",
-                                        description: "Tap on an item in the list to add it. The format for each item is as follows: Price in the middle in bold, Market cap below price, 1H change on right of box on top, 1D change in middle, and 1W change on bottom.",
+                                        description: new Column(
+                                            children: [
+                                             new Text(
+                                                "Tap on an item in the list to add it. The format for each item is as follows:",
+                                                style: new TextStyle(
+                                                  fontSize: 16.0,
+                                                  color: Colors.white.withOpacity(0.9),
+                                                )
+                                              ),
+                                              new Container(
+                                                height: 120.0,
+                                                  padding: EdgeInsets.only(top:10.0),
+                                                  child: new FlatButton(
+                                                    padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
+                                                    color: Colors.black87,
+                                                    child: new Row(
+                                                      children: <Widget>[
+                                                        // ignore: conflicting_dart_import
+                                                        new Expanded(child: new Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              new Row(
+                                                                  children: [
+                                                                    new Text("Name",style: new TextStyle(fontSize:20.0,color:Colors.white))
+                                                                  ]
+                                                              ),
+                                                              new Row(
+                                                                  children: [
+                                                                    Image.asset("icon/platypus2.png",height:32.0,width:32.0),
+                                                                    new Text(" TKR",style: new TextStyle(fontSize:15.0,color:Colors.white))
+                                                                  ]
+                                                              )
+                                                            ]
+                                                        )),
+                                                        new Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              new Text("Price",style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold,color:Colors.white)),
+                                                              new Text("Market cap",style: new TextStyle(color:Colors.grey,fontSize:12.0)),
+                                                              (fullList[0] as Crypto).smallImage
+                                                            ]
+                                                        ),
+                                                        new Expanded(
+                                                            child: new Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                                              children: <Widget>[
+                                                                new Text("1H %Change",style: new TextStyle(fontSize:10.0,color:Colors.white)),
+                                                                new Text("1D %Change",style: new TextStyle(fontSize:10.0,color:Colors.white)),
+                                                                new Text("1W %Change",style: new TextStyle(fontSize:10.0,color:Colors.white)),
+                                                              ],
+                                                            )
+                                                        )
+                                                      ],
+                                                    ),
+                                                    onPressed: (){}
+                                                 )
+                                              )
+                                            ]
+                                        ),
                                         child: filteredList[index]
                                     );
                                   }

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/lib/feature_discovery.dart" afterPath="$PROJECT_DIR$/lib/feature_discovery.dart" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -17,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.dart" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="1023" column="35" lean-forward="true" selection-start-line="1023" selection-start-column="35" selection-end-line="1023" selection-end-column="35" />
+            <state relative-caret-position="89">
+              <caret line="41" column="0" lean-forward="true" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -29,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="feature_discovery.dart" pinned="false" current-in-tab="true">
+      <file leaf-file-name="feature_discovery.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/feature_discovery.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+            <state relative-caret-position="292">
+              <caret line="503" column="28" lean-forward="false" selection-start-line="503" selection-start-column="28" selection-end-line="503" selection-end-column="28" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -54,7 +55,7 @@
       <file leaf-file-name="pubspec.yaml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pubspec.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
+            <state relative-caret-position="98">
               <caret line="17" column="24" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
               <folding />
             </state>
@@ -72,15 +73,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>features[4</find>
-      <find>new ListView</find>
-      <find>featureCount</find>
-      <find>dismiss</find>
-      <find>dismi</find>
-      <find>floatingAction</find>
-      <find>firsttime = false;</find>
-      <find>Listview.build</find>
-      <find>if(Firs</find>
       <find>if(firstTim</find>
       <find>onLongP</find>
       <find>if(firstTime){</find>
@@ -101,7 +93,16 @@
       <find>click</find>
       <find>tap</find>
       <find>descri</find>
+      <find>Content</find>
+      <find>new</find>
+      <find>descr</find>
+      <find>descriptio</find>
+      <find>descrit</find>
       <find>description</find>
+      <find>description:</find>
+      <find>description:</find>
+      <find>%1</find>
+      <find>TKR</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -786,14 +787,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="24" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/layout.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1845">
@@ -802,20 +795,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/main.dart">
+    <entry file="file://$PROJECT_DIR$/lib/feature_discovery.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="1023" column="35" lean-forward="true" selection-start-line="1023" selection-start-column="35" selection-end-line="1023" selection-end-column="35" />
+        <state relative-caret-position="292">
+          <caret line="503" column="28" lean-forward="false" selection-start-line="503" selection-start-column="28" selection-end-line="503" selection-end-column="28" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/feature_discovery.dart">
+    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+        <state relative-caret-position="98">
+          <caret line="17" column="24" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/main.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="41" column="0" lean-forward="true" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
