@@ -289,6 +289,7 @@ class HomePageState extends State<HomePage>{
           if((w as Crypto).price==null){
             http.Response r;
             getSpecificData((w as Crypto).id).then((re){
+              dex++;
               r = re;
               Map<String, dynamic> s = json.decode(r.body)["data"];
               Crypto temp = (w as Crypto);
