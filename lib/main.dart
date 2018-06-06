@@ -17,10 +17,54 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:crypto_tracker/feature_discovery.dart';
+import 'mydropdown.dart' as MyDropdown;
 
 int itemCount = 1;
 
 bool isInSwap = false;
+
+String currency = "USD";
+
+String symbol = "\$";
+
+double rate = 1.0;
+
+double usdRate = 1.0;
+
+Map<String, String> currencySymbolMap = {
+  "USD": "\$",
+  "AUD": "A\$",
+  "BRL": "R\$",
+  "CAD": "C\$",
+  "CHF": "Fr. ",
+  "CLP": "\$",
+  "CNY": "¥",
+  "CZK": "Kč",
+  "DKK": "kr. ",
+  "EUR": "€",
+  "GBP": "£",
+  "HKD": "HK\$",
+  "HUF": "Ft ",
+  "IDR": "Rp ",
+  "ILS": "₪",
+  "INR": "₹",
+  "JPY": "¥",
+  "KRW": "₩",
+  "MXN": "\$",
+  "MYR": "RM",
+  "NOK": "kr ",
+  "NZD": "\$",
+  "PHP": "₱",
+  "PKR": "₨ ",
+  "PLN": "zł",
+  "RUB": "₽",
+  "SEK": "kr ",
+  "SGD": "S\$",
+  "THB": "฿",
+  "TRY": "₺",
+  "TWD": "NT\$",
+  "ZAR": "R ",
+};
 
 List<String> features = ["f1","f2","f3","f4","f5","f6"];
 
@@ -47,8 +91,8 @@ bool firstTime = false;
 void main() {
   timeDilation = 1.0;
   themeInfo.readData().then((value){
-    if(value==null || value.length!=2){
-      themeInfo.writeData("0 1").then((f){
+    if(value==null || value.length!=3){
+      themeInfo.writeData("0 1 USD").then((f){
         bright = true;
         displayGraphs = true;
         firstTime = true;
@@ -58,20 +102,38 @@ void main() {
         ));
       });
     }else{
-      if(value[0]==1){
+      if(value[0]=="1"){
         bright = false;
       }else{
         bright = true;
       }
-      if(value[1]==1){
+      if(value[1]=="1"){
         displayGraphs = true;
       }else{
         displayGraphs = false;
       }
-      runApp(new MaterialApp(
-          theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-          home: new FeatureDiscovery(child: new HomePage())
-      ));
+      currency = value[2];
+      if(currency!="USD"){
+        symbol = currencySymbolMap.putIfAbsent(currency, ()=>null);
+        http.get(
+            Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/1?convert="+currency)
+        ).then((response){
+          Map<String, dynamic> map = json.decode(response.body)["data"];
+          rate = map["quotes"][currency]["price"]/map["quotes"]["USD"]["price"]*1.0;
+          usdRate = rate;
+          runApp(new MaterialApp(
+              theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+              home: new FeatureDiscovery(child: new HomePage())
+          ));
+        });
+      }else{
+        rate = 1.0;
+        symbol = "\$";
+        runApp(new MaterialApp(
+            theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+            home: new FeatureDiscovery(child: new HomePage())
+        ));
+      }
     }
   });
 }
@@ -136,15 +198,15 @@ class HomePageState extends State<HomePage>{
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
         int place = idIndex.putIfAbsent(s["id"], ()=>-1);
-        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*rate:-1.0;
         (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
         (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
-        (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
-        (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
-        (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
+        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*rate:-1.0;
+        (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]*rate:-1.0;
+        (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]*rate:-1.0;
+        (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]*rate:-1.0;
+        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*rate:-1.0;
         realCount++;
         setState((){});
       }
@@ -228,16 +290,16 @@ class HomePageState extends State<HomePage>{
             http.Response r;
             getSpecificData((fullList[dex] as Crypto).id).then((re){
               r = re;
-              Map<String, dynamic> s = json.decode(r.body);
-              (fullList[dex] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
+              Map<String, dynamic> s = json.decode(r.body)["data"];
+              (fullList[dex] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*rate:-1.0;
               (fullList[dex] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
               (fullList[dex] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
               (fullList[dex] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-              (fullList[dex] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+              (fullList[dex] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*rate:-1.0;
               (fullList[dex] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
               (fullList[dex] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
               (fullList[dex] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-              (fullList[dex] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
+              (fullList[dex] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*rate:-1.0;
             });
           }
         }
@@ -679,9 +741,11 @@ class Settings extends StatefulWidget{
 
 class SettingsState extends State<Settings>{
 
+  bool doneChanging = true;
+
   @override
   Widget build(BuildContext context){
-    return new Scaffold(
+    return new WillPopScope(child: new Scaffold(
         appBar: new AppBar(title:new Text("Settings",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
         body: new Container(
             padding:EdgeInsets.only(bottom:10.0,top:10.0),
@@ -699,35 +763,37 @@ class SettingsState extends State<Settings>{
                                 new Switch(
                                     value: !bright,
                                     onChanged: (dark){
-                                      bright = !bright;
-                                      showDialog(
-                                          barrierDismissible: false,
-                                          context:context,
-                                          builder: (BuildContext context)=>new AlertDialog(
-                                              title: new Text("Are you sure?"),
-                                              content: new Text("The application will close if you select this option"),
-                                              actions: <Widget>[
-                                                new FlatButton(
-                                                  onPressed: (){bright = !bright;Navigator.of(context).pop(false);},
-                                                  child: new Text('No'),
-                                                ),
-                                                new FlatButton(
-                                                    onPressed: (){
-                                                      if(dark==true){
-                                                        themeInfo.writeData("1"+(displayGraphs?" 1":" 0")).then((file){
-                                                          exit(0);
-                                                        });
-                                                      }else{
-                                                        themeInfo.writeData("0"+(displayGraphs?" 1":" 0")).then((file){
-                                                          exit(0);
-                                                        });
-                                                      }
-                                                    },
-                                                    child: new Text('Yes')
-                                                )
-                                              ]
-                                          )
-                                      );
+                                      if(doneChanging){
+                                        bright = !bright;
+                                        showDialog(
+                                            barrierDismissible: false,
+                                            context:context,
+                                            builder: (BuildContext context)=>new AlertDialog(
+                                                title: new Text("Are you sure?"),
+                                                content: new Text("The application will close if you select this option"),
+                                                actions: <Widget>[
+                                                  new FlatButton(
+                                                    onPressed: (){bright = !bright;Navigator.of(context).pop(false);},
+                                                    child: new Text('No'),
+                                                  ),
+                                                  new FlatButton(
+                                                      onPressed: (){
+                                                        if(dark==true){
+                                                          themeInfo.writeData("1"+(displayGraphs?" 1":" 0")+" "+currency).then((file){
+                                                            exit(0);
+                                                          });
+                                                        }else{
+                                                          themeInfo.writeData("0"+(displayGraphs?" 1":" 0")+" "+currency).then((file){
+                                                            exit(0);
+                                                          });
+                                                        }
+                                                      },
+                                                      child: new Text('Yes')
+                                                  )
+                                                ]
+                                            )
+                                        );
+                                      }
                                     }
                                 ),
                               ]
@@ -746,22 +812,120 @@ class SettingsState extends State<Settings>{
                                     new Switch(
                                         value: !displayGraphs,
                                         onChanged: (dark){
-                                          setState((){
-                                            displayGraphs = !displayGraphs;
-                                          });
-                                          themeInfo.writeData((bright?"0":"1")+(displayGraphs?" 1":" 0"));
+                                          if(doneChanging){
+                                            setState((){
+                                              displayGraphs = !displayGraphs;
+                                            });
+                                            themeInfo.writeData((bright?"0":"1")+(displayGraphs?" 1":" 0")+" "+currency);
+                                          }
                                         }
                                     ),
                                   ]
                               )
                           )
-                      )
-
+                      ),
+                      new Container(
+                          padding: EdgeInsets.only(top:10.0),
+                          child: new Container(
+                              padding: EdgeInsets.only(top:5.0,bottom:5.0),
+                              color: bright?Colors.black12:Colors.black87,
+                              child: new Row(
+                                  children: <Widget>[
+                                    new Expanded(
+                                        child: new Text("  Currency",style:new TextStyle(fontSize:20.0)),
+                                    ),
+                                    new Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [new Container(
+                                          padding: EdgeInsets.only(right:5.0),
+                                          color: bright? Colors.white:Colors.black54,
+                                          child: new MyDropdown.DropdownButtonHideUnderline(
+                                            child: new ButtonTheme(alignedDropdown: true,minWidth: 0.0,child: new MyDropdown.DropdownButton<String>(
+                                                items: [
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "USD", child: new Text("USD \$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "AUD", child: new Text("AUD A\$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "BRL", child: new Text("BRL R\$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "CAD", child: new Text("CAD C\$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "CHF", child: new Text("CHF Fr.")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "CLP", child: new Text("CLP \$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "CNY", child: new Text("CNY ¥")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "CZK", child: new Text("CZK Kč")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "DKK", child: new Text("DKK kr.")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "EUR", child: new Text("EUR €")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "GBP", child: new Text("GBP £")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "HKD", child: new Text("HKD HK\$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "HUF", child: new Text("HUF Ft")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "IDR", child: new Text("IDR Rp")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "ILS", child: new Text("ILS ₪")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "INR", child: new Text("INR ₹")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "JPY", child: new Text("JPY ¥")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "KRW", child: new Text("KRW ₩")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "MXN", child: new Text("MXN \$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "MYR", child: new Text("MYR RM")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "NOK", child: new Text("NOK kr")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "NZD", child: new Text("NZD \$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "PHP", child: new Text("PHP ₱")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "PKR", child: new Text("PKR ₨")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "PLN", child: new Text("PLN zł")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "RUB", child: new Text("RUB ₽")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "SEK", child: new Text("SEK kr")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "SGD", child: new Text("SGD S\$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "THB", child: new Text("THB ฿")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "TRY", child: new Text("TRY ₺")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "TWD", child: new Text("TWD NT\$")),
+                                                  new MyDropdown.DropdownMenuItem<String>(value: "ZAR", child: new Text("ZAR R")),
+                                                ],
+                                                onChanged: (s){
+                                                  if(doneChanging){
+                                                    doneChanging = false;
+                                                    double firstRate;
+                                                    double secondRate;
+                                                    http.get(
+                                                        Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/1?convert="+s)
+                                                    ).then((response){
+                                                      Map<String, dynamic> map1 = json.decode(response.body)["data"];
+                                                      firstRate = map1["quotes"][s]["price"]/map1["quotes"]["USD"]["price"]*1.0;
+                                                      usdRate = firstRate;
+                                                      http.get(
+                                                          Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/1?convert="+currency)
+                                                      ).then((response){
+                                                        Map<String, dynamic> map2 = json.decode(response.body)["data"];
+                                                        secondRate = map2["quotes"][currency]["price"]/map2["quotes"]["USD"]["price"]*1.0;
+                                                        rate = firstRate/secondRate;
+                                                        for(int i = 0; i<fullList.length;i++){
+                                                          Crypto temp = (fullList[i] as Crypto);
+                                                          temp.price = temp.price*rate;
+                                                          temp.mCap = temp.mCap*rate;
+                                                          temp.volume24h = temp.volume24h*rate;
+                                                          if(temp.favIndex!=null && temp.favIndex>=0){
+                                                            FavCrypto temperino = (favList[temp.favIndex] as FavCrypto);
+                                                            temperino.price = temp.price;
+                                                            temperino.mCap = temp.mCap;
+                                                            temperino.volume24h = temp.volume24h;
+                                                          }
+                                                        }
+                                                        setState((){currency = s;symbol = currencySymbolMap.putIfAbsent(currency, ()=>null);});
+                                                        themeInfo.writeData((bright?"0":"1")+(displayGraphs?" 1":" 0")+" "+currency);
+                                                        doneChanging = true;
+                                                      });
+                                                    });
+                                                  }
+                                                },
+                                                value: currency,
+                                                style: Theme.of(context).textTheme.title
+                                            ))
+                                          )
+                                        )]
+                                    )
+                                  ]
+                              )
+                          )
+                      ),
                     ]
                 )
             )
         )
-    );
+    ),onWillPop:()=>new Future(()=>doneChanging));
   }
 }
 
@@ -791,15 +955,15 @@ class CryptoListState extends State<CryptoList>{
       Map<String,dynamic> map = data["data"];
       for(Map<String,dynamic> s in map.values){
         int place = idIndex.putIfAbsent(s["id"], ()=>-1);
-        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]:-1.0;
-        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1.0;
+        (fullList[place] as Crypto).price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*rate:-1.0;
+        (fullList[place] as Crypto).oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]*rate:-1.0;
         (fullList[place] as Crypto).twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1.0;
         (fullList[place] as Crypto).sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1.0;
-        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]:-1.0;
+        (fullList[place] as Crypto).mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*rate:-1.0;
         (fullList[place] as Crypto).circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
         (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
         (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]:-1.0;
+        (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*rate:-1.0;
       }
       count+=100;
     }
@@ -1318,8 +1482,8 @@ class FavCryptoState extends State<FavCrypto>{
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                              new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                              new Text((widget.price!=-1?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                              new Text((widget.mCap!=-1?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                               displayGraphs?widget.smallImage:new Container()
                             ]
                         ),
@@ -1473,8 +1637,8 @@ class CryptoState extends State<Crypto>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      new Text((widget.price!=-1?widget.price>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):"\$"+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
-                      new Text((widget.mCap!=-1?widget.mCap>1?"\$"+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):"\$"+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
+                      new Text((widget.price!=-1?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 2).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                      new Text((widget.mCap!=-1?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                       displayGraphs?widget.smallImage:new Container()
                     ]
                 ),
@@ -1672,8 +1836,8 @@ class Info extends StatelessWidget{
             child: new Column(
                 children: [
                   new Text("",style: new TextStyle(fontSize:5.0)),
-                  new InfoPiece("Price",price,fontSize,2,price>.000001?6:7),
-                  new InfoPiece("Market Cap",mCap,fontSize,0,2),
+                  new InfoPiece("Price",price,fontSize,2,price>.000001?6:7,true),
+                  new InfoPiece("Market Cap",mCap,fontSize,0,2,true),
                   new Container(
                       padding: EdgeInsets.only(top:5.0),
                       child: new Container(
@@ -1716,10 +1880,10 @@ class Info extends StatelessWidget{
                           )
                       )
                   ),
-                  new InfoPiece("Circulating Supply",circSupply,fontSize,0,2),
-                  new InfoPiece("Total Supply",totalSupply,fontSize,0,2),
-                  new InfoPiece("Max Supply",maxSupply,fontSize,0,2),
-                  new InfoPiece("24H Volume",volume24h,fontSize,0,2),
+                  new InfoPiece("Circulating Supply",circSupply,fontSize,0,2,false),
+                  new InfoPiece("Total Supply",totalSupply,fontSize,0,2,false),
+                  new InfoPiece("Max Supply",maxSupply,fontSize,0,2,false),
+                  new InfoPiece("24H Volume",volume24h,fontSize,0,2,true),
                 ]
             )
         )
@@ -1737,7 +1901,9 @@ class InfoPiece extends StatelessWidget{
 
   int first,second;
 
-  InfoPiece(this.name,this.info,this.fontSize,this.first,this.second);
+  bool useSymbol;
+
+  InfoPiece(this.name,this.info,this.fontSize,this.first,this.second,this.useSymbol);
 
   @override
   Widget build(BuildContext context){
@@ -1749,7 +1915,7 @@ class InfoPiece extends StatelessWidget{
           child: new Row(
               children: [
                 new Expanded(child: new Text(" "+name,style:new TextStyle(fontSize:fontSize),textAlign: TextAlign.left)),
-                new Text((info!=-1?info>1?new NumberFormat.currency(symbol:"\$",decimalDigits: first).format(info):"\$"+info.toStringAsFixed(second):"N/A"),style:new TextStyle(fontSize: fontSize))
+                new Text((info!=-1?info>1?new NumberFormat.currency(symbol:useSymbol?symbol:"",decimalDigits: first).format(info):symbol+info.toStringAsFixed(second):"N/A"),style:new TextStyle(fontSize: fontSize))
               ]
           ),
         )
@@ -1868,7 +2034,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         primaryMeasureAxis: new charts.NumericAxisSpec(
             tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
             tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-                new NumberFormat("\$###,###,###,###,###.###########","en_US")
+                new NumberFormat(symbol+"###,###,###,###,###,###,###,###,###,###,###,###,###,###,###,###.###########","en_US")
             ),
             renderSpec: new charts.GridlineRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
@@ -1925,7 +2091,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               new Text((selectedTime!=null?"Date: "+new DateFormat("yyyy/MM/dd").add_jm().format(selectedTime):"")),
-              new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:"\$",decimalDigits: selectedPrice>1?2:selectedPrice>.000001?6:7).format(selectedPrice):""))
+              new Text((selectedPrice!=-1.0?"Price: "+new NumberFormat.currency(symbol:symbol,decimalDigits: selectedPrice>1?2:selectedPrice>.000001?6:7).format(selectedPrice):""))
             ]
         )
     )
@@ -1970,7 +2136,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       for(int i = 0;i<total;i++){
         maxPrice = maxPrice<info["price"][i][1]*1.0?info["price"][i][1]*1.0:maxPrice;
         minPrice = minPrice>info["price"][i][1]*1.0?info["price"][i][1]*1.0:minPrice;
-        data[i] = new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0);
+        data[i] = new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0*usdRate);
         setState((){count++;});
       }
     }else{
@@ -2008,24 +2174,18 @@ class ThemeInfo{
     return new File('$path/themeinfo.txt');
   }
 
-  Future<List<int>> readData() async {
+  Future<List<String>> readData() async {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
 
-      if(contents.length!=3){
+      if(contents.split(" ").length!=3){
         return null;
       }
 
       List<String> list = contents.split(" ");
 
-      List<int> finalList = new List<int>();
-
-      for(int i = 0; i<2;i++){
-        finalList.add(int.parse(list[i]));
-      }
-
-      return finalList;
+      return list;
     } catch (e) {
       return null;
     }
