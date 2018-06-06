@@ -285,7 +285,6 @@ class HomePageState extends State<HomePage>{
         }
         buildCount = 300;
         int dex = 0;
-        print(dex);
         for(Widget w in fullList){
           dex++;
           if((w as Crypto).price==null){
