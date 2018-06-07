@@ -20,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="933" column="51" lean-forward="true" selection-start-line="933" selection-start-column="51" selection-end-line="933" selection-end-column="51" />
+            <state relative-caret-position="70">
+              <caret line="1121" column="110" lean-forward="true" selection-start-line="1121" selection-start-column="110" selection-end-line="1121" selection-end-column="110" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -40,10 +40,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>symbol</find>
-      <find>onRefresh</find>
       <find>setUpData() a</find>
-      <find>*rate</find>
       <find>fir</find>
       <find>double pri</find>
       <find>*usdR</find>
@@ -70,6 +67,9 @@
       <find>textField</find>
       <find>realCOunt++</find>
       <find>DropDown</find>
+      <find>*rate</find>
+      <find>.sort</find>
+      <find>Icons.sort</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -810,8 +810,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="933" column="51" lean-forward="true" selection-start-line="933" selection-start-column="51" selection-end-line="933" selection-end-column="51" />
+        <state relative-caret-position="70">
+          <caret line="1121" column="110" lean-forward="true" selection-start-line="1121" selection-start-column="110" selection-end-line="1121" selection-end-column="110" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

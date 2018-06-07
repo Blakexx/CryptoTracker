@@ -851,7 +851,6 @@ class SettingsState extends State<Settings>{
                                     doneChanging?new Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [new Container(
-                                          padding: EdgeInsets.only(right:5.0),
                                           color: bright?Colors.white:Colors.white12,
                                           child: new MyDropdown.DropdownButtonHideUnderline(
                                             child: new ButtonTheme(alignedDropdown: true,minWidth: 0.0,child: new MyDropdown.DropdownButton<String>(
@@ -932,8 +931,8 @@ class SettingsState extends State<Settings>{
                                         )]
                                     ):new Container(
                                       height: 48.0,
-                                      width: 130.0,
-                                      child: new Container(child: new LinearProgressIndicator())
+                                      width: 48.0,//130.0,
+                                      child: new CircularProgressIndicator()//new LinearProgressIndicator()
                                     )
                                   ]
                               )
