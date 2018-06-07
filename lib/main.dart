@@ -405,7 +405,7 @@ class HomePageState extends State<HomePage>{
                   featureId: features[3],
                   color: Colors.blue,
                   title: 'Sorting',
-                  icon: Icons.filter_list,
+                  icon: Icons.sort,
                   description: new Text(
                     'Tap here to sort your favorites list.',
                     style: new TextStyle(
@@ -436,7 +436,7 @@ class HomePageState extends State<HomePage>{
                           new PopupMenuItem<String>(
                               child: const Text("Custom Order"), value: "Default")
                         ],
-                        child: new Icon(Icons.filter_list),
+                        child: new Icon(Icons.sort),
                         onSelected:(s){
                           if(firstTime){
                             setState((){firstTime = false;featureCount = 100;});
@@ -848,7 +848,7 @@ class SettingsState extends State<Settings>{
                                     new Expanded(
                                         child: new Text("  Currency",style:new TextStyle(fontSize:20.0)),
                                     ),
-                                    new Column(
+                                    doneChanging?new Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [new Container(
                                           padding: EdgeInsets.only(right:5.0),
@@ -891,7 +891,7 @@ class SettingsState extends State<Settings>{
                                                 ],
                                                 onChanged: (s){
                                                   if(doneChanging){
-                                                    doneChanging = false;
+                                                    setState((){doneChanging = false;});
                                                     double firstRate;
                                                     double secondRate;
                                                     http.get(
@@ -920,7 +920,7 @@ class SettingsState extends State<Settings>{
                                                         }
                                                         setState((){currency = s;symbol = currencySymbolMap.putIfAbsent(currency, ()=>null);});
                                                         themeInfo.writeData((bright?"0":"1")+(displayGraphs?" 1":" 0")+" "+currency);
-                                                        doneChanging = true;
+                                                        setState((){doneChanging = true;});
                                                       });
                                                     });
                                                   }
@@ -930,6 +930,10 @@ class SettingsState extends State<Settings>{
                                             ))
                                           )
                                         )]
+                                    ):new Container(
+                                      height: 48.0,
+                                      width: 130.0,
+                                      child: new Container(child: new LinearProgressIndicator())
                                     )
                                   ]
                               )
@@ -1124,7 +1128,7 @@ class CryptoListState extends State<CryptoList>{
                                 new PopupMenuItem<String>(
                                     child: const Text("24H Change Descending"), value: "24H Change Descending")
                               ],
-                              child: new Icon(Icons.filter_list),
+                              child: new Icon(Icons.sort),
                               onSelected:(s){
                                 setState(() {
                                   scrollController.jumpTo(1.0);
