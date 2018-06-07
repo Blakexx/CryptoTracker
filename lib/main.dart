@@ -127,6 +127,7 @@ void main() {
           ));
         });
       }else{
+        usdRate = 1.0;
         rate = 1.0;
         symbol = "\$";
         runApp(new MaterialApp(
@@ -2214,4 +2215,3 @@ class ThemeInfo{
   }
 
 }
-
