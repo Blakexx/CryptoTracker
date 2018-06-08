@@ -546,7 +546,7 @@ class HomePageState extends State<HomePage>{
                           launchIOS();
                         }else if(Platform.isAndroid){
                           launchAndroid() async{
-                            const url = 'https://play.google.com/store/apps/details?id=land.platypus.crypto';
+                            const url = 'https://www.platypus.land';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
