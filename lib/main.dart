@@ -600,7 +600,7 @@ class HomePageState extends State<HomePage>{
                       new PopupMenuItem<String>(
                           child: const Text("Settings"), value: "Settings"),
                       new PopupMenuItem<String>(
-                          child: const Text("Rate us"), value: "Rate us"),
+                          child: new Text(!Platform.isIOS?"Rate us":"Website"), value: "Rate us"),
                       new PopupMenuItem<String>(
                           child: const Text("Report a Bug"), value: "Report a Bug"),
                       new PopupMenuItem<String>(
