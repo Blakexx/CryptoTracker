@@ -2052,7 +2052,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         primaryMeasureAxis: new charts.NumericAxisSpec(
             tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
             tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-                new NumberFormat(symbol+"###,###,###,###,###,###,###,###,###,###,###,###,###,###,###,###.###########","en_US")
+                new NumberFormat(symbol.toString().replaceAll("\.", "")+"###,###,###,###,###,###,###,###,###,###,###,###,###,###,###,###.###########","en_US")
             ),
             renderSpec: new charts.GridlineRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
