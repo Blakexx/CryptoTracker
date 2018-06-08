@@ -536,7 +536,7 @@ class HomePageState extends State<HomePage>{
                       }else if(selected=="Rate us"){
                         if(Platform.isIOS){
                           launchIOS() async{
-                            const url = 'https://www.apple.com';
+                            const url = 'https://sites.google.com/view/platypuslabsllc/home';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
@@ -546,7 +546,7 @@ class HomePageState extends State<HomePage>{
                           launchIOS();
                         }else if(Platform.isAndroid){
                           launchAndroid() async{
-                            const url = 'https://www.google.com';
+                            const url = 'https://play.google.com/store/apps/details?id=land.platypus.crypto';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
@@ -1500,7 +1500,7 @@ class FavCryptoState extends State<FavCrypto>{
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              new Text((widget.price>=0?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: widget.price<1000000?2:0).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold)),
+                              new Text((widget.price>=0?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: widget.price<100000?2:0).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold)),
                               new Text((widget.mCap>=0?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                               displayGraphs?widget.smallImage:new Container()
                             ]
@@ -1655,7 +1655,7 @@ class CryptoState extends State<Crypto>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      new Text((widget.price>=0?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: widget.price<1000000?2:0).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
+                      new Text((widget.price>=0?widget.price>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: widget.price<100000?2:0).format(widget.price):symbol+(widget.price>.000001?widget.price.toStringAsFixed(6):widget.price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)),
                       new Text((widget.mCap>=0?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                       displayGraphs?widget.smallImage:new Container()
                     ]
