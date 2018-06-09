@@ -2070,7 +2070,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                 )
             ),
             tickProviderSpec: days!=1?new charts.DayTickProviderSpec(
-                increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[40]:[60]
+                increments: days==7?[1]:days==30?[5]:days==180?[40]:[60]
             ):new charts.AutoDateTimeTickProviderSpec(),
             renderSpec: new charts.SmallTickRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
