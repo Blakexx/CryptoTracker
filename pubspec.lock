@@ -36,13 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  browser:
-    dependency: transitive
-    description:
-      name: browser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.10.0+3"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -131,7 +124,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2"
+    version: "0.4.0"
   flutter_list_drag_and_drop:
     dependency: "direct main"
     description:
@@ -199,7 +192,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.33"
+    version: "2.0.3"
   intl:
     dependency: transitive
     description:
@@ -297,7 +290,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   petitparser:
     dependency: transitive
     description:
@@ -339,7 +332,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.2"
   shelf:
     dependency: transitive
     description:
@@ -456,7 +449,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   utf:
     dependency: transitive
     description:

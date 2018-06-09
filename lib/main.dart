@@ -2069,9 +2069,9 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                     transitionFormat: days==1?'MM/dd hh/mm a':days==7?'MM/dd':days==30?'MM/dd':days==180?"YY/MM":"YY/MM"
                 )
             ),
-            tickProviderSpec: new charts.DayTickProviderSpec(
+            tickProviderSpec: days!=1?new charts.DayTickProviderSpec(
                 increments: days==1?[1]:days==7?[1]:days==30?[5]:days==180?[40]:[60]
-            ),
+            ):new charts.AutoDateTimeTickProviderSpec(),
             renderSpec: new charts.SmallTickRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
                     color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
