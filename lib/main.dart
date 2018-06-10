@@ -415,7 +415,7 @@ class HomePageState extends State<HomePage>{
                     ),
                   ),
                   child: new Container(
-                    padding: EdgeInsets.only(left:5.0,right:10.0),
+                    width: 35.0,
                     child: new PopupMenuButton<String>(
                         itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
                           new PopupMenuItem<String>(
@@ -526,7 +526,7 @@ class HomePageState extends State<HomePage>{
                       color: Colors.white.withOpacity(0.9),
                     ),
                   ),
-                  child: new PopupMenuButton<String>(
+                  child: new Container(width: 30.0,child: new PopupMenuButton<String>(
                     onSelected: (String selected){
                       if(firstTime){
                         setState((){firstTime = false;featureCount = 100;});
@@ -607,7 +607,7 @@ class HomePageState extends State<HomePage>{
                           child: const Text("About"), value: "About"),
                     ],
                     child: new Icon(Icons.more_vert)
-                )
+                ))
               )
             ]
         ),
@@ -1108,7 +1108,8 @@ class CryptoListState extends State<CryptoList>{
                           }
                       ),
                       new Container(
-                          padding: EdgeInsets.only(right:10.0),
+                          width:40.0,
+                          padding: EdgeInsets.only(right:5.0),
                           child: new PopupMenuButton<String>(
                               itemBuilder: (BuildContext context)=><PopupMenuItem<String>>[
                                 new PopupMenuItem<String>(
