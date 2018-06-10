@@ -1270,7 +1270,7 @@ class CryptoListState extends State<CryptoList>{
                                                             crossAxisAlignment: CrossAxisAlignment.center,
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
-                                                              new Text("Price",style: new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold,color:Colors.white)),
+                                                              new Text("Price",style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold,color:Colors.white)),
                                                               new Text("Market cap",style: new TextStyle(color:Colors.grey,fontSize:12.0)),
                                                               (fullList[0] as Crypto).smallImage
                                                             ]
@@ -1635,7 +1635,7 @@ class CryptoState extends State<Crypto>{
             child: new Row(
               children: <Widget>[
                 // ignore: conflicting_dart_import
-                new Expanded(child: new Column(
+                new Expanded(flex:100,child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1661,7 +1661,7 @@ class CryptoState extends State<Crypto>{
                       displayGraphs?widget.smallImage:new Container()
                     ]
                 ),
-                new Expanded(
+                new Expanded(flex:78,
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -1673,7 +1673,7 @@ class CryptoState extends State<Crypto>{
                     )
                 ),
                 new Icon(widget.color==Colors.black12?Icons.add:Icons.check)
-              ],
+              ]
             ),
             onPressed: (){
               if(completer.isCompleted){
