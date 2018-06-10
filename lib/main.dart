@@ -2096,8 +2096,8 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                     selectedTime = selectedDatum[0].datum.time;
                   });
                 }else{
-                  selectedPrice = -1.0;
-                  selectedTime = null;
+                  setState((){selectedPrice = -1.0;
+                  selectedTime = null;});
                 }
               }
           )
@@ -2113,12 +2113,9 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             ]
         )
     )
-
     ]):canLoad?new Container(height:232.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new CircularProgressIndicator()
-        ]
+        children: <Widget>[new CircularProgressIndicator()]
     )):new Container(
         height:232.0,
         child: new Center(
@@ -2130,9 +2127,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   Future<List<charts.Series<TimeSeriesPrice, DateTime>>> createChart(http.Response response, String s) async {
 
 
-    List<TimeSeriesPrice> data = [
-
-    ];
+    List<TimeSeriesPrice> data = [];
 
     Map<String, dynamic> info = json.decode(response.body);
 
