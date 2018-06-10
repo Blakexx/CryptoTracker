@@ -588,7 +588,7 @@ class HomePageState extends State<HomePage>{
                                           new Text("\n"),
                                           Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
                                           new Text("\nPlatypus Crypto V1.0.3"),
-                                          new Text("2018© Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
+                                          new Text("©2018 Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
                                         ]
                                     )
                                 )
@@ -2096,8 +2096,10 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                     selectedTime = selectedDatum[0].datum.time;
                   });
                 }else{
-                  setState((){selectedPrice = -1.0;
-                  selectedTime = null;});
+                  setState((){
+                    selectedPrice = -1.0;
+                    selectedTime = null;
+                  });
                 }
               }
           )
