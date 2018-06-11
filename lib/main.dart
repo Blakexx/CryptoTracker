@@ -308,33 +308,28 @@ class HomePageState extends State<HomePage>{
         for(Widget w in fullList){
           dex++;
           if((w as Crypto).price==null){
-            http.Response r;
-            getSpecificData((w as Crypto).id).then((re){
-              r = re;
-              Map<String, dynamic> s = json.decode(r.body)["data"];
-              Crypto temp = (w as Crypto);
-              temp.price = s["quotes"]["USD"]["price"]!=null?s["quotes"]["USD"]["price"]*usdRate:-1.0;
-              temp.oneHour = s["quotes"]["USD"]["percent_change_1h"]!=null?s["quotes"]["USD"]["percent_change_1h"]:-1000000.0;
-              temp.twentyFourHours = s["quotes"]["USD"]["percent_change_24h"]!=null?s["quotes"]["USD"]["percent_change_24h"]:-1000000.0;
-              temp.sevenDays = s["quotes"]["USD"]["percent_change_7d"]!=null?s["quotes"]["USD"]["percent_change_7d"]:-1000000.0;
-              temp.mCap = s["quotes"]["USD"]["market_cap"]!=null?s["quotes"]["USD"]["market_cap"]*usdRate:-1.0;
-              temp.circSupply = s["circulating_supply"]!=null?s["circulating_supply"]:-1.0;
-              temp.totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
-              temp.maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
-              temp.volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*usdRate:-1.0;
-              if((w as Crypto).favIndex!=null && (w as Crypto).favIndex>=0){
-                FavCrypto temperino = favList[(fullList[dex] as Crypto).favIndex] as FavCrypto;
-                temperino.price = temp.price;
-                temperino.oneHour = temp.oneHour;
-                temperino.twentyFourHours = temp.twentyFourHours;
-                temperino.sevenDays = temp.sevenDays;
-                temperino.mCap = temp.mCap;
-                temperino.circSupply = temp.circSupply;
-                temperino.totalSupply = temp.totalSupply;
-                temperino.maxSupply = temp.maxSupply;
-                temperino.volume24h = temp.volume24h;
-              }
-            });
+            Crypto temp = (w as Crypto);
+            temp.price = -1.0;
+            temp.oneHour = -1000000.0;
+            temp.twentyFourHours = -1000000.0;
+            temp.sevenDays = -1000000.0;
+            temp.mCap = -1.0;
+            temp.circSupply = -1.0;
+            temp.totalSupply = -1.0;
+            temp.maxSupply = -1.0;
+            temp.volume24h = -1.0;
+            if((w as Crypto).favIndex!=null && (w as Crypto).favIndex>=0){
+              FavCrypto temperino = favList[(fullList[dex] as Crypto).favIndex] as FavCrypto;
+              temperino.price = temp.price;
+              temperino.oneHour = temp.oneHour;
+              temperino.twentyFourHours = temp.twentyFourHours;
+              temperino.sevenDays = temp.sevenDays;
+              temperino.mCap = temp.mCap;
+              temperino.circSupply = temp.circSupply;
+              temperino.totalSupply = temp.totalSupply;
+              temperino.maxSupply = temp.maxSupply;
+              temperino.volume24h = temp.volume24h;
+            }
           }
         }
         wait(){
