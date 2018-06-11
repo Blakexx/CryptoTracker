@@ -628,7 +628,7 @@ class HomePageState extends State<HomePage>{
                                         children: <Widget>[
                                           new Text("\n"),
                                           Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
-                                          new Text("\nPlatypus Crypto V1.0.4"),
+                                          new Text("\nPlatypus Crypto V1.0.5"),
                                           new Text("©2018 Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
                                         ]
                                     )
