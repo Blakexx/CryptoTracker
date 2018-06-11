@@ -1656,7 +1656,7 @@ class CryptoState extends State<Crypto>{
             child: new Row(
               children: <Widget>[
                 // ignore: conflicting_dart_import
-                new Expanded(flex:100,child: new Column(
+                new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1672,8 +1672,8 @@ class CryptoState extends State<Crypto>{
                           ]
                       )
                     ]
-                )),
-                new Column(
+                ),
+                new Expanded(child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1681,9 +1681,8 @@ class CryptoState extends State<Crypto>{
                       new Text((widget.mCap>=0?widget.mCap>1?symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(widget.mCap):symbol+widget.mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:bright?Colors.black45:Colors.grey,fontSize:12.0)),
                       displayGraphs?widget.smallImage:new Container()
                     ]
-                ),
-                new Expanded(flex:80,
-                    child: new Column(
+                )),
+                new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
@@ -1692,7 +1691,7 @@ class CryptoState extends State<Crypto>{
                         widget.sevenDays!=-1000000.0?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
                       ],
                     )
-                ),
+                ,
                 new Icon(widget.color==Colors.black12?Icons.add:Icons.check)
               ]
             ),
