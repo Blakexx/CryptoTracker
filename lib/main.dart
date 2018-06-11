@@ -536,7 +536,7 @@ class HomePageState extends State<HomePage>{
                       }else if(selected=="Rate us"){
                         if(Platform.isIOS){
                           launchIOS() async{
-                            const url = 'https://sites.google.com/view/platypuslabsllc/home';
+                            const url = 'https://itunes.apple.com/us/app/platypus-crypto/id1397122793';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
@@ -577,6 +577,28 @@ class HomePageState extends State<HomePage>{
                           }
                           launchAndroid();
                         }
+                      }else if(selected=="Website"){
+                        if(Platform.isIOS){
+                          launchIOS() async{
+                            const url = 'https://sites.google.com/view/platypuslabsllc/home';
+                            if(await canLaunch(url)) {
+                              await launch(url);
+                            }else{
+                              throw 'Could not launch $url';
+                            }
+                          }
+                          launchIOS();
+                        }else if(Platform.isAndroid){
+                          launchAndroid() async{
+                            const url = 'https://sites.google.com/view/platypuslabsllc/home';
+                            if(await canLaunch(url)) {
+                              await launch(url);
+                            }else{
+                              throw 'Could not launch $url';
+                            }
+                          }
+                          launchAndroid();
+                        }
                       }else if(selected=="About"){
                         Navigator.push(context,new MaterialPageRoute(builder: (context) => new Scaffold(
                             appBar: new AppBar(title:new Text("About"),backgroundColor: Colors.black54),
@@ -600,9 +622,11 @@ class HomePageState extends State<HomePage>{
                       new PopupMenuItem<String>(
                           child: const Text("Settings"), value: "Settings"),
                       new PopupMenuItem<String>(
-                          child: new Text(!Platform.isIOS?"Rate us":"Website"), value: "Rate us"),
+                          child: const Text("Rate us"), value: "Rate us"),
                       new PopupMenuItem<String>(
                           child: const Text("Report a Bug"), value: "Report a Bug"),
+                      new PopupMenuItem<String>(
+                          child: const Text("Website"), value: "Website"),
                       new PopupMenuItem<String>(
                           child: const Text("About"), value: "About"),
                     ],
