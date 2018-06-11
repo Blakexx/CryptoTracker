@@ -898,13 +898,13 @@ class SettingsState extends State<Settings>{
                                                         Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/1?convert="+s)
                                                     ).then((response){
                                                       Map<String, dynamic> map1 = json.decode(response.body)["data"];
-                                                      firstRate = map1["quotes"][s]["price"]/map1["quotes"]["USD"]["price"]*1.0;
-                                                      usdRate = firstRate;
+                                                      firstRate = map1["quotes"][s]["price"];
+                                                      usdRate = firstRate/map1["quotes"]["USD"]["price"]*1.0;
                                                       http.get(
                                                           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/1?convert="+currency)
                                                       ).then((response){
                                                         Map<String, dynamic> map2 = json.decode(response.body)["data"];
-                                                        secondRate = map2["quotes"][currency]["price"]/map2["quotes"]["USD"]["price"]*1.0;
+                                                        secondRate = map2["quotes"][currency]["price"];
                                                         rate = firstRate/secondRate;
                                                         for(int i = 0; i<fullList.length;i++){
                                                           Crypto temp = (fullList[i] as Crypto);
@@ -1661,7 +1661,7 @@ class CryptoState extends State<Crypto>{
                       displayGraphs?widget.smallImage:new Container()
                     ]
                 ),
-                new Expanded(flex:78,
+                new Expanded(flex:80,
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,

@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" afterPath="$PROJECT_DIR$/ios/Podfile.lock" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -21,8 +23,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="1663" column="36" lean-forward="false" selection-start-line="1663" selection-start-column="36" selection-end-line="1663" selection-end-column="36" />
+            <state relative-caret-position="290">
+              <caret line="909" column="93" lean-forward="false" selection-start-line="909" selection-start-column="93" selection-end-line="909" selection-end-column="93" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -81,11 +83,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Icons.sort</find>
-      <find>DropDown</find>
-      <find>google.com</find>
-      <find>Graph</find>
-      <find>&lt;100</find>
       <find>jump</find>
       <find>CryptoListStat</find>
       <find>i</find>
@@ -111,6 +108,11 @@
       <find>Price</find>
       <find>&quot;Price&quot;</find>
       <find>CryptoStat</find>
+      <find>favCryptoSta</find>
+      <find>new Text(&quot;|</find>
+      <find>flex:</find>
+      <find>rate</find>
+      <find>*rate</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -134,7 +136,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="width" value="1440" />
     <option name="height" value="900" />
   </component>
@@ -171,10 +173,10 @@
         </subPane>
         <option name="show-excluded-files" value="false" />
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
       <pane id="AndroidView" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -806,8 +808,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="1663" column="36" lean-forward="false" selection-start-line="1663" selection-start-column="36" selection-end-line="1663" selection-end-column="36" />
+        <state relative-caret-position="290">
+          <caret line="909" column="93" lean-forward="false" selection-start-line="909" selection-start-column="93" selection-end-line="909" selection-end-column="93" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
