@@ -18,6 +18,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:crypto_tracker/feature_discovery.dart';
 import 'mydropdown.dart' as MyDropdown;
+import 'package:dynamic_theme/dynamic_theme.dart';
 
 int itemCount = 1;
 
@@ -96,9 +97,15 @@ void main() {
         bright = true;
         displayGraphs = true;
         firstTime = true;
-        runApp(new MaterialApp(
-            theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-            home: new FeatureDiscovery(child: new HomePage())
+        runApp(new DynamicTheme(
+            themedWidgetBuilder: (context, theme){
+              return new MaterialApp(
+                  theme: theme,
+                  home: new FeatureDiscovery(child: new HomePage())
+              );
+            },
+            data: (brightness) => new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+            defaultBrightness: bright?Brightness.light:Brightness.dark
         ));
       });
     }else{
@@ -121,18 +128,30 @@ void main() {
           Map<String, dynamic> map = json.decode(response.body)["data"];
           rate = map["quotes"][currency]["price"]/map["quotes"]["USD"]["price"]*1.0;
           usdRate = rate;
-          runApp(new MaterialApp(
-              theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-              home: new FeatureDiscovery(child: new HomePage())
+          runApp(new DynamicTheme(
+              themedWidgetBuilder: (context, theme){
+                return new MaterialApp(
+                    theme: theme,
+                    home: new FeatureDiscovery(child: new HomePage())
+                );
+              },
+              data: (brightness) => new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+              defaultBrightness: bright?Brightness.light:Brightness.dark
           ));
         });
       }else{
         usdRate = 1.0;
         rate = 1.0;
         symbol = "\$";
-        runApp(new MaterialApp(
-            theme: new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
-            home: new FeatureDiscovery(child: new HomePage())
+        runApp(new DynamicTheme(
+          themedWidgetBuilder: (context, theme){
+            return new MaterialApp(
+                theme: theme,
+                home: new FeatureDiscovery(child: new HomePage())
+            );
+          },
+          data: (brightness) => new ThemeData(fontFamily: "MavenPro",brightness: bright?Brightness.light:Brightness.dark),
+          defaultBrightness: bright?Brightness.light:Brightness.dark
         ));
       }
     }
@@ -804,34 +823,9 @@ class SettingsState extends State<Settings>{
                                     onChanged: (dark){
                                       if(doneChanging){
                                         bright = !bright;
-                                        showDialog(
-                                            barrierDismissible: false,
-                                            context:context,
-                                            builder: (BuildContext context)=>new AlertDialog(
-                                                title: new Text("Are you sure?"),
-                                                content: new Text("The application will close if you select this option"),
-                                                actions: <Widget>[
-                                                  new FlatButton(
-                                                    onPressed: (){bright = !bright;Navigator.of(context).pop(false);},
-                                                    child: new Text('No'),
-                                                  ),
-                                                  new FlatButton(
-                                                      onPressed: (){
-                                                        if(dark==true){
-                                                          themeInfo.writeData("1"+(displayGraphs?" 1":" 0")+" "+currency).then((file){
-                                                            exit(0);
-                                                          });
-                                                        }else{
-                                                          themeInfo.writeData("0"+(displayGraphs?" 1":" 0")+" "+currency).then((file){
-                                                            exit(0);
-                                                          });
-                                                        }
-                                                      },
-                                                      child: new Text('Yes')
-                                                  )
-                                                ]
-                                            )
-                                        );
+                                        themeInfo.writeData((dark?"1":"0")+(displayGraphs?" 1":" 0")+" "+currency).then((file){
+                                          DynamicTheme.of(context).setBrightness(bright?Brightness.light:Brightness.dark);
+                                        });
                                       }
                                     }
                                 ),
@@ -1441,7 +1435,10 @@ class FavCryptoState extends State<FavCrypto>{
       wrap = true;
     }
 
+    widget.color = bright?Colors.black12:Colors.black87;
+
     widget.key = new ObjectKey(widget.slug);
+
     return new Container(
         height: !wrap?displayGraphs?120.0:100.0:null,
         padding: EdgeInsets.only(top:10.0),

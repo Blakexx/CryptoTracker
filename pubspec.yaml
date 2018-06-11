@@ -16,6 +16,9 @@ dependencies:
   flutter_launcher_icons:
   cached_network_image:
   flutter_cache_manager:
+  dynamic_theme:
+      git:
+        url: git://github.com/Norbert515/dynamic_theme.git
 
 dev_dependencies:
   flutter_test:

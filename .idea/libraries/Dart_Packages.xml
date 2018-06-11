@@ -107,6 +107,13 @@
             </list>
           </value>
         </entry>
+        <entry key="dynamic_theme">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/git/dynamic_theme-8982a929112006e7b10261ffa60afbe8c5e2d64d/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter">
           <value>
             <list>
@@ -509,6 +516,7 @@
       </option>
     </properties>
     <CLASSES>
+      <root url="file://$USER_HOME$/.pub-cache/git/dynamic_theme-8982a929112006e7b10261ffa60afbe8c5e2d64d/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/analyzer-0.31.2-alpha.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/archive-1.0.33/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/args-1.4.3/lib" />
