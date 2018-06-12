@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="329" column="51" lean-forward="true" selection-start-line="329" selection-start-column="51" selection-end-line="329" selection-end-column="51" />
+            <state relative-caret-position="346">
+              <caret line="1689" column="15" lean-forward="true" selection-start-line="1689" selection-start-column="15" selection-end-line="1689" selection-end-column="15" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -81,8 +80,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Price</find>
-      <find>&quot;Price&quot;</find>
       <find>CryptoStat</find>
       <find>favCryptoSta</find>
       <find>new Text(&quot;|</find>
@@ -109,8 +106,10 @@
       <find>new Row</find>
       <find>widget.pric</find>
       <find>new ListView</find>
-      <find>CryptoState</find>
       <find>getSpec</find>
+      <find>CryptoState</find>
+      <find>= temp.price</find>
+      <find>CryptoSta</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -806,8 +805,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="329" column="51" lean-forward="true" selection-start-line="329" selection-start-column="51" selection-end-line="329" selection-end-column="51" />
+        <state relative-caret-position="346">
+          <caret line="1689" column="15" lean-forward="true" selection-start-line="1689" selection-start-column="15" selection-end-line="1689" selection-end-column="15" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

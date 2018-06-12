@@ -1651,7 +1651,7 @@ class CryptoState extends State<Crypto>{
             child: new Row(
               children: <Widget>[
                 // ignore: conflicting_dart_import
-                new Column(
+                new Expanded(child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1667,7 +1667,7 @@ class CryptoState extends State<Crypto>{
                           ]
                       )
                     ]
-                ),
+                )),
                 new Expanded(child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1677,7 +1677,7 @@ class CryptoState extends State<Crypto>{
                       displayGraphs?widget.smallImage:new Container()
                     ]
                 )),
-                new Column(
+                new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.end,children: [new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
@@ -1685,9 +1685,8 @@ class CryptoState extends State<Crypto>{
                         widget.twentyFourHours!=-1000000.0?new Text(((widget.twentyFourHours>=0)?"+":"")+widget.twentyFourHours.toString()+"\%",style:new TextStyle(color:((widget.twentyFourHours>=0)?Colors.green:Colors.red))):new Text("N/A"),
                         widget.sevenDays!=-1000000.0?new Text(((widget.sevenDays>=0)?"+":"")+widget.sevenDays.toString()+"\%",style:new TextStyle(color:((widget.sevenDays>=0)?Colors.green:Colors.red))):new Text("N/A")
                       ],
-                    )
-                ,
-                new Icon(widget.color==Colors.black12?Icons.add:Icons.check)
+                ),
+                new Icon(widget.color==Colors.black12?Icons.add:Icons.check)]))
               ]
             ),
             onPressed: (){
