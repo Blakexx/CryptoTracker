@@ -1437,7 +1437,7 @@ class FavCryptoState extends State<FavCrypto>{
     widget.key = new ObjectKey(widget.slug);
 
     return new Container(
-        height: wrap?displayGraphs?120.0:100.0:null,
+        height: !wrap?displayGraphs?120.0:100.0:null,
         padding: EdgeInsets.only(top:10.0),
         child: new GestureDetector(
             onLongPress: (){
@@ -2047,15 +2047,13 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   double selectedPrice = -1.0;
   DateTime selectedTime;
 
-  double maxPrice = -1.0,minPrice = double.maxFinite;
-
   SimpleTimeSeriesChartState(this.seriesList, this.shortName,this.price,this.days,{this.animate});
 
   @override
   Widget build(BuildContext context) {
     if(firstBuild){
       http.get(
-          Uri.encodeFull("http://coincap.io/history/"+days.toString()+"day/"+shortName)
+          days!=-1?Uri.encodeFull("http://coincap.io/history/"+days.toString()+"day/"+shortName):Uri.encodeFull("http://coincap.io/history/"+shortName)
       ).then((value){
         response = value;
         createChart(response,shortName).then((value){
@@ -2089,7 +2087,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                 )
             ),
             tickProviderSpec: days!=1?new charts.DayTickProviderSpec(
-                increments: days==7?[1]:days==30?[5]:days==180?[40]:[60]
+                increments: days==7?[1]:days==30?[5]:days==180?[40]:days==365?[60]:[365]
             ):new charts.AutoDateTimeTickProviderSpec(),
             renderSpec: new charts.SmallTickRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
@@ -2168,8 +2166,6 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       setState((){total = info["price"].length-1;});
       data.length = total;
       for(int i = 0;i<total;i++){
-        maxPrice = maxPrice<info["price"][i][1]*1.0?info["price"][i][1]*1.0:maxPrice;
-        minPrice = minPrice>info["price"][i][1]*1.0?info["price"][i][1]*1.0:minPrice;
         data[i] = new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["price"][i][0]), info["price"][i][1]*1.0*usdRate);
         setState((){count++;});
       }

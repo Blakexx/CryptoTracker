@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -20,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-518">
-              <caret line="1429" column="10" lean-forward="true" selection-start-line="1429" selection-start-column="10" selection-end-line="1429" selection-end-column="10" />
+            <state relative-caret-position="125">
+              <caret line="1777" column="0" lean-forward="true" selection-start-line="1777" selection-start-column="0" selection-end-line="1777" selection-end-column="0" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -80,9 +81,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>new Text(&quot;|</find>
-      <find>flex:</find>
-      <find>rate</find>
       <find>*rate</find>
       <find>1.0.3</find>
       <find>debug</find>
@@ -110,6 +108,9 @@
       <find>CryptoSta</find>
       <find>onLongPres</find>
       <find>ondis</find>
+      <find>gra</find>
+      <find>minPrice</find>
+      <find>1Y</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -153,9 +154,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -173,7 +173,8 @@
         </subPane>
         <option name="show-excluded-files" value="false" />
       </pane>
-      <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -805,8 +806,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-518">
-          <caret line="1429" column="10" lean-forward="true" selection-start-line="1429" selection-start-column="10" selection-end-line="1429" selection-end-column="10" />
+        <state relative-caret-position="125">
+          <caret line="1777" column="0" lean-forward="true" selection-start-line="1777" selection-start-column="0" selection-end-line="1777" selection-end-column="0" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
