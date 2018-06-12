@@ -1409,6 +1409,8 @@ int friendSwap = -1;
 
 class FavCryptoState extends State<FavCrypto>{
 
+  bool isPressed = false;
+
   String displayedName;
 
   bool wrap = false;
@@ -1430,7 +1432,7 @@ class FavCryptoState extends State<FavCrypto>{
       wrap = true;
     }
 
-    widget.color = bright?Colors.black12:Colors.black87;
+    widget.color = !isPressed?bright?Colors.black12:Colors.black87:bright?Colors.black26:Colors.black54;
 
     widget.key = new ObjectKey(widget.slug);
 
@@ -1452,11 +1454,13 @@ class FavCryptoState extends State<FavCrypto>{
                 }else{
                   setState((){
                     widget.color = bright?Colors.black26:Colors.black54;
+                    isPressed = true;
                     isInSwap = true;
                     friendSwap = widget.index;
                     wait(){
                       if(widget.index!=friendSwap){
                         setState((){});
+                        isPressed = false;
                       }else{
                         new Timer(Duration.zero,wait);
                       }
