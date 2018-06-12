@@ -1437,7 +1437,7 @@ class FavCryptoState extends State<FavCrypto>{
     widget.key = new ObjectKey(widget.slug);
 
     return new Container(
-        height: !wrap?displayGraphs?120.0:100.0:null,
+        height: wrap?displayGraphs?120.0:100.0:null,
         padding: EdgeInsets.only(top:10.0),
         child: new GestureDetector(
             onLongPress: (){
