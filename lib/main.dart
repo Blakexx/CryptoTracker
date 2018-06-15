@@ -623,7 +623,7 @@ class HomePageState extends State<HomePage>{
                                         children: <Widget>[
                                           new Text("\n"),
                                           Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
-                                          new Text("\nPlatypus Crypto V1.0.5"),
+                                          new Text("\nPlatypus Crypto V1.0.6"),
                                           new Text("©2018 Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
                                         ]
                                     )
@@ -1639,7 +1639,6 @@ class Crypto extends StatefulWidget{
 
 class CryptoState extends State<Crypto>{
 
-
   String displayedName;
 
   bool wrap = false;
@@ -1742,7 +1741,7 @@ class CryptoState extends State<Crypto>{
         ),
         onLongPress: (){
           Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));
-        },)
+        })
     );
   }
 }

@@ -21,8 +21,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="1745" column="6" lean-forward="true" selection-start-line="1745" selection-start-column="6" selection-end-line="1745" selection-end-column="6" />
+            <state relative-caret-position="190">
+              <caret line="625" column="76" lean-forward="false" selection-start-line="625" selection-start-column="76" selection-end-line="625" selection-end-column="76" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -81,7 +81,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>child: new MA</find>
       <find>Dyan</find>
       <find>showDi</find>
       <find>new Mat</find>
@@ -105,12 +104,13 @@
       <find>onrefr</find>
       <find>onRefr</find>
       <find>onRef</find>
-      <find>FavCryptoSta</find>
       <find>setUpDa</find>
       <find>http.get</find>
       <find>setUpData</find>
       <find>FavCryptoState</find>
       <find>CryptoState</find>
+      <find>FavCryptoSta</find>
+      <find>1.0.5</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -806,8 +806,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="1745" column="6" lean-forward="true" selection-start-line="1745" selection-start-column="6" selection-end-line="1745" selection-end-column="6" />
+        <state relative-caret-position="190">
+          <caret line="625" column="76" lean-forward="false" selection-start-line="625" selection-start-column="76" selection-end-line="625" selection-end-column="76" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
