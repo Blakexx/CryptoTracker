@@ -736,9 +736,17 @@ class HomePageState extends State<HomePage>{
                     setState((){completer = new Completer<Null>();});
                     done = false;
                     setUpData();
-                    wait() {
+                    wait(){
                       if (done) {
-                        for(int i = 0; i<favList.length;i++){
+                        int i = 0;
+                        doubleWait(){
+                          if(i==favList.length){
+                            completer.complete();
+                          }else{
+                            new Timer(Duration.zero,doubleWait);
+                          }
+                        }
+                        for(i = 0; i<favList.length;i++){
                           Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
                           (favList[i] as FavCrypto).price = temp.price;
                           (favList[i] as FavCrypto).oneHour = temp.oneHour;
@@ -750,7 +758,7 @@ class HomePageState extends State<HomePage>{
                           (favList[i] as FavCrypto).maxSupply = temp.maxSupply;
                           (favList[i] as FavCrypto).volume24h = temp.volume24h;
                         }
-                        completer.complete();
+                        doubleWait();
                       } else {
                         new Timer(Duration.zero, wait);
                       }
@@ -974,7 +982,6 @@ class CryptoList extends StatefulWidget{
 }
 
 class CryptoListState extends State<CryptoList>{
-
   Future<String> setUpData() async{
     int count = 1;
     http.Response r;
@@ -1319,7 +1326,15 @@ class CryptoListState extends State<CryptoList>{
                                 completer = new Completer<Null>();
                                 wait() {
                                   if (done) {
-                                    for(int i = 0; i<favList.length;i++){
+                                    int i = 0;
+                                    doubleWait(){
+                                      if(i==favList.length){
+                                        completer.complete();
+                                      }else{
+                                        new Timer(Duration.zero,doubleWait);
+                                      }
+                                    }
+                                    for(i = 0; i<favList.length;i++){
                                       Crypto temp = fullList[(favList[i] as FavCrypto).friendIndex];
                                       (favList[i] as FavCrypto).price = temp.price;
                                       (favList[i] as FavCrypto).oneHour = temp.oneHour;
@@ -1331,7 +1346,7 @@ class CryptoListState extends State<CryptoList>{
                                       (favList[i] as FavCrypto).maxSupply = temp.maxSupply;
                                       (favList[i] as FavCrypto).volume24h = temp.volume24h;
                                     }
-                                    completer.complete();
+                                    doubleWait();
                                   } else {
                                     new Timer(Duration.zero, wait);
                                   }
@@ -1649,7 +1664,7 @@ class CryptoState extends State<Crypto>{
         height: !wrap?displayGraphs?120.0:100.0:null,
         key: new ObjectKey("full"+widget.slug),
         padding: EdgeInsets.only(top:10.0),
-        child: new FlatButton(
+        child: new GestureDetector(child: new FlatButton(
             padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
             color: bright?widget.color:widget.color==Colors.black26?Colors.black87:Colors.black54,
             child: new Row(
@@ -1724,7 +1739,10 @@ class CryptoState extends State<Crypto>{
                 }
               }
             }
-        )
+        ),
+        onLongPress: (){
+          Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.slug,widget.name,widget.id,widget.oneHour,widget.twentyFourHours,widget.sevenDays,widget.price,widget.mCap,widget.image,widget.shortName,widget.circSupply,widget.totalSupply,widget.maxSupply,widget.volume24h)));
+        },)
     );
   }
 }
