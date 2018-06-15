@@ -1151,66 +1151,65 @@ class CryptoListState extends State<CryptoList>{
                               ],
                               child: new Icon(Icons.sort),
                               onSelected:(s){
-                                setState(() {
-                                  scrollController.jumpTo(1.0);
-                                  if(s=="Name Ascending"){
-                                    filteredList.sort((o1,o2){
-                                      if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
-                                        return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                      }
-                                      return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
-                                    });
-                                  }else if(s=="Name Descending"){
-                                    filteredList.sort((o1,o2){
-                                      if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
-                                        return (o2 as Crypto).name.toUpperCase().compareTo((o1 as Crypto).name.toUpperCase());
-                                      }
-                                      return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
-                                    });
-                                  }else if(s=="Price Ascending"){
-                                    filteredList.sort((o1,o2){
-                                      if(((o1 as Crypto).price!=(o2 as Crypto).price)){
-                                        return ((o1 as Crypto).price*1000000000-(o2 as Crypto).price*1000000000).round();
-                                      }
+                                if(s=="Name Ascending"){
+                                  filteredList.sort((o1,o2){
+                                    if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
                                       return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                    });
-                                  }else if(s=="Price Descending"){
-                                    filteredList.sort((o1,o2){
-                                      if(((o1 as Crypto).price!=(o2 as Crypto).price)){
-                                        return ((o2 as Crypto).price*1000000000-(o1 as Crypto).price*1000000000).round();
-                                      }
-                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                    });
-                                  }else if(s=="Market Cap Ascending"){
-                                    filteredList.sort((o1,o2){
-                                      if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-                                        return ((o1 as Crypto).mCap*100-(o2 as Crypto).mCap*100).round();
-                                      }
-                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                    });
-                                  }else if(s=="Market Cap Descending"){
-                                    filteredList.sort((o1,o2){
-                                      if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-                                        return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
-                                      }
-                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                    });
-                                  }else if(s=="24H Change Ascending"){
-                                    filteredList.sort((o1,o2){
-                                      if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
-                                        return ((o1 as Crypto).twentyFourHours*100-(o2 as Crypto).twentyFourHours*100).round();
-                                      }
-                                      return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-                                    });
-                                  }else if(s=="24H Change Descending"){
-                                    filteredList.sort((o1,o2){
-                                      if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
-                                        return ((o2 as Crypto).twentyFourHours*100-(o1 as Crypto).twentyFourHours*100).round();
-                                      }
-                                      return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-                                    });
-                                  }
-                                });
+                                    }
+                                    return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
+                                  });
+                                }else if(s=="Name Descending"){
+                                  filteredList.sort((o1,o2){
+                                    if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
+                                      return (o2 as Crypto).name.toUpperCase().compareTo((o1 as Crypto).name.toUpperCase());
+                                    }
+                                    return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
+                                  });
+                                }else if(s=="Price Ascending"){
+                                  filteredList.sort((o1,o2){
+                                    if(((o1 as Crypto).price!=(o2 as Crypto).price)){
+                                      return ((o1 as Crypto).price*1000000000-(o2 as Crypto).price*1000000000).round();
+                                    }
+                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                  });
+                                }else if(s=="Price Descending"){
+                                  filteredList.sort((o1,o2){
+                                    if(((o1 as Crypto).price!=(o2 as Crypto).price)){
+                                      return ((o2 as Crypto).price*1000000000-(o1 as Crypto).price*1000000000).round();
+                                    }
+                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                  });
+                                }else if(s=="Market Cap Ascending"){
+                                  filteredList.sort((o1,o2){
+                                    if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                      return ((o1 as Crypto).mCap*100-(o2 as Crypto).mCap*100).round();
+                                    }
+                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                  });
+                                }else if(s=="Market Cap Descending"){
+                                  filteredList.sort((o1,o2){
+                                    if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                      return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+                                    }
+                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                  });
+                                }else if(s=="24H Change Ascending"){
+                                  filteredList.sort((o1,o2){
+                                    if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
+                                      return ((o1 as Crypto).twentyFourHours*100-(o2 as Crypto).twentyFourHours*100).round();
+                                    }
+                                    return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
+                                  });
+                                }else if(s=="24H Change Descending"){
+                                  filteredList.sort((o1,o2){
+                                    if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
+                                      return ((o2 as Crypto).twentyFourHours*100-(o1 as Crypto).twentyFourHours*100).round();
+                                    }
+                                    return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
+                                  });
+                                }
+                                scrollController.jumpTo(1.0);
+                                new Timer(new Duration(microseconds:1),((){setState((){});}));
                               }
                           )
                       )
@@ -1507,6 +1506,28 @@ class FavCryptoState extends State<FavCrypto>{
                       dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                     }
                     storage.writeData(dataBuild);
+                  }else{
+                    wait(){
+                      if(completer.isCompleted){
+                        HomePageState.filteredList.remove(favList[widget.index]);
+                        favList.removeAt(widget.index);
+                        (fullList[widget.friendIndex] as Crypto).favIndex = null;
+                        (fullList[widget.friendIndex] as Crypto).color = Colors.black12;
+                        for(int i = 0;i<favList.length;i++){
+                          (favList[i] as FavCrypto).index = i;
+                          (fullList[(favList[i] as FavCrypto).friendIndex] as Crypto).favIndex = i;
+                        }
+                        context.ancestorStateOfType(new TypeMatcher<HomePageState>()).setState((){});
+                        String dataBuild = "";
+                        for(int i = 0;i<favList.length;i++){
+                          dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
+                        }
+                        storage.writeData(dataBuild);
+                      }else{
+                        new Timer(Duration.zero,wait);
+                      }
+                    }
+                    wait();
                   }
                 },
                 background: new Container(color:Colors.red),
@@ -1669,7 +1690,7 @@ class CryptoState extends State<Crypto>{
             child: new Row(
               children: <Widget>[
                 // ignore: conflicting_dart_import
-                new Expanded(child: new Column(
+                new Expanded(flex:3,child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1686,7 +1707,7 @@ class CryptoState extends State<Crypto>{
                       )
                     ]
                 )),
-                new Expanded(child: new Column(
+                new Expanded(flex:4,child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1695,7 +1716,7 @@ class CryptoState extends State<Crypto>{
                       displayGraphs?widget.smallImage:new Container()
                     ]
                 )),
-                new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.end,children: [new Column(
+                new Expanded(flex:3,child: new Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.end,children: [new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
