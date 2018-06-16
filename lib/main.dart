@@ -1955,9 +1955,9 @@ class Info extends StatelessWidget{
                           )
                       )
                   ),
-                  new InfoPiece("Circulating Supply",circSupply,fontSize,0,2,false),
-                  new InfoPiece("Total Supply",totalSupply,fontSize,0,2,false),
-                  new InfoPiece("Max Supply",maxSupply,fontSize,0,2,false),
+                  new InfoPiece("Circulating Supply",circSupply,fontSize,0,0,false),
+                  new InfoPiece("Total Supply",totalSupply,fontSize,0,0,false),
+                  new InfoPiece("Max Supply",maxSupply,fontSize,0,0,false),
                   new InfoPiece("24H Volume",volume24h,fontSize,0,2,true),
                 ]
             )
@@ -1990,7 +1990,7 @@ class InfoPiece extends StatelessWidget{
           child: new Row(
               children: [
                 new Expanded(child: new Text(" "+name,style:new TextStyle(fontSize:fontSize),textAlign: TextAlign.left)),
-                new Text((info>=0?info>1?new NumberFormat.currency(symbol:useSymbol?symbol:"",decimalDigits: first).format(info):symbol+info.toStringAsFixed(second):"N/A"),style:new TextStyle(fontSize: fontSize))
+                new Text((info>=0?info>1?new NumberFormat.currency(symbol:useSymbol?symbol:"",decimalDigits: first).format(info):new NumberFormat.currency(symbol:useSymbol?symbol:"",decimalDigits: second).format(info):"N/A"),style:new TextStyle(fontSize: fontSize))
               ]
           ),
         )
