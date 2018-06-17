@@ -25,9 +25,11 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  image_path: "icon/platypus.png"
-  android: false
+  android: true
   ios: true
+  image_path: "icon/platypus.png"
+  image_path_android: "icon/platypus2.png"
+  image_path_ios: "icon/platypus.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

@@ -1989,7 +1989,7 @@ class InfoPiece extends StatelessWidget{
           padding: EdgeInsets.only(top:10.0,bottom:10.0),
           child: new Row(
               children: [
-                new Expanded(child: new Text(" "+name,style:new TextStyle(fontSize:fontSize),textAlign: TextAlign.left)),
+                new Expanded(child: new Text(name,style:new TextStyle(fontSize:fontSize),textAlign: TextAlign.left)),
                 new Text((info>=0?info>1?new NumberFormat.currency(symbol:useSymbol?symbol:"",decimalDigits: first).format(info):new NumberFormat.currency(symbol:useSymbol?symbol:"",decimalDigits: second).format(info):"N/A"),style:new TextStyle(fontSize: fontSize))
               ]
           ),
