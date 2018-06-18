@@ -220,8 +220,8 @@ class HomePageState extends State<HomePage>{
         (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
         (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*usdRate:-1.0;
         realCount++;
-        setState((){});
       }
+      setState((){});
       count+=100;
     }
     //print(count.toString()+" "+itemCount.toString());
