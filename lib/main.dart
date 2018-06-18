@@ -109,16 +109,8 @@ void main() {
         ));
       });
     }else{
-      if(value[0]=="1"){
-        bright = false;
-      }else{
-        bright = true;
-      }
-      if(value[1]=="1"){
-        displayGraphs = true;
-      }else{
-        displayGraphs = false;
-      }
+      bright = value[0]=="0";
+      displayGraphs = value[1]=="1";
       currency = value[2];
       if(currency!="USD"){
         symbol = currencySymbolMap.putIfAbsent(currency, ()=>null);
@@ -968,12 +960,9 @@ class SettingsState extends State<Settings>{
   }
 }
 
-List<Widget> favList = [
+List<Widget> favList = [];
 
-];
-
-List<Widget> fullList = [
-];
+List<Widget> fullList = [];
 
 class CryptoList extends StatefulWidget{
 
@@ -1046,7 +1035,7 @@ class CryptoListState extends State<CryptoList>{
       });
       buttonPressed = false;
       if(firstTime && featureCount==1){
-        Timer t = new Timer(const Duration(seconds:4),(){
+        new Timer(const Duration(seconds:4),(){
           FeatureDiscovery.discoverFeatures(context, [features[1]]);
         });
       }
@@ -1151,65 +1140,74 @@ class CryptoListState extends State<CryptoList>{
                               ],
                               child: new Icon(Icons.sort),
                               onSelected:(s){
-                                if(s=="Name Ascending"){
-                                  filteredList.sort((o1,o2){
-                                    if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
-                                      return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                    }
-                                    return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
-                                  });
-                                }else if(s=="Name Descending"){
-                                  filteredList.sort((o1,o2){
-                                    if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
-                                      return (o2 as Crypto).name.toUpperCase().compareTo((o1 as Crypto).name.toUpperCase());
-                                    }
-                                    return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
-                                  });
-                                }else if(s=="Price Ascending"){
-                                  filteredList.sort((o1,o2){
-                                    if(((o1 as Crypto).price!=(o2 as Crypto).price)){
-                                      return ((o1 as Crypto).price*1000000000-(o2 as Crypto).price*1000000000).round();
-                                    }
-                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                  });
-                                }else if(s=="Price Descending"){
-                                  filteredList.sort((o1,o2){
-                                    if(((o1 as Crypto).price!=(o2 as Crypto).price)){
-                                      return ((o2 as Crypto).price*1000000000-(o1 as Crypto).price*1000000000).round();
-                                    }
-                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                  });
-                                }else if(s=="Market Cap Ascending"){
-                                  filteredList.sort((o1,o2){
-                                    if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-                                      return ((o1 as Crypto).mCap*100-(o2 as Crypto).mCap*100).round();
-                                    }
-                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                  });
-                                }else if(s=="Market Cap Descending"){
-                                  filteredList.sort((o1,o2){
-                                    if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
-                                      return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
-                                    }
-                                    return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
-                                  });
-                                }else if(s=="24H Change Ascending"){
-                                  filteredList.sort((o1,o2){
-                                    if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
-                                      return ((o1 as Crypto).twentyFourHours*100-(o2 as Crypto).twentyFourHours*100).round();
-                                    }
-                                    return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-                                  });
-                                }else if(s=="24H Change Descending"){
-                                  filteredList.sort((o1,o2){
-                                    if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
-                                      return ((o2 as Crypto).twentyFourHours*100-(o1 as Crypto).twentyFourHours*100).round();
-                                    }
-                                    return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
-                                  });
-                                }
                                 scrollController.jumpTo(1.0);
-                                new Timer(new Duration(microseconds:1),((){setState((){});}));
+                                wait(){
+                                  if(scrollController.position.pixels==1.0){
+                                    new Timer(new Duration(milliseconds:100),((){setState((){
+                                      if(s=="Name Ascending"){
+                                        filteredList.sort((o1,o2){
+                                          if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
+                                            return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                          }
+                                          return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
+                                        });
+                                      }else if(s=="Name Descending"){
+                                        filteredList.sort((o1,o2){
+                                          if((o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase())!=0){
+                                            return (o2 as Crypto).name.toUpperCase().compareTo((o1 as Crypto).name.toUpperCase());
+                                          }
+                                          return ((o1 as Crypto).price-(o2 as Crypto).price).floor().toInt();
+                                        });
+                                      }else if(s=="Price Ascending"){
+                                        filteredList.sort((o1,o2){
+                                          if(((o1 as Crypto).price!=(o2 as Crypto).price)){
+                                            return ((o1 as Crypto).price*1000000000-(o2 as Crypto).price*1000000000).round();
+                                          }
+                                          return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                        });
+                                      }else if(s=="Price Descending"){
+                                        filteredList.sort((o1,o2){
+                                          if(((o1 as Crypto).price!=(o2 as Crypto).price)){
+                                            return ((o2 as Crypto).price*1000000000-(o1 as Crypto).price*1000000000).round();
+                                          }
+                                          return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                        });
+                                      }else if(s=="Market Cap Ascending"){
+                                        filteredList.sort((o1,o2){
+                                          if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                            return ((o1 as Crypto).mCap*100-(o2 as Crypto).mCap*100).round();
+                                          }
+                                          return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                        });
+                                      }else if(s=="Market Cap Descending"){
+                                        filteredList.sort((o1,o2){
+                                          if(((o1 as Crypto).mCap!=(o2 as Crypto).mCap)){
+                                            return ((o2 as Crypto).mCap*100-(o1 as Crypto).mCap*100).round();
+                                          }
+                                          return (o1 as Crypto).name.toUpperCase().compareTo((o2 as Crypto).name.toUpperCase());
+                                        });
+                                      }else if(s=="24H Change Ascending"){
+                                        filteredList.sort((o1,o2){
+                                          if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
+                                            return ((o1 as Crypto).twentyFourHours*100-(o2 as Crypto).twentyFourHours*100).round();
+                                          }
+                                          return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
+                                        });
+                                      }else if(s=="24H Change Descending"){
+                                        filteredList.sort((o1,o2){
+                                          if(((o1 as Crypto).twentyFourHours!=(o2 as Crypto).twentyFourHours)){
+                                            return ((o2 as Crypto).twentyFourHours*100-(o1 as Crypto).twentyFourHours*100).round();
+                                          }
+                                          return (o1 as Crypto).name.compareTo((o2 as Crypto).name);
+                                        });
+                                      }
+                                    });}));
+                                  }else{
+                                    scrollController.jumpTo(1.0);
+                                    new Timer(Duration.zero,wait());
+                                  }
+                                }
+                                wait();
                               }
                           )
                       )
@@ -1820,11 +1818,11 @@ class ItemInfoState extends State<ItemInfo>{
   void initState(){
     super.initState();
     graphs.length = 5;
-    graphs[0]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,1,animate:false);
-    graphs[1]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,7,animate:false);
-    graphs[2]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,30,animate:false);
-    graphs[3]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,180,animate:false);
-    graphs[4]=new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,365,animate:false);
+    graphs[0] = new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,1,animate:false);
+    graphs[1] = new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,7,animate:false);
+    graphs[2] = new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,30,animate:false);
+    graphs[3] = new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,180,animate:false);
+    graphs[4] = new SimpleTimeSeriesChart(new List<charts.Series<TimeSeriesPrice,DateTime>>(),shortName,price,365,animate:false);
     selected = 0;
   }
 

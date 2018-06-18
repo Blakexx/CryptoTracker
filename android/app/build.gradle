@@ -27,7 +27,7 @@ android {
         applicationId "land.platypus.crypto"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 5
+        versionCode 6
         versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
