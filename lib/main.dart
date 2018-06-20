@@ -343,6 +343,7 @@ class HomePageState extends State<HomePage>{
     }
     return firstLoad?new Scaffold(
         appBar:new AppBar(
+            bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,7.0),child: new Container(height:7.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
             title:!inSearch?new Text("Favorites"):new TextField(
                 autocorrect: false,
                 decoration: new InputDecoration(
@@ -971,7 +972,9 @@ class CryptoList extends StatefulWidget{
 }
 
 class CryptoListState extends State<CryptoList>{
+  int realCount = 0;
   Future<String> setUpData() async{
+    realCount = 0;
     int count = 1;
     http.Response r;
     while(count<itemCount+1){
@@ -991,7 +994,9 @@ class CryptoListState extends State<CryptoList>{
         (fullList[place] as Crypto).totalSupply = s["total_supply"]!=null?s["total_supply"]:-1.0;
         (fullList[place] as Crypto).maxSupply = s["max_supply"]!=null?s["max_supply"]:-1.0;
         (fullList[place] as Crypto).volume24h = s["quotes"]["USD"]["volume_24h"]!=null?s["quotes"]["USD"]["volume_24h"]*usdRate:-1.0;
+        realCount++;
       }
+      setState((){});
       count+=100;
     }
     done = true;
@@ -1057,6 +1062,7 @@ class CryptoListState extends State<CryptoList>{
                     )
                 ),
                 appBar: new AppBar(
+                    bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,7.0),child: new Container(height:7.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
                     title: new TextField(
                         focusNode: focusNode,
                         controller: textController,
@@ -1992,18 +1998,6 @@ class InfoPiece extends StatelessWidget{
               ]
           ),
         )
-    );
-  }
-}
-
-
-class Options{
-
-  @override
-  Widget build(BuildContext context){
-    return new Scaffold(
-      appBar:new AppBar(title:new Text("More"),backgroundColor: Colors.black54),
-
     );
   }
 }
