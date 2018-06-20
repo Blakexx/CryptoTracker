@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" afterPath="$PROJECT_DIR$/android/app/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" afterPath="$PROJECT_DIR$/ios/Podfile.lock" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -25,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="345" column="275" lean-forward="false" selection-start-line="345" selection-start-column="275" selection-end-line="345" selection-end-column="275" />
+            <state relative-caret-position="198">
+              <caret line="345" column="209" lean-forward="false" selection-start-line="345" selection-start-column="209" selection-end-line="345" selection-end-column="209" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -68,7 +63,7 @@
         <entry file="file://$PROJECT_DIR$/android/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="228">
-              <caret line="39" column="9" lean-forward="true" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+              <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -85,14 +80,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>InfoPiece</find>
-      <find>&gt;1</find>
-      <find>info&gt;1</find>
-      <find>InfoState</find>
-      <find>loadGood</find>
-      <find>putif</find>
-      <find>displayGr</find>
-      <find>=</find>
       <find>Image.asset</find>
       <find>jumpTo</find>
       <find>onRefresh</find>
@@ -114,6 +101,14 @@
       <find>class Op</find>
       <find>new ListView.buil</find>
       <find>pref</find>
+      <find>setUpData(</find>
+      <find>if</find>
+      <find>completer.comple</find>
+      <find>doubleWait(){</find>
+      <find>7.0</find>
+      <find>6.0</find>
+      <find>5.0</find>
+      <find>bottom:</find>
       <find>bottom:</find>
     </findStrings>
   </component>
@@ -393,13 +388,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/main.dart</url>
-          <line>620</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
@@ -808,15 +796,15 @@
     <entry file="file://$PROJECT_DIR$/android/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
-          <caret line="39" column="9" lean-forward="true" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+          <caret line="39" column="9" lean-forward="false" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="345" column="275" lean-forward="false" selection-start-line="345" selection-start-column="275" selection-end-line="345" selection-end-column="275" />
+        <state relative-caret-position="198">
+          <caret line="345" column="209" lean-forward="false" selection-start-line="345" selection-start-column="209" selection-end-line="345" selection-end-column="209" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

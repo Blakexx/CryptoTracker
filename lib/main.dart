@@ -257,7 +257,7 @@ class HomePageState extends State<HomePage>{
 
   int a = 0;
 
-  String search = null;
+  String search;
 
   static bool hasSearched = false;
 
@@ -343,7 +343,7 @@ class HomePageState extends State<HomePage>{
     }
     return firstLoad?new Scaffold(
         appBar:new AppBar(
-            bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,7.0),child: new Container(height:7.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
+            bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,6.0),child: new Container(height:6.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
             title:!inSearch?new Text("Favorites"):new TextField(
                 autocorrect: false,
                 decoration: new InputDecoration(
@@ -730,7 +730,7 @@ class HomePageState extends State<HomePage>{
                     done = false;
                     setUpData();
                     wait(){
-                      if (done) {
+                      if(done){
                         int i = 0;
                         doubleWait(){
                           if(i==favList.length){
@@ -752,7 +752,7 @@ class HomePageState extends State<HomePage>{
                           (favList[i] as FavCrypto).volume24h = temp.volume24h;
                         }
                         doubleWait();
-                      } else {
+                      }else{
                         new Timer(Duration.zero, wait);
                       }
                     }
@@ -1062,7 +1062,7 @@ class CryptoListState extends State<CryptoList>{
                     )
                 ),
                 appBar: new AppBar(
-                    bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,7.0),child: new Container(height:7.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
+                    bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,6.0),child: new Container(height:6.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
                     title: new TextField(
                         focusNode: focusNode,
                         controller: textController,
