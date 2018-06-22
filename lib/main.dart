@@ -64,7 +64,7 @@ Map<String, String> currencySymbolMap = {
   "THB": "฿",
   "TRY": "₺",
   "TWD": "NT\$",
-  "ZAR": "R ",
+  "ZAR": "R "
 };
 
 List<String> features = ["f1","f2","f3","f4","f5","f6"];
@@ -343,7 +343,7 @@ class HomePageState extends State<HomePage>{
     }
     return firstLoad?new Scaffold(
         appBar:new AppBar(
-            bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,6.0),child: new Container(height:6.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
+            bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,2.0),child: new Container(height:2.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
             title:!inSearch?new Text("Favorites"):new TextField(
                 autocorrect: false,
                 decoration: new InputDecoration(
@@ -1062,7 +1062,7 @@ class CryptoListState extends State<CryptoList>{
                     )
                 ),
                 appBar: new AppBar(
-                    bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,6.0),child: new Container(height:6.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
+                    bottom: completer.isCompleted?new PreferredSize(preferredSize: new Size(0.0,0.0),child: new Container()):new PreferredSize(preferredSize: new Size(double.infinity,2.0),child: new Container(height:2.0,child:new LinearProgressIndicator(value:realCount/itemCount))),
                     title: new TextField(
                         focusNode: focusNode,
                         controller: textController,
@@ -1864,7 +1864,7 @@ class ItemInfoState extends State<ItemInfo>{
                       )
                   ),
                   new Container(
-                      height: 232.0,
+                      height: 233.0,
                       child: new TabBarView(
                           physics: NeverScrollableScrollPhysics(),
                           children: [
@@ -2153,7 +2153,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         ]
     )),
     new Container(
-        height:32.0,
+        height:33.0,
         child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -2162,11 +2162,11 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             ]
         )
     )
-    ]):canLoad?new Container(height:232.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
+    ]):canLoad?new Container(height:233.0,padding:EdgeInsets.only(left:10.0,right:10.0),child:new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[new CircularProgressIndicator()]
     )):new Container(
-        height:232.0,
+        height:233.0,
         child: new Center(
             child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
         )
