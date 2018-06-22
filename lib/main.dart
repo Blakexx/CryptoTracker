@@ -2106,7 +2106,8 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                     color: bright?charts.MaterialPalette.black:charts.MaterialPalette.white
                 ),
                 lineStyle: new charts.LineStyleSpec(
-                    color: bright?charts.MaterialPalette.gray.shade400:charts.MaterialPalette.white)
+                    color: bright?charts.MaterialPalette.gray.shade400:charts.MaterialPalette.white
+                )
             )
         ),
         domainAxis: charts.DateTimeAxisSpec(
