@@ -587,7 +587,7 @@ class HomePageState extends State<HomePage>{
                       }else if(selected=="Website"){
                         if(Platform.isIOS){
                           launchIOS() async{
-                            const url = 'https://sites.google.com/view/platypuslabsllc/home';
+                            const url = 'https://www.platypus.land';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
@@ -597,7 +597,7 @@ class HomePageState extends State<HomePage>{
                           launchIOS();
                         }else if(Platform.isAndroid){
                           launchAndroid() async{
-                            const url = 'https://sites.google.com/view/platypuslabsllc/home';
+                            const url = 'https://www.platypus.land';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
