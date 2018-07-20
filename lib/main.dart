@@ -565,7 +565,7 @@ class HomePageState extends State<HomePage>{
                       }else if(selected=="Report a Bug"){
                         if(Platform.isIOS){
                           launchIOS() async{
-                            const url = 'mailto:blakeplatypus@gmail.com,platypuscaleb@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20or%20screen%20recordings%20below:%0A%0A%0AThanks%20for%20your%20report!';
+                            const url = 'mailto:support@platypus.land?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20or%20screen%20recordings%20below:%0A%0A%0AThanks%20for%20your%20report!';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
@@ -575,7 +575,7 @@ class HomePageState extends State<HomePage>{
                           launchIOS();
                         }else if(Platform.isAndroid){
                           launchAndroid() async{
-                            const url = 'mailto:blakeplatypus@gmail.com,platypuscaleb@gmail.com?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20or%20screen%20recordings%20below:%0A%0A%0AThanks%20for%20your%20report!';
+                            const url = 'mailto:support@platypus.land?subject=Bug%20Report&body=Description%20of%20Bug:%0A%0A%0ASteps%20to%20reproduce%20error:%0A%0A%0AAttach%20any%20relevant%20screenshots%20or%20screen%20recordings%20below:%0A%0A%0AThanks%20for%20your%20report!';
                             if(await canLaunch(url)) {
                               await launch(url);
                             }else{
@@ -616,7 +616,7 @@ class HomePageState extends State<HomePage>{
                                         children: <Widget>[
                                           new Text("\n"),
                                           Image.asset("icon/platypus2.png",height:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0,width:150.0*(MediaQuery.of(context).size.width<=MediaQuery.of(context).size.height?MediaQuery.of(context).size.width:MediaQuery.of(context).size.height)/375.0),
-                                          new Text("\nPlatypus Crypto V1.0.7"),
+                                          new Text("\nPlatypus Crypto V1.0.9"),
                                           new Text("©2018 Blake Bottum and Caleb Jiang",style: new TextStyle(fontWeight:FontWeight.bold))
                                         ]
                                     )
