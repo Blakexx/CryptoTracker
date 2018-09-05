@@ -120,7 +120,6 @@ void main() {
           Map<String, dynamic> map = json.decode(response.body)["data"];
           rate = map["quotes"][currency]["price"]/map["quotes"]["USD"]["price"]*1.0;
           usdRate = rate;
-          firstTime = true;
           runApp(new DynamicTheme(
               themedWidgetBuilder: (context, theme){
                 return new MaterialApp(
@@ -136,7 +135,6 @@ void main() {
         usdRate = 1.0;
         rate = 1.0;
         symbol = "\$";
-        firstTime = true;
         runApp(new DynamicTheme(
           themedWidgetBuilder: (context, theme){
             return new MaterialApp(
