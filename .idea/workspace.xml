@@ -20,8 +20,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-678">
-              <caret line="98" column="17" lean-forward="false" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="17" />
+            <state relative-caret-position="185">
+              <caret line="1093" column="58" lean-forward="false" selection-start-line="1093" selection-start-column="58" selection-end-line="1093" selection-end-column="58" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -92,8 +92,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>new</find>
-      <find>Settings</find>
       <find>SettingsSta</find>
       <find>www.</find>
       <find>1.0.</find>
@@ -111,7 +109,6 @@
       <find>setUpData() as</find>
       <find>count</find>
       <find>Count</find>
-      <find>print</find>
       <find>setUpDat</find>
       <find>new Describ</find>
       <find>color:</find>
@@ -122,6 +119,9 @@
       <find>firstTime =</find>
       <find>firstTime = true</find>
       <find>firstTime</find>
+      <find>+=100</find>
+      <find>&lt;itemCount</find>
+      <find>print</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -680,8 +680,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-678">
-          <caret line="98" column="17" lean-forward="false" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="17" />
+        <state relative-caret-position="185">
+          <caret line="1093" column="58" lean-forward="false" selection-start-line="1093" selection-start-column="58" selection-end-line="1093" selection-end-column="58" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

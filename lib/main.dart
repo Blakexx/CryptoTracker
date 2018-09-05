@@ -199,7 +199,7 @@ class HomePageState extends State<HomePage>{
     count = 0;
     realCount = 0;
     http.Response r;
-    while(count<itemCount){
+    while(count<itemCount+1){
       r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
@@ -219,7 +219,7 @@ class HomePageState extends State<HomePage>{
         realCount++;
       }
       setState((){});
-      count+=100;
+      count+=count==0?101:100;
     }
     if(first){
       buildCount = 199;
@@ -936,7 +936,7 @@ class CryptoListState extends State<CryptoList>{
     realCount = 0;
     int count = 0;
     http.Response r;
-    while(count<itemCount){
+    while(count<itemCount+1){
       r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
@@ -956,7 +956,7 @@ class CryptoListState extends State<CryptoList>{
         realCount++;
       }
       setState((){});
-      count+=100;
+      count+=count==0?101:100;
     }
     done = true;
     setState((){});
