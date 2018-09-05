@@ -93,8 +93,8 @@ void main() {
   timeDilation = 1.0;
   themeInfo.readData().then((value){
     if(value==null || value.length!=3){
-      themeInfo.writeData("0 1 USD").then((f){
-        bright = true;
+      themeInfo.writeData("1 1 USD").then((f){
+        bright = false;
         displayGraphs = true;
         firstTime = true;
         runApp(new DynamicTheme(
@@ -120,6 +120,7 @@ void main() {
           Map<String, dynamic> map = json.decode(response.body)["data"];
           rate = map["quotes"][currency]["price"]/map["quotes"]["USD"]["price"]*1.0;
           usdRate = rate;
+          firstTime = true;
           runApp(new DynamicTheme(
               themedWidgetBuilder: (context, theme){
                 return new MaterialApp(
@@ -135,6 +136,7 @@ void main() {
         usdRate = 1.0;
         rate = 1.0;
         symbol = "\$";
+        firstTime = true;
         runApp(new DynamicTheme(
           themedWidgetBuilder: (context, theme){
             return new MaterialApp(
@@ -198,11 +200,8 @@ class HomePageState extends State<HomePage>{
   Future<String> setUpData() async{
     count = 0;
     realCount = 0;
-    //print(count);
-    //print(itemCount);
     http.Response r;
     while(count<itemCount){
-      //print(count);
       r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
@@ -224,15 +223,11 @@ class HomePageState extends State<HomePage>{
       setState((){});
       count+=100;
     }
-    //print(count.toString()+" "+itemCount.toString());
-    //print("Data Retrieved and Processed");
     if(first){
       buildCount = 199;
     }
     first = false;
-    //print(data.toString());
     done = true;
-    //print(fullList);
     setState((){});
     return new Future<String>((){return "0";});
   }
@@ -276,7 +271,6 @@ class HomePageState extends State<HomePage>{
       setUpData();
       buildCount++;
     }
-    //print(buildCount);
     if(buildCount==199){
       //build fav list
       inds = new List<int>();
@@ -374,7 +368,7 @@ class HomePageState extends State<HomePage>{
             actions: [
               new DescribedFeatureOverlay(
                 featureId: features[2],
-                color: Colors.blue,
+                color: Colors.teal,
                 title: 'Searching',
                 icon: Icons.search,
                   description: new Text(
@@ -411,7 +405,7 @@ class HomePageState extends State<HomePage>{
                     f();
                   },
                   featureId: features[3],
-                  color: Colors.blue,
+                  color: Colors.teal,
                   title: 'Sorting',
                   icon: Icons.sort,
                   description: new Text(
@@ -523,7 +517,7 @@ class HomePageState extends State<HomePage>{
                     f();
                   },
                   featureId: features[4],
-                  color: Colors.blue,
+                  color: Colors.teal,
                   title: 'Extra',
                   icon: Icons.more_vert,
                   description: new Text(
@@ -644,7 +638,7 @@ class HomePageState extends State<HomePage>{
         ),
         floatingActionButton: (done && completer.isCompleted)?new DescribedFeatureOverlay(
             featureId: features[0],
-            color: Colors.blue,
+            color: Colors.teal,
             title: 'Adding',
             icon: Icons.add,
             description: new Text(
@@ -691,7 +685,7 @@ class HomePageState extends State<HomePage>{
                           if(firstTime && i==0){
                             return new DescribedFeatureOverlay(
                                 featureId: features[5],
-                                color: Colors.blue,
+                                color: Colors.teal,
                                 icon: Icons.info,
                                 title: "More Info",
                                 description: new Text(
@@ -869,40 +863,7 @@ class SettingsState extends State<Settings>{
                                           color: bright?Colors.white:Colors.white12,
                                           child: new MyDropdown.DropdownButtonHideUnderline(
                                             child: new ButtonTheme(alignedDropdown: true,minWidth: 0.0,child: new MyDropdown.DropdownButton<String>(
-                                                items: [
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "USD", child: new Text("USD \$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "AUD", child: new Text("AUD A\$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "BRL", child: new Text("BRL R\$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "CAD", child: new Text("CAD C\$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "CHF", child: new Text("CHF Fr.")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "CLP", child: new Text("CLP \$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "CNY", child: new Text("CNY ¥")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "CZK", child: new Text("CZK Kč")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "DKK", child: new Text("DKK kr.")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "EUR", child: new Text("EUR €")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "GBP", child: new Text("GBP £")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "HKD", child: new Text("HKD HK\$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "HUF", child: new Text("HUF Ft")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "IDR", child: new Text("IDR Rp")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "ILS", child: new Text("ILS ₪")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "INR", child: new Text("INR ₹")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "JPY", child: new Text("JPY ¥")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "KRW", child: new Text("KRW ₩")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "MXN", child: new Text("MXN \$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "MYR", child: new Text("MYR RM")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "NOK", child: new Text("NOK kr")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "NZD", child: new Text("NZD \$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "PHP", child: new Text("PHP ₱")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "PKR", child: new Text("PKR ₨")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "PLN", child: new Text("PLN zł")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "RUB", child: new Text("RUB ₽")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "SEK", child: new Text("SEK kr")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "SGD", child: new Text("SGD S\$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "THB", child: new Text("THB ฿")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "TRY", child: new Text("TRY ₺")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "TWD", child: new Text("TWD NT\$")),
-                                                  new MyDropdown.DropdownMenuItem<String>(value: "ZAR", child: new Text("ZAR R")),
-                                                ],
+                                                items: currencySymbolMap.keys.map((key)=>new MyDropdown.DropdownMenuItem<String>(value: key, child: new Text("$key ${currencySymbolMap[key]}"))).toList(),
                                                 onChanged: (s){
                                                   if(doneChanging){
                                                     setState((){doneChanging = false;});
@@ -975,9 +936,9 @@ class CryptoListState extends State<CryptoList>{
   int realCount = 0;
   Future<String> setUpData() async{
     realCount = 0;
-    int count = 1;
+    int count = 0;
     http.Response r;
-    while(count<itemCount+1){
+    while(count<itemCount){
       r = await http.get(
           Uri.encodeFull("https://api.coinmarketcap.com/v2/ticker/?start="+count.toString())
       );
@@ -1251,7 +1212,7 @@ class CryptoListState extends State<CryptoList>{
                                           Navigator.of(context).pop();
                                         },
                                         featureId: features[1],
-                                        color: Colors.blue,
+                                        color: Colors.teal,
                                         icon: Icons.add,
                                         title: "Items",
                                         description: new Column(
@@ -1747,7 +1708,6 @@ class CryptoState extends State<Crypto>{
                   }
                   storage.writeData(dataBuild);
                 }else{
-                  //print(widget.favIndex);
                   favList.removeAt(widget.favIndex);
                   widget.favIndex = null;
                   for(int i = 0; i<favList.length;i++){
@@ -1758,7 +1718,6 @@ class CryptoState extends State<Crypto>{
                   for(int i = 0;i<favList.length;i++){
                     dataBuild+=(favList[i] as FavCrypto).id.toString()+" "+(favList[i] as FavCrypto).index.toString()+" ";
                   }
-                  //print(dataBuild);
                   storage.writeData(dataBuild);
                 }
               }
