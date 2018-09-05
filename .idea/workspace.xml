@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
-    </list>
+    <list default="true" id="c03ec825-a7f2-442b-bf51-c80d40efea93" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
     <ignored path="$PROJECT_DIR$/.pub/" />
@@ -20,8 +18,8 @@
       <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="1093" column="58" lean-forward="false" selection-start-line="1093" selection-start-column="58" selection-end-line="1093" selection-end-column="58" />
+            <state relative-caret-position="245">
+              <caret line="1127" column="91" lean-forward="false" selection-start-line="1127" selection-start-column="91" selection-end-line="1127" selection-end-column="91" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -92,7 +90,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>SettingsSta</find>
       <find>www.</find>
       <find>1.0.</find>
       <find>please s</find>
@@ -122,6 +119,7 @@
       <find>+=100</find>
       <find>&lt;itemCount</find>
       <find>print</find>
+      <find>print(</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -680,8 +678,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="1093" column="58" lean-forward="false" selection-start-line="1093" selection-start-column="58" selection-end-line="1093" selection-end-column="58" />
+        <state relative-caret-position="245">
+          <caret line="1127" column="91" lean-forward="false" selection-start-line="1127" selection-start-column="91" selection-end-line="1127" selection-end-column="91" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
