@@ -1977,7 +1977,6 @@ class DataStorage {
     try {
       final file = await _localFile;
 
-      // Read the file
       String contents = await file.readAsString();
 
       List<String> list = contents.split(" ");
@@ -1990,14 +1989,12 @@ class DataStorage {
 
       return bigList;
     } catch (e) {
-      // If we encounter an error, return 0
       return null;
     }
   }
 
   Future<File> writeData(String data) async {
     final file = await _localFile;
-    // Write the file
     return data!=""?file.writeAsString(data.substring(0,data.length-1)):file.writeAsString("");
   }
 
