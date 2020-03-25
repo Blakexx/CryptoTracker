@@ -180,9 +180,9 @@ class HomePageState extends State<HomePage>{
       // ignore: conflicting_dart_import
       fullList[i] = new Crypto(data["data"][i]["website_slug"],Colors.black12,i,data["data"][i]["name"],data["data"][i]["id"],new CachedNetworkImage(
         // ignore: conflicting_dart_import
-          imageUrl: "https://s2.coinmarketcap.com/static/img/coins/64x64/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString()),placeholder: Image.asset("icon/platypus2.png",height:32.0,width:32.0),fadeInDuration: const Duration(milliseconds:100),height:32.0,width:32.0
+          imageUrl: "https://s2.coinmarketcap.com/static/img/coins/64x64/"+data["data"][i]["id"].toString()+".png",key: new Key("Icon for "+data["data"][i]["name"].toString()),placeholder: (bc,s)=>Image.asset("icon/platypus2.png",height:32.0,width:32.0),fadeInDuration: const Duration(milliseconds:100),height:32.0,width:32.0
       ),data["data"][i]["symbol"],new CachedNetworkImage(
-          imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:105.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: Image.asset("icon/platypus2.png",height:35.0,width:0.0)
+          imageUrl: "https://s2.coinmarketcap.com/generated/sparklines/web/7d/usd/"+data["data"][i]["id"].toString()+'.png',width:105.0,key: new Key("Graph for "+data["data"][i]["name"].toString()),fadeInDuration: const Duration(milliseconds:100),placeholder: (bc,s)=>Image.asset("icon/platypus2.png",height:35.0,width:0.0)
       ));
       idIndex.putIfAbsent(data["data"][i]["id"], ()=>i);
     }
@@ -331,7 +331,8 @@ class HomePageState extends State<HomePage>{
       });
     }
     if(firstTime && featureCount==2 && loadGood){
-      new Timer(new Duration(seconds:1),(){FeatureDiscovery.discoverFeatures(context, features.sublist(2,features.length));loadGood = false;});
+      loadGood = false;
+      new Timer(new Duration(seconds:1),(){FeatureDiscovery.discoverFeatures(context, features.sublist(2,features.length));});
     }
     return firstLoad?new Scaffold(
         appBar:new AppBar(
@@ -999,7 +1000,7 @@ class CryptoListState extends State<CryptoList>{
       });
       buttonPressed = false;
       if(firstTime && featureCount==1){
-        new Timer(const Duration(seconds:4),(){
+        new Future.delayed(Duration.zero,(){
           FeatureDiscovery.discoverFeatures(context, [features[1]]);
         });
       }
@@ -1812,11 +1813,11 @@ class ItemInfoState extends State<ItemInfo>{
                       color: Colors.black54,
                       child: new TabBar(
                           tabs: [
-                            new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
+                            new Tab(icon: new Text("1D",style:new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("1W",style:new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("1M",style:new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("6M",style:new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold))),
+                            new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:22.0,fontWeight: FontWeight.bold)))
                           ]
                       )
                   ),
@@ -2053,7 +2054,7 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         primaryMeasureAxis: new charts.NumericAxisSpec(
             tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 5,zeroBound: false,dataIsInWholeNumbers: false),
             tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-                new NumberFormat(symbol.toString().replaceAll("\.", "")+"###,###,###,###,###,###,###,###,###,###,###,###,###,###,###,###.###########","en_US")
+              (i)=>new NumberFormat(symbol.toString().replaceAll("\.", "")+"###,###,###,###,###,###,###,###,###,###,###,###,###,###,###,###.###########","en_US").format(i)
             ),
             renderSpec: new charts.GridlineRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
@@ -2083,14 +2084,14 @@ class SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         ),
         behaviors: [
           new charts.LinePointHighlighter(
-              showHorizontalFollowLine: true, showVerticalFollowLine: true),
+              showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.all, showVerticalFollowLine: charts.LinePointHighlighterFollowLineType.all),
           new charts.SelectNearest(
-              eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
+              eventTrigger: charts.SelectionTrigger.tapAndDrag)
         ],
         selectionModels: [
           new charts.SelectionModelConfig(
               type: charts.SelectionModelType.info,
-              listener: (charts.SelectionModel model){
+              changedListener: (charts.SelectionModel model){
                 final selectedDatum = model.selectedDatum;
                 if(selectedDatum.isNotEmpty){
                   setState((){
