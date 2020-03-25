@@ -75,8 +75,8 @@ void _changeCurrency(String currency){
 }
 
 void main() async{
-  SyncfusionLicense.registerLicense(key);
   WidgetsFlutterBinding.ensureInitialized();
+  SyncfusionLicense.registerLicense(key);
   _userData = new Database((await getApplicationDocumentsDirectory()).path);
   _savedCoins = (await _userData["saved"])?.cast<String>() ?? [];
   _settings = await _userData["settings"];
@@ -1087,7 +1087,7 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           ],
           plotAreaBackgroundColor: Colors.transparent,
           primaryXAxis: new DateTimeAxis(
-              dateFormat: widget.startTime==1?new DateFormat().add_jm():null
+              dateFormat: widget.startTime==1?new DateFormat("h꞉mm a"):null
           ),
           primaryYAxis: new NumericAxis(
               numberFormat: new NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base),
@@ -1102,7 +1102,7 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             shouldAlwaysShow: true,
             tooltipSettings: new InteractiveTooltip(
                 color: Colors.white,
-                format: "point.x : point.y"
+                format: "point.x | point.y"
             )
           )
         )

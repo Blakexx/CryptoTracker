@@ -38,4 +38,4 @@ lib/generated_plugin_registrant.dart
 lib/key.dart
 lib/image_keys.dart
 android/key.properties
-android/key.jks
+android/app/key.jks

@@ -1,4 +1,4 @@
-package land.platypus.crypto
+package land.platypus.cryptotracker
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

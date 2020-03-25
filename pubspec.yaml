@@ -30,7 +30,7 @@ dependencies:
   flutter_launcher_icons:
   web_socket_channel:
   auto_size_text:
-  syncfusion_flutter_charts: 17.4.40
+  syncfusion_flutter_charts:
   url_launcher:
   flutter_svg:
 
