@@ -1091,8 +1091,8 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           ),
           primaryYAxis: new NumericAxis(
               numberFormat: new NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base),
-              maximum: maxVal*1.1,
-              minimum: minVal*.9
+              maximum: maxVal+(maxVal-minVal)*.1,
+              minimum: minVal-(maxVal-minVal)*.1
           ),
           selectionGesture: ActivationMode.singleTap,
           selectionType: SelectionType.point,
@@ -1130,10 +1130,8 @@ List<TimeSeriesPrice> createChart(Map<String,dynamic> info, String s) {
     if(info!=null&&info.length>1){
       for(int i = 0;i<info["data"].length;i++){
         num val = num.parse(info["data"][i]["priceUsd"])*_exchangeRate;
-        minVal??=val;
-        maxVal??=val;
-        minVal = min(minVal,val);
-        maxVal = max(maxVal,val);
+        minVal = min(minVal??val,val);
+        maxVal = max(maxVal??val,val);
         data.add(new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["data"][i]["time"]), val));
       }
     }else{
