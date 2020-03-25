@@ -817,8 +817,6 @@ class ItemInfo extends StatefulWidget{
 
 class _ItemInfoState extends State<ItemInfo>{
 
-  List<SimpleTimeSeriesChart> graphs = [];
-
   ValueNotifier<num> coinNotif;
 
   Color changeColor;
@@ -853,12 +851,6 @@ class _ItemInfoState extends State<ItemInfo>{
     coinNotif = _valueNotifiers[widget.id];
     coinNotif.addListener(update);
     data = _coinData[widget.id];
-    graphs.length = 5;
-    graphs[0] = new SimpleTimeSeriesChart(widget.id,1,"m5");
-    graphs[1] = new SimpleTimeSeriesChart(widget.id,7,"m30");
-    graphs[2] = new SimpleTimeSeriesChart(widget.id,30,"h2");
-    graphs[3] = new SimpleTimeSeriesChart(widget.id,182,"h12");
-    graphs[4] = new SimpleTimeSeriesChart(widget.id,364,"d1");
   }
 
   @override
@@ -896,26 +888,57 @@ class _ItemInfoState extends State<ItemInfo>{
                 ]
             ),
             body:new ListView(
+                physics: new ClampingScrollPhysics(),
                 children:[
                   new Container(
                       color: Colors.black54,
                       child: new TabBar(
                           tabs: [
-                            new Tab(icon: new Text("1D",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("1W",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("1M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("6M",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold))),
-                            new Tab(icon: new Text("1Y",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)))
+                            new Tab(icon: new AutoSizeText(
+                              "1D",
+                              maxFontSize: 25.0,
+                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              minFontSize: 0.0,
+                            )),
+                            new Tab(icon: new AutoSizeText(
+                              "1W",
+                              maxFontSize: 25.0,
+                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              minFontSize: 0.0,
+                            )),
+                            new Tab(icon: new AutoSizeText(
+                              "1M",
+                              maxFontSize: 25.0,
+                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              minFontSize: 0.0,
+                            )),
+                            new Tab(icon: new AutoSizeText(
+                              "6M",
+                              maxFontSize: 25.0,
+                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              minFontSize: 0.0,
+                            )),
+                            new Tab(icon: new AutoSizeText(
+                              "1Y",
+                              maxFontSize: 25.0,
+                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              minFontSize: 0.0,
+                            ))
                           ]
                       )
                   ),
                   new Container(height:15.0),
                   new Container(
                       height: 200.0,
+                      padding: EdgeInsets.only(right:10.0),
                       child: new TabBarView(
                           physics: new NeverScrollableScrollPhysics(),
                           children: [
-                            graphs[0],graphs[1],graphs[2],graphs[3],graphs[4]
+                            new SimpleTimeSeriesChart(widget.id,1,"m5"),
+                            new SimpleTimeSeriesChart(widget.id,7,"m30"),
+                            new SimpleTimeSeriesChart(widget.id,30,"h2"),
+                            new SimpleTimeSeriesChart(widget.id,182,"h12"),
+                            new SimpleTimeSeriesChart(widget.id,364,"d1")
                           ]
                       )
                   ),
@@ -985,7 +1008,7 @@ class _InfoState extends State<Info>{
     }
     if(widget.title=="24h Change"&&widget.value!=-1000000){
       text+="%";
-      text = (widget.value<0?"-":widget.value>0?"+":"")+text;
+      text = (widget.value>0?"+":"")+text;
     }
     return new Container(
         padding: EdgeInsets.only(top:2.0, left:2.0, right:2.0),
