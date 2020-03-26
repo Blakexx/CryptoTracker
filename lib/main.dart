@@ -203,8 +203,8 @@ class _ListPageState extends State<ListPage> {
   void search(String s){
     scrollController.jumpTo(0.0);
     reset();
-    swapping = false;
-    swapWith = null;
+    moving = false;
+    moveWith = null;
     for(int i = 0; i<sortedKeys.length; i++){
       String key = sortedKeys[i];
       String name = _coinData[key]["name"];
@@ -219,8 +219,8 @@ class _ListPageState extends State<ListPage> {
 
   void sort(String s){
     scrollController.jumpTo(0.0);
-    swapping = false;
-    swapWith = null;
+    moving = false;
+    moveWith = null;
     sortingBy = s;
     setState(() {
       sortedKeys.sort(sortBy(s));
@@ -285,7 +285,7 @@ class _ListPageState extends State<ListPage> {
               onTap: (){
                 if(!_loading){
                   _didImport = false;
-                  Navigator.push(context,new MaterialPageRoute(builder: (context) => new ImpExpPage())).then((f){
+                  Navigator.push(context, new MaterialPageRoute(builder: (context) => new ImpExpPage())).then((f){
                     if(_didImport){
                       _didImport = false;
                       searching = false;
@@ -319,7 +319,7 @@ class _ListPageState extends State<ListPage> {
                 leading: new Icon(Icons.star),
                 title: new Text("Rate Us",style: new TextStyle(fontSize:16.0)),
                 onTap: () async{
-                  String url = Platform.isIOS?"https://itunes.apple.com/us/app/platypus-crypto/id1397122793":"https://play.google.com/store/apps/details?id=land.platypus.crypto";
+                  String url = Platform.isIOS?"https://itunes.apple.com/us/app/platypus-crypto/id1397122793":"https://play.google.com/store/apps/details?id=land.platypus.cryptotracker";
                   if(await canLaunch(url)) {
                     await launch(url);
                   }
@@ -403,6 +403,8 @@ class _ListPageState extends State<ListPage> {
       ):new Container(),
       floatingActionButton: widget.savedPage?!_loading?new FloatingActionButton(
         onPressed: (){
+          moving = false;
+          moveWith = null;
           Navigator.push(context,new MaterialPageRoute(builder: (context) => new ListPage(false))).then((d){
             sortingBy = "custom";
             searching = false;
@@ -450,6 +452,7 @@ class ImpExpPageState extends State<ImpExpPage>{
             child: new Padding(
                 padding: EdgeInsets.only(top:20.0,right:15,left:15),
                 child: new ListView(
+                    physics: new ClampingScrollPhysics(),
                     children: [
                       new Card(
                         color: Colors.black12,
@@ -596,8 +599,8 @@ class SettingsState extends State<Settings>{
   }
 }
 
-bool swapping = false;
-String swapWith;
+bool moving = false;
+String moveWith;
 
 class Crypto extends StatefulWidget{
 
@@ -653,11 +656,11 @@ class _CryptoState extends State<Crypto>{
     coinNotif.removeListener(update);
   }
 
-  void swap(List<String> coins){
-    int swapTo = coins.indexOf(swapWith);
-    int swapFrom = coins.indexOf(widget.id);
-    coins[swapFrom] = coins[swapTo];
-    coins[swapTo] = widget.id;
+  void move(List<String> coins){
+    int moveTo = coins.indexOf(widget.id);
+    int moveFrom = coins.indexOf(moveWith);
+    coins.removeAt(moveFrom);
+    coins.insert(moveTo, moveWith);
   }
 
   @override
@@ -675,9 +678,9 @@ class _CryptoState extends State<Crypto>{
       child: new GestureDetector(
         onLongPress: (){
           if(sortingBy=="custom"){
-            setState(() {
-              swapping = true;
-              swapWith = widget.id;
+            context.findAncestorStateOfType<_ListPageState>().setState((){
+              moving = true;
+              moveWith = widget.id;
             });
           }else if(!widget.savedPage){
             Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.id)));
@@ -696,12 +699,12 @@ class _CryptoState extends State<Crypto>{
             child: new FlatButton(
               onPressed: (){
                 if(widget.savedPage){
-                  if(swapping){
-                    swap(_savedCoins);
-                    swap(context.findAncestorStateOfType<_ListPageState>().sortedKeys);
+                  if(moving){
+                    move(_savedCoins);
+                    move(context.findAncestorStateOfType<_ListPageState>().sortedKeys);
                     setState((){
-                      swapWith = null;
-                      swapping = false;
+                      moveWith = null;
+                      moving = false;
                     });
                     context.findAncestorStateOfType<_ListPageState>().setState((){});
                     _userData["saved"] = _savedCoins;
@@ -723,7 +726,7 @@ class _CryptoState extends State<Crypto>{
                 }
               },
               padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
-              color: saved&&swapWith!=widget.id?Colors.black45:Colors.black26,
+              color: saved&&moveWith!=widget.id?Colors.black45:Colors.black26,
               child: new Row(
                 children: [
                   new Expanded(child: new Column(
@@ -898,31 +901,31 @@ class _ItemInfoState extends State<ItemInfo>{
                               "1D",
                               maxFontSize: 25.0,
                               style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
-                              minFontSize: 0.0,
+                              minFontSize: 0.0
                             )),
                             new Tab(icon: new AutoSizeText(
                               "1W",
                               maxFontSize: 25.0,
                               style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
-                              minFontSize: 0.0,
+                              minFontSize: 0.0
                             )),
                             new Tab(icon: new AutoSizeText(
                               "1M",
                               maxFontSize: 25.0,
                               style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
-                              minFontSize: 0.0,
+                              minFontSize: 0.0
                             )),
                             new Tab(icon: new AutoSizeText(
                               "6M",
                               maxFontSize: 25.0,
                               style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
-                              minFontSize: 0.0,
+                              minFontSize: 0.0
                             )),
                             new Tab(icon: new AutoSizeText(
                               "1Y",
                               maxFontSize: 25.0,
                               style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
-                              minFontSize: 0.0,
+                              minFontSize: 0.0
                             ))
                           ]
                       )
