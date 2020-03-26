@@ -490,7 +490,6 @@ class ImpExpPageState extends State<ImpExpPage>{
                                 Scaffold.of(context).removeCurrentSnackBar();
                                 Scaffold.of(context).showSnackBar(new SnackBar(duration: new Duration(milliseconds: 1000),content: new Text("Imported",style:new TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
                               }catch(e){
-                                print(e);
                                 Scaffold.of(context).removeCurrentSnackBar();
                                 Scaffold.of(context).showSnackBar(new SnackBar(duration: new Duration(milliseconds: 1000),content: new Text("Invalid data",style:new TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
                               }
