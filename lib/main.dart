@@ -19,7 +19,7 @@ import "key.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 String _api = "https://api.coincap.io/v2/";
-HashMap<String,Map<String,Comparable>> _coinData;
+HashMap<String,Map<String,dynamic>> _coinData;
 HashMap<String, ValueNotifier<num>> _valueNotifiers = new HashMap<String, ValueNotifier<num>>();
 List<String> _savedCoins;
 Database _userData;
@@ -115,7 +115,7 @@ class _AppState extends State<App> {
     var data = (await _apiGet("assets?limit=2000"))["data"];
     data.forEach((e){
       String id = e["id"];
-      _coinData[id] = (e as Map).cast<String,Comparable>();
+      _coinData[id] = e.cast<String,Comparable>();
       _valueNotifiers[id] = new ValueNotifier(0);
       for(String s in e.keys){
         if(e[s]==null){
@@ -176,9 +176,14 @@ SortType sortBy(String s){
       return _savedCoins.indexOf(s1)-_savedCoins.indexOf(s2);
     }
     Map<String,Comparable> m1 = _coinData[ascending?s1:s2], m2 = _coinData[ascending?s2:s1];
-    int comp = m1[sortVal].compareTo(m2[sortVal]);
+    dynamic v1 = m1[sortVal], v2 = m2[sortVal];
+    if(sortVal=="name"){
+      v1 = v1.toUpperCase();
+      v2 = v2.toUpperCase();
+    }
+    int comp = v1.compareTo(v2);
     if(comp==0){
-      return m1["name"].compareTo(m2["name"]);
+      return sortBy("nameA")(s1,s2) as int;
     }
     return comp;
   };
@@ -409,6 +414,7 @@ class _ListPageState extends State<ListPage> {
             sortingBy = "custom";
             searching = false;
             reset();
+            scrollController.jumpTo(0.0);
           });
         },
         child: new Icon(
@@ -507,7 +513,6 @@ class ImpExpPageState extends State<ImpExpPage>{
 }
 
 class Settings extends StatefulWidget{
-
   @override
   SettingsState createState() => new SettingsState();
 }
@@ -518,80 +523,66 @@ class SettingsState extends State<Settings>{
   Widget build(BuildContext context){
     return new Scaffold(
         appBar: new AppBar(title:new Text("Settings",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
-        body: new Container(
-            padding:EdgeInsets.only(bottom:10.0,top:10.0),
-            child: new Center(
-                child: new Column(
-                    children: [
-                      new Container(
-                          padding: EdgeInsets.only(top:10.0),
-                          child: new GestureDetector(
-                            child: new Container(
-                                padding: EdgeInsets.only(top:5.0,bottom:5.0),
-                                color: Colors.black87,
-                                child: new Row(
-                                    children: <Widget>[
-                                      new Expanded(
-                                          child: new Text("  Disable 7 day graphs",style:new TextStyle(fontSize:20.0))
-                                      ),
-                                      new Switch(
-                                          value: _settings["disableGraphs"],
-                                          onChanged: (disp){
-                                            setState((){
-                                              _settings["disableGraphs"] = !_settings["disableGraphs"];
-                                            });
-                                            _userData["settings/disableGraphs"] = _settings["disableGraphs"];
-                                          }
-                                      ),
-                                    ]
-                                )
-                            ),
-                            onTap: (){
+        body: new Padding(
+            padding: EdgeInsets.only(top:20.0,right:15,left:15),
+            child: new ListView(
+                physics: new ClampingScrollPhysics(),
+                children: [
+                  new Card(
+                    color: Colors.black12,
+                    child: new ListTile(
+                        title: new Text("Disable 7 day graphs"),
+                        subtitle: new Text("More compact cards"),
+                        trailing: new Switch(
+                            value: _settings["disableGraphs"],
+                            onChanged: (disp){
                               setState((){
                                 _settings["disableGraphs"] = !_settings["disableGraphs"];
                               });
                               _userData["settings/disableGraphs"] = _settings["disableGraphs"];
                             }
-                          )
-                      ),
-                      new Container(
-                          padding: EdgeInsets.only(top:10.0),
-                          child: new Container(
-                              padding: EdgeInsets.only(top:5.0,bottom:5.0),
-                              color: Colors.black87,
-                              child: new Row(
-                                  children: <Widget>[
-                                    new Expanded(
-                                      child: new Text("  Currency",style:new TextStyle(fontSize:20.0)),
-                                    ),
-                                    new Padding(
-                                      child: new Container(
-                                          color: Colors.white12,
-                                          padding: EdgeInsets.only(right:7.0,left:7.0),
-                                          child: new DropdownButtonHideUnderline(
-                                              child: new DropdownButton<String>(
-                                                  value: _settings["currency"],
-                                                  onChanged: (s){
-                                                    _settings["currency"] = s;
-                                                    _changeCurrency(s);
-                                                    _userData["settings/currency"] = s;
-                                                    context.findAncestorStateOfType<_AppState>().setState((){});
-                                                  },
-                                                  items: _currencySymbolMap.keys.map((s)=>new DropdownMenuItem(
-                                                      value:s,
-                                                      child: new Text(s+" "+_currencySymbolMap[s])
-                                                  )).toList()
-                                              )
-                                          )
-                                      ),
-                                      padding: EdgeInsets.only(right:10.0)
+                        ),
+                        onTap: (){
+                          setState((){
+                            _settings["disableGraphs"] = !_settings["disableGraphs"];
+                          });
+                          _userData["settings/disableGraphs"] = _settings["disableGraphs"];
+                        }
+                    ),
+                    margin: EdgeInsets.zero,
+                  ),
+                  new Container(height:20),
+                  new Card(
+                    color: Colors.black12,
+                    child: new ListTile(
+                        title: new Text("Change Currency"),
+                        subtitle: new Text("33 fiat currency options"),
+                        trailing: new Padding(
+                            child: new Container(
+                                color: Colors.white12,
+                                padding: EdgeInsets.only(right:7.0,left:7.0),
+                                child: new DropdownButtonHideUnderline(
+                                    child: new DropdownButton<String>(
+                                        value: _settings["currency"],
+                                        onChanged: (s){
+                                          _settings["currency"] = s;
+                                          _changeCurrency(s);
+                                          _userData["settings/currency"] = s;
+                                          context.findAncestorStateOfType<_AppState>().setState((){});
+                                        },
+                                        items: _currencySymbolMap.keys.map((s)=>new DropdownMenuItem(
+                                            value:s,
+                                            child: new Text(s+" "+_currencySymbolMap[s])
+                                        )).toList()
                                     )
-                                  ]
-                              )
-                          )
-                      ),
-                    ]
-                )
+                                )
+                            ),
+                            padding: EdgeInsets.only(right:10.0)
+                        )
+                    ),
+                    margin: EdgeInsets.zero,
+                  )
+                ]
             )
         )
     );
@@ -755,7 +746,7 @@ class _CryptoState extends State<Crypto>{
                                   placeholder: new AssetImage("icon/platypus2.png"),
                                   fadeInDuration: const Duration(milliseconds:100),
                                   height:32.0,
-                                  width:32.0,
+                                  width:32.0
                               ),
                               new Container(width:4.0),
                               new ConstrainedBox(
@@ -864,9 +855,9 @@ class _ItemInfoState extends State<ItemInfo>{
 
   @override
   Widget build(BuildContext context){
-    num price = ((_coinData[widget.id]["priceUsd"] as num)*_exchangeRate);
-    num mCap = ((_coinData[widget.id]["marketCapUsd"] as num)*_exchangeRate);
-    num change = (_coinData[widget.id]["changePercent24Hr"] as num);
+    num price = (_coinData[widget.id]["priceUsd"]*_exchangeRate);
+    num mCap = (_coinData[widget.id]["marketCapUsd"]*_exchangeRate);
+    num change = _coinData[widget.id]["changePercent24Hr"];
     return new DefaultTabController(
         length:5,
         child: new Scaffold(
@@ -1080,7 +1071,7 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
         loading = false;
       });
     });
-    num price = (_coinData[widget.id]["priceUsd"] as num)*_exchangeRate;
+    num price = _coinData[widget.id]["priceUsd"]*_exchangeRate;
     base = price>=0?max(0,(-log(price)/log(10)).ceil()+2):0;
     if(price<=1.1&&price>.9){
       base++;
