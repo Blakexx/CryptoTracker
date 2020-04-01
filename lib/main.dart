@@ -589,28 +589,23 @@ class SettingsState extends State<Settings>{
   }
 }
 
-bool moving = false;
-String moveWith;
-
-class Crypto extends StatefulWidget{
+class PriceText extends StatefulWidget{
 
   final String id;
-  final bool savedPage;
 
-  Crypto(this.id, this.savedPage) : super(key: new ValueKey(id+savedPage.toString()));
+  PriceText(this.id);
 
   @override
-  _CryptoState createState() => new _CryptoState();
+  _PriceTextState createState() => new _PriceTextState();
 }
 
-class _CryptoState extends State<Crypto>{
+class _PriceTextState extends State<PriceText>{
 
-  bool saved;
   Color changeColor;
   Timer updateTimer;
-  Map<String,Comparable> data;
-  ValueNotifier<num> coinNotif;
   bool disp = false;
+  ValueNotifier<num> coinNotif;
+  Map<String,dynamic> data;
 
   void update(){
     if(data["priceUsd"].compareTo(coinNotif.value)>0){
@@ -635,7 +630,6 @@ class _CryptoState extends State<Crypto>{
     super.initState();
     data = _coinData[widget.id];
     coinNotif = _valueNotifiers[widget.id];
-    saved = _savedCoins.contains(widget.id);
     coinNotif.addListener(update);
   }
 
@@ -644,6 +638,40 @@ class _CryptoState extends State<Crypto>{
     super.dispose();
     disp = true;
     coinNotif.removeListener(update);
+  }
+
+  @override
+  Widget build(BuildContext context){
+    num price = data["priceUsd"]*_exchangeRate;
+    return new Text(price>=0?new NumberFormat.currency(symbol: _symbol, decimalDigits: price>1?price<100000?2:0:price>.000001?6:7).format(price):"N/A",style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold, color: changeColor));
+  }
+
+}
+
+bool moving = false;
+String moveWith;
+
+class Crypto extends StatefulWidget{
+
+  final String id;
+  final bool savedPage;
+
+  Crypto(this.id, this.savedPage) : super(key: new ValueKey(id+savedPage.toString()));
+
+  @override
+  _CryptoState createState() => new _CryptoState();
+}
+
+class _CryptoState extends State<Crypto>{
+
+  bool saved;
+  Map<String,dynamic> data;
+
+  @override
+  void initState(){
+    super.initState();
+    data = _coinData[widget.id];
+    saved = _savedCoins.contains(widget.id);
   }
 
   void move(List<String> coins){
@@ -656,8 +684,6 @@ class _CryptoState extends State<Crypto>{
   @override
   Widget build(BuildContext context){
     double width = MediaQuery.of(context).size.width;
-    num price = data["priceUsd"];
-    price*=_exchangeRate;
     num mCap = data["marketCapUsd"];
     mCap*=_exchangeRate;
     num change = data["changePercent24Hr"];
@@ -766,7 +792,7 @@ class _CryptoState extends State<Crypto>{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        new Text((price>=0?price>1?_symbol+new NumberFormat.currency(symbol:"",decimalDigits: price<100000?2:0).format(price):_symbol+(price>.000001?price.toStringAsFixed(6):price.toStringAsFixed(7)):"N/A"),style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold, color: changeColor)),
+                        new PriceText(widget.id),
                         new Text((mCap>=0?mCap>1?_symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):_symbol+mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.grey,fontSize:12.0)),
                         !_settings["disableGraphs"]?linkMap[shortName]!=null&&!blacklist.contains(widget.id)?new SvgPicture.network(
                           "https://www.coingecko.com/coins/${linkMap[shortName] ?? linkMap[widget.id]}/sparkline",
@@ -810,54 +836,17 @@ class ItemInfo extends StatefulWidget{
 
 class _ItemInfoState extends State<ItemInfo>{
 
-  ValueNotifier<num> coinNotif;
-
-  Color changeColor;
-
-  Timer updateTimer;
-
-  bool disp = false;
 
   Map<String,dynamic> data;
-
-  void update(){
-    if(data["priceUsd"].compareTo(coinNotif.value)>0){
-      changeColor = Colors.green;
-    }else{
-      changeColor = Colors.red;
-    }
-    setState((){});
-    updateTimer?.cancel();
-    updateTimer = new Timer(new Duration(milliseconds: 400),(){
-      if(disp){
-        return;
-      }
-      setState(() {
-        changeColor = null;
-      });
-    });
-  }
 
   @override
   void initState(){
     super.initState();
-    coinNotif = _valueNotifiers[widget.id];
-    coinNotif.addListener(update);
     data = _coinData[widget.id];
   }
 
   @override
-  void dispose(){
-    super.dispose();
-    disp = true;
-    coinNotif.removeListener(update);
-  }
-
-  @override
   Widget build(BuildContext context){
-    num price = (_coinData[widget.id]["priceUsd"]*_exchangeRate);
-    num mCap = (_coinData[widget.id]["marketCapUsd"]*_exchangeRate);
-    num change = _coinData[widget.id]["changePercent24Hr"];
     return new DefaultTabController(
         length:5,
         child: new Scaffold(
@@ -936,26 +925,22 @@ class _ItemInfoState extends State<ItemInfo>{
                       )
                   ),
                   new Container(height:10.0),
-                  /*new Column(
-                    children: ["supply","maxSupply","marketCapUsd","volumeUsd24Hr","priceUsd","changePercent24Hr","vwap24Hr"].map((s)=>new Info(s,_coinData[widget.id][s].toString())).toList()
-                  ),*/
                   new Row(
                       children: [
-                        //(mCap>=0?mCap>1?_symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):_symbol+mCap.toStringAsFixed(2):"N/A")
-                        new Expanded(child: new Info("Price",price,price>=0?price>1?price<100000?2:0:price>.000001?6:7:null,true,new TextStyle(color:changeColor))),
-                        new Expanded(child:new Info("Market Cap",mCap,mCap>=0?mCap>1?0:2:null,true))
+                        new Expanded(child:new Info("Price",widget.id,"priceUsd")),
+                        new Expanded(child:new Info("Market Cap",widget.id,"marketCapUsd"))
                       ]
                   ),
                   new Row(
                       children: [
-                        new Expanded(child:new Info("Supply",_coinData[widget.id]["supply"],0)),
-                        new Expanded(child:new Info("Max Supply",_coinData[widget.id]["maxSupply"],0)),
+                        new Expanded(child:new Info("Supply",widget.id,"supply")),
+                        new Expanded(child:new Info("Max Supply",widget.id,"maxSupply")),
                       ]
                   ),
                   new Row(
                       children: [
-                        new Expanded(child:new Info("24h Change",change,3,false,new TextStyle(color:change<0?Colors.red:change>0?Colors.green:Colors.white))),
-                        new Expanded(child:new Info("24h Volume",_coinData[widget.id]["volumeUsd24Hr"],0))
+                        new Expanded(child:new Info("24h Change",widget.id,"changePercent24Hr")),
+                        new Expanded(child:new Info("24h Volume",widget.id,"volumeUsd24Hr"))
                       ]
                   ),
                 ]
@@ -967,13 +952,9 @@ class _ItemInfoState extends State<ItemInfo>{
 
 class Info extends StatefulWidget{
 
-  final String title;
-  final dynamic value;
-  final TextStyle valueStyle;
-  final int digits;
-  final bool currency;
+  final String title,ticker,id;
 
-  Info(this.title,this.value,[this.digits,this.currency=false,this.valueStyle=const TextStyle()]);
+  Info(this.title,this.ticker,this.id);
 
   @override
   _InfoState createState() => new _InfoState();
@@ -981,27 +962,80 @@ class Info extends StatefulWidget{
 
 class _InfoState extends State<Info>{
 
-  NumberFormat formatter;
+  dynamic value;
+
+  ValueNotifier<num> coinNotif;
+
+  Color textColor;
+
+  Timer updateTimer;
+
+  bool disp = false;
+
+  Map<String,dynamic> data;
+
+  void update(){
+    if(data["priceUsd"].compareTo(coinNotif.value)>0){
+      textColor = Colors.green;
+    }else{
+      textColor = Colors.red;
+    }
+    setState((){});
+    updateTimer?.cancel();
+    updateTimer = new Timer(new Duration(milliseconds: 400),(){
+      if(disp){
+        return;
+      }
+      setState(() {
+        textColor = null;
+      });
+    });
+  }
 
   @override
   void initState(){
     super.initState();
-    formatter = new NumberFormat.currency(symbol: widget.currency?_symbol:"", decimalDigits: widget.digits);
+    if(widget.id=="priceUsd"){
+      coinNotif = _valueNotifiers[widget.ticker];
+      coinNotif.addListener(update);
+    }else{
+      textColor = Colors.white;
+    }
+    data = _coinData[widget.ticker];
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    if(widget.id=="priceUsd"){
+      disp = true;
+      coinNotif.removeListener(update);
+    }
   }
 
   @override
   Widget build(BuildContext context){
+    dynamic value = data[widget.id];
     String text;
-    if((widget.title=="24h Change"&&widget.value==-1000000)||widget.value==null||widget.value==-1){
+    if((widget.id=="changePercent24Hr"&&value==-1000000)||value==null||value==-1){
       text = "N/A";
-    }else if(widget.digits!=null){
-      text = formatter.format(widget.value);
     }else{
-      text = widget.value.toString();
+      NumberFormat formatter;
+      if(widget.id=="priceUsd"){
+        formatter = new NumberFormat.currency(symbol: _symbol, decimalDigits: value>1?value<100000?2:0:value>.000001?6:7);
+      }else if(widget.id=="marketCapUsd"){
+        formatter = new NumberFormat.currency(symbol: _symbol, decimalDigits: value>1?0:2);
+      }else if(widget.id=="changePercent24Hr"){
+        formatter = new NumberFormat.currency(symbol:"",decimalDigits:3);
+      }else{
+        formatter = new NumberFormat.currency(symbol:"",decimalDigits:0);
+      }
+      text = formatter.format(value);
     }
-    if(widget.title=="24h Change"&&widget.value!=-1000000){
+    if(widget.id=="changePercent24Hr"&&value!=-1000000){
       text+="%";
-      text = (widget.value>0?"+":"")+text;
+      text = (value>0?"+":"")+text;
+      textColor = value<0?Colors.red:value>0?Colors.green:Colors.white;
     }
     return new Container(
         padding: EdgeInsets.only(top:2.0, left:2.0, right:2.0),
@@ -1018,7 +1052,7 @@ class _InfoState extends State<Info>{
                         text,
                         minFontSize: 0,
                         maxFontSize: 17,
-                        style: text!="N/A"?widget.valueStyle.copyWith(fontSize: 17):new TextStyle(fontSize:17),
+                        style: new TextStyle(fontSize:17,color: textColor),
                         maxLines: 1
                     ),
                     constraints: new BoxConstraints(
@@ -1034,8 +1068,8 @@ class _InfoState extends State<Info>{
 }
 
 class TimeSeriesPrice {
-  final DateTime time;
-  final double price;
+  DateTime time;
+  double price;
 
   TimeSeriesPrice(this.time, this.price);
 }
@@ -1070,12 +1104,11 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
       setState((){
         loading = false;
       });
+      base = minVal>=0?max(0,(-log(minVal)/log(10)).ceil()+2):0;
+      if(minVal<=1.1&&minVal>.9){
+        base++;
+      }
     });
-    num price = _coinData[widget.id]["priceUsd"]*_exchangeRate;
-    base = price>=0?max(0,(-log(price)/log(10)).ceil()+2):0;
-    if(price<=1.1&&price>.9){
-      base++;
-    }
   }
 
   Map<String,int> dataPerDay = {
@@ -1086,13 +1119,30 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     "d1":1
   };
 
+  Map<String,DateFormat> formatMap = {
+    "m5":new DateFormat("h꞉mm a"),
+    "m30":new DateFormat.MMMd(),
+    "h2":new DateFormat.MMMd(),
+    "h12":new DateFormat.MMMd(),
+    "d1":new DateFormat.MMMd(),
+  };
+
   @override
   Widget build(BuildContext context){
     bool hasData = seriesList!=null&&seriesList.length>(widget.startTime*dataPerDay[widget.period]/10);
+    double dif, factor, visMax, visMin;
+    DateFormat xFormatter = formatMap[widget.period];
+    NumberFormat yFormatter = new NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base);
+    if(!loading){
+      dif = (maxVal-minVal);
+      factor = .5;
+      visMin = max(0,minVal-dif*factor);
+      visMax = visMin!=0?maxVal+dif*factor:maxVal+minVal;
+    }
     return !loading&&canLoad&&hasData?new Container(width: 350.0*MediaQuery.of(context).size.width/375.0,
         height:200.0,
         child: new SfCartesianChart(
-          series: [
+            series: [
             new LineSeries<TimeSeriesPrice,DateTime>(
                 dataSource: seriesList,
                 xValueMapper: (TimeSeriesPrice s,_)=>s.time,
@@ -1103,22 +1153,32 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
           ],
           plotAreaBackgroundColor: Colors.transparent,
           primaryXAxis: new DateTimeAxis(
-              dateFormat: widget.startTime==1?new DateFormat("h꞉mm a"):null
+              dateFormat: xFormatter
           ),
           primaryYAxis: new NumericAxis(
-              numberFormat: new NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base),
-              maximum: maxVal+(maxVal-minVal)*.1,
-              minimum: minVal-(maxVal-minVal)*.1
+              numberFormat: yFormatter,
+              decimalPlaces: base,
+              visibleMaximum: visMax,
+              visibleMinimum: visMin,
+              interval: (visMax-visMin)/4.001
           ),
           selectionGesture: ActivationMode.singleTap,
           selectionType: SelectionType.point,
+          onAxisLabelRender: (a){
+            if(a.orientation==AxisOrientation.vertical){
+              a.text = yFormatter.format(a.value);
+            }else{
+              a.text = xFormatter.format(new DateTime.fromMillisecondsSinceEpoch(a.value));
+            }
+          },
           trackballBehavior: new TrackballBehavior(
             activationMode: ActivationMode.singleTap,
             enable: true,
             shouldAlwaysShow: true,
             tooltipSettings: new InteractiveTooltip(
                 color: Colors.white,
-                format: "point.x | point.y"
+                format: "point.x | point.y",
+                decimalPlaces: base
             )
           )
         )
