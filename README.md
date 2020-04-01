@@ -6,7 +6,7 @@ Platypus Crypto is an ad-free cross-platform robust solution for tracking crypto
 
 Apple app store: https://itunes.apple.com/us/app/platypus-crypto/id1397122793
 
-Google play store: https://play.google.com/store/apps/details?id=land.platypus.crypto
+Google play store: https://play.google.com/store/apps/details?id=land.platypus.cryptotracker
 
 Amazon app store: https://www.amazon.com/dp/B07F6TPW1T/
 
