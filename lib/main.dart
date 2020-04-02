@@ -1135,7 +1135,7 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     NumberFormat yFormatter = new NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base);
     if(!loading){
       dif = (maxVal-minVal);
-      factor = .5;
+      factor = min(1,max(.2,dif/maxVal));
       visMin = max(0,minVal-dif*factor);
       visMax = visMin!=0?maxVal+dif*factor:maxVal+minVal;
     }
@@ -1180,7 +1180,11 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
                 format: "point.x | point.y",
                 decimalPlaces: base
             )
-          )
+          ),
+          onTrackballPositionChanging: (a){
+              var v = a.chartPointInfo.chartDataPoint;
+              a.chartPointInfo.label = "${xFormatter.format(v.x)} | ${yFormatter.format(v.y)}";
+          },
         )
     ):canLoad&&(hasData||loading)?new Container(
         height:233.0,
