@@ -20,7 +20,7 @@ import "package:flutter_svg/flutter_svg.dart";
 
 String _api = "https://api.coincap.io/v2/";
 HashMap<String,Map<String,dynamic>> _coinData;
-HashMap<String, ValueNotifier<num>> _valueNotifiers = new HashMap<String, ValueNotifier<num>>();
+HashMap<String, ValueNotifier<num>> _valueNotifiers = HashMap<String, ValueNotifier<num>>();
 List<String> _savedCoins;
 Database _userData;
 Map<String,dynamic> _settings;
@@ -77,7 +77,7 @@ void _changeCurrency(String currency){
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SyncfusionLicense.registerLicense(key);
-  _userData = new Database((await getApplicationDocumentsDirectory()).path);
+  _userData = Database((await getApplicationDocumentsDirectory()).path);
   _savedCoins = (await _userData["saved"])?.cast<String>() ?? [];
   _settings = await _userData["settings"];
   if(_settings==null){
@@ -89,13 +89,13 @@ void main() async{
   }
   _exchangeRates = json.decode((await http.get("https://api.exchangeratesapi.io/latest?base=USD")).body)["rates"].cast<String,double>();
   _changeCurrency(_settings["currency"]);
-  _coinData = new HashMap<String,Map<String,Comparable>>();
-  runApp(new App());
+  _coinData = HashMap<String,Map<String,Comparable>>();
+  runApp(App());
 }
 
 class App extends StatefulWidget{
   @override
-  _AppState createState() => new _AppState();
+  _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
@@ -109,14 +109,14 @@ class _AppState extends State<App> {
   IOWebSocketChannel socket;
 
   Future<void> setUpData() async{
-    _coinData = new HashMap<String,Map<String,Comparable>>();
+    _coinData = HashMap<String,Map<String,Comparable>>();
     _loading = true;
     setState((){});
     var data = (await _apiGet("assets?limit=2000"))["data"];
     data.forEach((e){
       String id = e["id"];
       _coinData[id] = e.cast<String,Comparable>();
-      _valueNotifiers[id] = new ValueNotifier(0);
+      _valueNotifiers[id] = ValueNotifier(0);
       for(String s in e.keys){
         if(e[s]==null){
           e[s]=(s=="changePercent24Hr"?-1000000:-1);
@@ -128,7 +128,7 @@ class _AppState extends State<App> {
     _loading = false;
     setState((){});
     socket?.sink?.close();
-    socket = new IOWebSocketChannel.connect("wss://ws.coincap.io/prices?assets=ALL");
+    socket = IOWebSocketChannel.connect("wss://ws.coincap.io/prices?assets=ALL");
     socket.stream.listen((message){
       Map<String,dynamic> data = json.decode(message);
       data.forEach((s,v){
@@ -143,13 +143,13 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      theme: new ThemeData(
+    return MaterialApp(
+      theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.grey[700]
       ),
       debugShowCheckedModeBanner: false,
-      home: new ListPage(true)
+      home: ListPage(true)
     );
   }
 }
@@ -160,10 +160,10 @@ class ListPage extends StatefulWidget {
 
   final bool savedPage;
 
-  ListPage(this.savedPage) : super(key:new ValueKey(savedPage));
+  ListPage(this.savedPage) : super(key:ValueKey(savedPage));
 
   @override
-  _ListPageState createState() => new _ListPageState();
+  _ListPageState createState() => _ListPageState();
 }
 
 typedef SortType(String s1, String s2);
@@ -198,9 +198,9 @@ class _ListPageState extends State<ListPage> {
 
   void reset(){
     if(widget.savedPage){
-      sortedKeys = new List.from(_savedCoins)..sort(sortBy(sortingBy));
+      sortedKeys = List.from(_savedCoins)..sort(sortBy(sortingBy));
     }else{
-      sortedKeys = new List.from(_coinData.keys)..sort(sortBy(sortingBy));
+      sortedKeys = List.from(_coinData.keys)..sort(sortBy(sortingBy));
     }
     setState((){});
   }
@@ -240,42 +240,42 @@ class _ListPageState extends State<ListPage> {
   }
 
   Timer searchTimer;
-  ScrollController scrollController = new ScrollController();
+  ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context){
     List<PopupMenuItem> l = [
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("Name Ascending"), value: "nameA"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("Name Descending"), value: "nameD"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("Price Ascending"), value: "priceUsdA"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("Price Descending"), value: "priceUsdD"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("Market Cap Ascending"), value: "marketCapUsdA"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("Market Cap Descending"), value: "marketCapUsdD"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("24H Change Ascending"), value: "changePercent24HrA"),
-      new PopupMenuItem<String>(
+      PopupMenuItem<String>(
           child: const Text("24H Change Descending"), value: "changePercent24HrD")
     ];
     if(widget.savedPage){
-      l.insert(0, new PopupMenuItem<String>(
+      l.insert(0, PopupMenuItem<String>(
           child: const Text("Custom"), value: "custom")
       );
     }
-    Widget ret = new Scaffold(
-      drawer: widget.savedPage?new Drawer(
-        child: new ListView(
+    Widget ret = Scaffold(
+      drawer: widget.savedPage?Drawer(
+        child: ListView(
           children: [
-            new GestureDetector(
-              child: new Container(
+            GestureDetector(
+              child: Container(
                 color: Colors.black,
                 height:MediaQuery.of(context).size.height/5,
-                child: new Image.asset("icon/platypus.png"),
+                child: Image.asset("icon/platypus.png"),
               ),
               onTap: () async{
                 String url = "https://platypuslabs.llc";
@@ -284,13 +284,13 @@ class _ListPageState extends State<ListPage> {
                 }
               }
             ),
-            new ListTile(
-              leading: new Icon(Icons.import_export),
-              title: new Text("Import/Export Favorites", style: new TextStyle(fontSize:16.0)),
+            ListTile(
+              leading: Icon(Icons.import_export),
+              title: Text("Import/Export Favorites", style: TextStyle(fontSize:16.0)),
               onTap: (){
                 if(!_loading){
                   _didImport = false;
-                  Navigator.push(context, new MaterialPageRoute(builder: (context) => new ImpExpPage())).then((f){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ImpExpPage())).then((f){
                     if(_didImport){
                       _didImport = false;
                       searching = false;
@@ -301,18 +301,18 @@ class _ListPageState extends State<ListPage> {
                 }
               }
             ),
-            new ListTile(
-                leading: new Icon(Icons.settings),
-                title: new Text("Settings",style: new TextStyle(fontSize:16.0)),
+            ListTile(
+                leading: Icon(Icons.settings),
+                title: Text("Settings",style: TextStyle(fontSize:16.0)),
                 onTap: (){
                   if(!_loading){
-                    Navigator.push(context,new MaterialPageRoute(builder: (context) => new Settings()));
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => Settings()));
                   }
                 }
             ),
-            new ListTile(
-                leading: new Icon(Icons.mail),
-                title: new Text("Contact Us",style: new TextStyle(fontSize:16.0)),
+            ListTile(
+                leading: Icon(Icons.mail),
+                title: Text("Contact Us",style: TextStyle(fontSize:16.0)),
                 onTap: () async{
                   String url = Uri.encodeFull("mailto:support@platypuslabs.llc?subject=GetPass&body=Contact Reason: ");
                   if(await canLaunch(url)) {
@@ -320,9 +320,9 @@ class _ListPageState extends State<ListPage> {
                   }
                 }
             ),
-            new ListTile(
-                leading: new Icon(Icons.star),
-                title: new Text("Rate Us",style: new TextStyle(fontSize:16.0)),
+            ListTile(
+                leading: Icon(Icons.star),
+                title: Text("Rate Us",style: TextStyle(fontSize:16.0)),
                 onTap: () async{
                   String url = Platform.isIOS?"https://itunes.apple.com/us/app/platypus-crypto/id1397122793":"https://play.google.com/store/apps/details?id=land.platypus.cryptotracker";
                   if(await canLaunch(url)) {
@@ -332,32 +332,32 @@ class _ListPageState extends State<ListPage> {
             )
           ]
         ),
-        key: new ValueKey(widget.savedPage)
+        key: ValueKey(widget.savedPage)
       ):null,
-      appBar: new AppBar(
-        bottom: _loading?new PreferredSize(preferredSize: new Size(double.infinity,3.0),child: new Container(height:3.0, child: new LinearProgressIndicator())):null,
-        title: searching?new TextField(
+      appBar: AppBar(
+        bottom: _loading?PreferredSize(preferredSize: Size(double.infinity,3.0),child: Container(height:3.0, child: LinearProgressIndicator())):null,
+        title: searching?TextField(
             autocorrect: false,
             autofocus: true,
-            decoration: new InputDecoration(
+            decoration: InputDecoration(
                 hintText: "Search",
-                hintStyle: new TextStyle(color:Colors.white),
+                hintStyle: TextStyle(color:Colors.white),
                 border: InputBorder.none
             ),
-            style:new TextStyle(color:Colors.white),
+            style:TextStyle(color:Colors.white),
             onChanged:(s){
               searchTimer?.cancel();
-              searchTimer = new Timer(new Duration(milliseconds: 500),(){
+              searchTimer = Timer(Duration(milliseconds: 500),(){
                 search(s);
               });
             },
             onSubmitted: (s){
               search(s);
             }
-        ):new Text(widget.savedPage?"Favorites":"All Coins"),
+        ):Text(widget.savedPage?"Favorites":"All Coins"),
         actions: [
-          new IconButton(
-              icon: new Icon(searching?Icons.close:Icons.search),
+          IconButton(
+              icon: Icon(searching?Icons.close:Icons.search),
               onPressed: (){
                 if(_loading){
                   return;
@@ -372,11 +372,11 @@ class _ListPageState extends State<ListPage> {
                 });
               }
           ),
-          new Container(
+          Container(
               width:35.0,
-              child: new PopupMenuButton(
+              child: PopupMenuButton(
                   itemBuilder: (BuildContext context)=>l,
-                  child: new Icon(Icons.sort),
+                  child: Icon(Icons.sort),
                   onSelected:(s){
                     if(_loading){
                       return;
@@ -385,8 +385,8 @@ class _ListPageState extends State<ListPage> {
                   }
               )
           ),
-          new IconButton(
-              icon: new Icon(Icons.refresh),
+          IconButton(
+              icon: Icon(Icons.refresh),
               onPressed: () async{
                 if(_loading){
                   return;
@@ -399,42 +399,42 @@ class _ListPageState extends State<ListPage> {
           )
         ],
       ),
-      body: !_loading?new Scrollbar(
-          child: new ListView.builder(
-              itemBuilder: (context, i)=>new Crypto(sortedKeys[i], widget.savedPage),
+      body: !_loading?Scrollbar(
+          child: ListView.builder(
+              itemBuilder: (context, i)=>Crypto(sortedKeys[i], widget.savedPage),
               itemCount: sortedKeys.length,
               controller: scrollController
           )
-      ):new Container(),
-      floatingActionButton: widget.savedPage?!_loading?new FloatingActionButton(
+      ):Container(),
+      floatingActionButton: widget.savedPage?!_loading?FloatingActionButton(
         onPressed: (){
           moving = false;
           moveWith = null;
-          Navigator.push(context,new MaterialPageRoute(builder: (context) => new ListPage(false))).then((d){
+          Navigator.push(context,MaterialPageRoute(builder: (context) => ListPage(false))).then((d){
             sortingBy = "custom";
             searching = false;
             reset();
             scrollController.jumpTo(0.0);
           });
         },
-        child: new Icon(
+        child: Icon(
             Icons.add
         ),
         heroTag: "newPage"
-      ):null:new FloatingActionButton(
+      ):null:FloatingActionButton(
           onPressed: (){
             scrollController.jumpTo(0.0);
           },
-          child: new Icon(
+          child: Icon(
               Icons.arrow_upward
           ),
           heroTag: "jump"
       )
     );
     if(!widget.savedPage){
-      ret = new WillPopScope(
+      ret = WillPopScope(
           child: ret,
-          onWillPop: ()=>new Future<bool>(()=>!_loading)
+          onWillPop: ()=>Future<bool>(()=>!_loading)
       );
     }
     return ret;
@@ -445,42 +445,42 @@ bool _didImport = false;
 
 class ImpExpPage extends StatefulWidget{
   @override
-  ImpExpPageState createState() => new ImpExpPageState();
+  ImpExpPageState createState() => ImpExpPageState();
 }
 
 class ImpExpPageState extends State<ImpExpPage>{
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(title: new Text("Import/Export")),
-      body: new Builder(
-        builder: (context)=>new Container(
-            child: new Padding(
+    return Scaffold(
+      appBar: AppBar(title: Text("Import/Export")),
+      body: Builder(
+        builder: (context)=>Container(
+            child: Padding(
                 padding: EdgeInsets.only(top:20.0,right:15,left:15),
-                child: new ListView(
-                    physics: new ClampingScrollPhysics(),
+                child: ListView(
+                    physics: ClampingScrollPhysics(),
                     children: [
-                      new Card(
+                      Card(
                         color: Colors.black12,
-                        child: new ListTile(
-                            title: new Text("Export Favorites"),
-                            subtitle: new Text("To your clipboard"),
-                            trailing: new Icon(Icons.file_upload),
+                        child: ListTile(
+                            title: Text("Export Favorites"),
+                            subtitle: Text("To your clipboard"),
+                            trailing: Icon(Icons.file_upload),
                             onTap: () async{
-                              await Clipboard.setData(new ClipboardData(text:json.encode(_savedCoins)));
+                              await Clipboard.setData(ClipboardData(text:json.encode(_savedCoins)));
                               Scaffold.of(context).removeCurrentSnackBar();
-                              Scaffold.of(context).showSnackBar(new SnackBar(duration: new Duration(milliseconds: 1000),content: new Text("Copied to clipboard",style:new TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
+                              Scaffold.of(context).showSnackBar(SnackBar(duration: Duration(milliseconds: 1000),content: Text("Copied to clipboard",style:TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
                             }
                         ),
                         margin: EdgeInsets.zero,
                       ),
-                      new Container(height:20),
-                      new Card(
+                      Container(height:20),
+                      Card(
                         color: Colors.black12,
-                        child: new ListTile(
-                            title: new Text("Import Favorites"),
-                            subtitle: new Text("From your clipboard"),
-                            trailing: new Icon(Icons.file_download),
+                        child: ListTile(
+                            title: Text("Import Favorites"),
+                            subtitle: Text("From your clipboard"),
+                            trailing: Icon(Icons.file_download),
                             onTap: () async{
                               String str = (await Clipboard.getData("text/plain")).text;
                               try{
@@ -494,10 +494,10 @@ class ImpExpPageState extends State<ImpExpPage>{
                                 _userData["saved"] = data;
                                 _didImport = true;
                                 Scaffold.of(context).removeCurrentSnackBar();
-                                Scaffold.of(context).showSnackBar(new SnackBar(duration: new Duration(milliseconds: 1000),content: new Text("Imported",style:new TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
+                                Scaffold.of(context).showSnackBar(SnackBar(duration: Duration(milliseconds: 1000),content: Text("Imported",style:TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
                               }catch(e){
                                 Scaffold.of(context).removeCurrentSnackBar();
-                                Scaffold.of(context).showSnackBar(new SnackBar(duration: new Duration(milliseconds: 1000),content: new Text("Invalid data",style:new TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
+                                Scaffold.of(context).showSnackBar(SnackBar(duration: Duration(milliseconds: 1000),content: Text("Invalid data",style:TextStyle(color:Colors.white)),backgroundColor: Colors.grey[800]));
                               }
                             }
                         ),
@@ -514,26 +514,26 @@ class ImpExpPageState extends State<ImpExpPage>{
 
 class Settings extends StatefulWidget{
   @override
-  SettingsState createState() => new SettingsState();
+  SettingsState createState() => SettingsState();
 }
 
 class SettingsState extends State<Settings>{
 
   @override
   Widget build(BuildContext context){
-    return new Scaffold(
-        appBar: new AppBar(title:new Text("Settings",style:new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
-        body: new Padding(
+    return Scaffold(
+        appBar: AppBar(title:Text("Settings",style:TextStyle(fontSize:25.0,fontWeight: FontWeight.bold)),backgroundColor: Colors.black54),
+        body: Padding(
             padding: EdgeInsets.only(top:20.0,right:15,left:15),
-            child: new ListView(
-                physics: new ClampingScrollPhysics(),
+            child: ListView(
+                physics: ClampingScrollPhysics(),
                 children: [
-                  new Card(
+                  Card(
                     color: Colors.black12,
-                    child: new ListTile(
-                        title: new Text("Disable 7 day graphs"),
-                        subtitle: new Text("More compact cards"),
-                        trailing: new Switch(
+                    child: ListTile(
+                        title: Text("Disable 7 day graphs"),
+                        subtitle: Text("More compact cards"),
+                        trailing: Switch(
                             value: _settings["disableGraphs"],
                             onChanged: (disp){
                               setState((){
@@ -551,18 +551,18 @@ class SettingsState extends State<Settings>{
                     ),
                     margin: EdgeInsets.zero,
                   ),
-                  new Container(height:20),
-                  new Card(
+                  Container(height:20),
+                  Card(
                     color: Colors.black12,
-                    child: new ListTile(
-                        title: new Text("Change Currency"),
-                        subtitle: new Text("33 fiat currency options"),
-                        trailing: new Padding(
-                            child: new Container(
+                    child: ListTile(
+                        title: Text("Change Currency"),
+                        subtitle: Text("33 fiat currency options"),
+                        trailing: Padding(
+                            child: Container(
                                 color: Colors.white12,
                                 padding: EdgeInsets.only(right:7.0,left:7.0),
-                                child: new DropdownButtonHideUnderline(
-                                    child: new DropdownButton<String>(
+                                child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
                                         value: _settings["currency"],
                                         onChanged: (s){
                                           _settings["currency"] = s;
@@ -570,9 +570,9 @@ class SettingsState extends State<Settings>{
                                           _userData["settings/currency"] = s;
                                           context.findAncestorStateOfType<_AppState>().setState((){});
                                         },
-                                        items: _currencySymbolMap.keys.map((s)=>new DropdownMenuItem(
+                                        items: _currencySymbolMap.keys.map((s)=>DropdownMenuItem(
                                             value:s,
-                                            child: new Text(s+" "+_currencySymbolMap[s])
+                                            child: Text(s+" "+_currencySymbolMap[s])
                                         )).toList()
                                     )
                                 )
@@ -596,7 +596,7 @@ class PriceText extends StatefulWidget{
   PriceText(this.id);
 
   @override
-  _PriceTextState createState() => new _PriceTextState();
+  _PriceTextState createState() => _PriceTextState();
 }
 
 class _PriceTextState extends State<PriceText>{
@@ -615,7 +615,7 @@ class _PriceTextState extends State<PriceText>{
     }
     setState((){});
     updateTimer?.cancel();
-    updateTimer = new Timer(new Duration(milliseconds: 400),(){
+    updateTimer = Timer(Duration(milliseconds: 400),(){
       if(disp){
         return;
       }
@@ -643,7 +643,7 @@ class _PriceTextState extends State<PriceText>{
   @override
   Widget build(BuildContext context){
     num price = data["priceUsd"]*_exchangeRate;
-    return new Text(price>=0?new NumberFormat.currency(symbol: _symbol, decimalDigits: price>1?price<100000?2:0:price>.000001?6:7).format(price):"N/A",style: new TextStyle(fontSize:20.0,fontWeight: FontWeight.bold, color: changeColor));
+    return Text(price>=0?NumberFormat.currency(symbol: _symbol, decimalDigits: price>1?price<100000?2:0:price>.000001?6:7).format(price):"N/A",style: TextStyle(fontSize:20.0,fontWeight: FontWeight.bold, color: changeColor));
   }
 
 }
@@ -656,10 +656,10 @@ class Crypto extends StatefulWidget{
   final String id;
   final bool savedPage;
 
-  Crypto(this.id, this.savedPage) : super(key: new ValueKey(id+savedPage.toString()));
+  Crypto(this.id, this.savedPage) : super(key: ValueKey(id+savedPage.toString()));
 
   @override
-  _CryptoState createState() => new _CryptoState();
+  _CryptoState createState() => _CryptoState();
 }
 
 class _CryptoState extends State<Crypto>{
@@ -688,10 +688,10 @@ class _CryptoState extends State<Crypto>{
     mCap*=_exchangeRate;
     num change = data["changePercent24Hr"];
     String shortName = data["symbol"];
-    return new Container(
+    return Container(
       height: !_settings["disableGraphs"]?120.0:100.0,
       padding: EdgeInsets.only(top:10.0),
-      child: new GestureDetector(
+      child: GestureDetector(
         onLongPress: (){
           if(sortingBy=="custom"){
             context.findAncestorStateOfType<_ListPageState>().setState((){
@@ -699,12 +699,12 @@ class _CryptoState extends State<Crypto>{
               moveWith = widget.id;
             });
           }else if(!widget.savedPage){
-            Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.id)));
+            Navigator.push(context,MaterialPageRoute(builder: (context) => ItemInfo(widget.id)));
           }
         },
-        child: new Dismissible(
-            background: new Container(color:Colors.red),
-            key: new ValueKey(widget.id),
+        child: Dismissible(
+            background: Container(color:Colors.red),
+            key: ValueKey(widget.id),
             direction: DismissDirection.endToStart,
             onDismissed: (d){
               _savedCoins.remove(widget.id);
@@ -712,7 +712,7 @@ class _CryptoState extends State<Crypto>{
               context.findAncestorStateOfType<_ListPageState>().sortedKeys.remove(widget.id);
               context.findAncestorStateOfType<_ListPageState>().setState((){});
             },
-            child: new FlatButton(
+            child: FlatButton(
               onPressed: (){
                 if(widget.savedPage){
                   if(moving){
@@ -725,7 +725,7 @@ class _CryptoState extends State<Crypto>{
                     context.findAncestorStateOfType<_ListPageState>().setState((){});
                     _userData["saved"] = _savedCoins;
                   }else{
-                    Navigator.push(context,new MaterialPageRoute(builder: (context) => new ItemInfo(widget.id)));
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => ItemInfo(widget.id)));
                   }
                 }else{
                   setState((){
@@ -743,43 +743,43 @@ class _CryptoState extends State<Crypto>{
               },
               padding: EdgeInsets.only(top:15.0,bottom:15.0,left:5.0,right:5.0),
               color: saved&&moveWith!=widget.id?Colors.black45:Colors.black26,
-              child: new Row(
+              child: Row(
                 children: [
-                  new Expanded(child: new Column(
+                  Expanded(child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        new Row(
+                        Row(
                             children: [
-                              new ConstrainedBox(
-                                constraints: new BoxConstraints(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
                                   maxWidth: width/3
                                 ),
-                                child: new AutoSizeText(
+                                child: AutoSizeText(
                                     data["name"],
                                     maxLines: 2,
                                     minFontSize: 0.0,
                                     maxFontSize: 17.0,
-                                    style: new TextStyle(fontSize:17.0)
+                                    style: TextStyle(fontSize:17.0)
                                 )
                               )
                             ]
                         ),
-                        new Container(height:5.0),
-                        new Row(
+                        Container(height:5.0),
+                        Row(
                             children: [
-                              new FadeInImage(
-                                  image: !blacklist.contains(widget.id)?new NetworkImage("https://static.coincap.io/assets/icons/${shortName.toLowerCase()}@2x.png"):new AssetImage("icon/platypus2.png"),
-                                  placeholder: new AssetImage("icon/platypus2.png"),
+                              FadeInImage(
+                                  image: !blacklist.contains(widget.id)?NetworkImage("https://static.coincap.io/assets/icons/${shortName.toLowerCase()}@2x.png"):AssetImage("icon/platypus2.png"),
+                                  placeholder: AssetImage("icon/platypus2.png"),
                                   fadeInDuration: const Duration(milliseconds:100),
                                   height:32.0,
                                   width:32.0
                               ),
-                              new Container(width:4.0),
-                              new ConstrainedBox(
-                                  constraints: new BoxConstraints(
+                              Container(width:4.0),
+                              ConstrainedBox(
+                                  constraints: BoxConstraints(
                                     maxWidth: width/3-40
                                   ),
-                                  child: new AutoSizeText(
+                                  child: AutoSizeText(
                                       shortName,
                                       maxLines: 1
                                   )
@@ -788,30 +788,30 @@ class _CryptoState extends State<Crypto>{
                         )
                       ]
                   )),
-                  new Column(
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        new PriceText(widget.id),
-                        new Text((mCap>=0?mCap>1?_symbol+new NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):_symbol+mCap.toStringAsFixed(2):"N/A"),style: new TextStyle(color:Colors.grey,fontSize:12.0)),
-                        !_settings["disableGraphs"]?linkMap[shortName]!=null&&!blacklist.contains(widget.id)?new SvgPicture.network(
+                        PriceText(widget.id),
+                        Text((mCap>=0?mCap>1?_symbol+NumberFormat.currency(symbol:"",decimalDigits: 0).format(mCap):_symbol+mCap.toStringAsFixed(2):"N/A"),style: TextStyle(color:Colors.grey,fontSize:12.0)),
+                        !_settings["disableGraphs"]?linkMap[shortName]!=null&&!blacklist.contains(widget.id)?SvgPicture.network(
                           "https://www.coingecko.com/coins/${linkMap[shortName] ?? linkMap[widget.id]}/sparkline",
-                          placeholderBuilder: (BuildContext context) => new Container(
+                          placeholderBuilder: (BuildContext context) => Container(
                             width:0,
                             height:35.0
                           ),
                           width:105.0,
                           height:35.0
-                        ):new Container(height:35.0):new Container(),
+                        ):Container(height:35.0):Container(),
                       ]
                   ),
-                  new Expanded(
-                      child: new Row(
+                  Expanded(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          change!=-1000000.0?new Text(((change>=0)?"+":"")+change.toStringAsFixed(3)+"\%",style:new TextStyle(color:((change>=0)?Colors.green:Colors.red))):new Text("N/A"),
-                          new Container(width:2),
-                          !widget.savedPage?new Icon(saved?Icons.check:Icons.add):new Container()
+                          change!=-1000000.0?Text(((change>=0)?"+":"")+change.toStringAsFixed(3)+"\%",style:TextStyle(color:((change>=0)?Colors.green:Colors.red))):Text("N/A"),
+                          Container(width:2),
+                          !widget.savedPage?Icon(saved?Icons.check:Icons.add):Container()
                         ]
                       )
                   )
@@ -831,7 +831,7 @@ class ItemInfo extends StatefulWidget{
   ItemInfo(this.id);
 
   @override
-  _ItemInfoState createState() => new _ItemInfoState();
+  _ItemInfoState createState() => _ItemInfoState();
 }
 
 class _ItemInfoState extends State<ItemInfo>{
@@ -847,100 +847,100 @@ class _ItemInfoState extends State<ItemInfo>{
 
   @override
   Widget build(BuildContext context){
-    return new DefaultTabController(
+    return DefaultTabController(
         length:5,
-        child: new Scaffold(
-            appBar:new AppBar(
-                title:new Text(data["name"],style:new TextStyle(fontSize:25.0)),
+        child: Scaffold(
+            appBar:AppBar(
+                title:Text(data["name"],style:TextStyle(fontSize:25.0)),
                 backgroundColor: Colors.black54,
                 actions: [
-                  new Row(
+                  Row(
                       children: [
-                        new FadeInImage(
-                          image: new NetworkImage("https://static.coincap.io/assets/icons/${data["symbol"].toLowerCase()}@2x.png"),
-                          placeholder: new AssetImage("icon/platypus2.png"),
+                        FadeInImage(
+                          image: NetworkImage("https://static.coincap.io/assets/icons/${data["symbol"].toLowerCase()}@2x.png"),
+                          placeholder: AssetImage("icon/platypus2.png"),
                           fadeInDuration: const Duration(milliseconds:100),
                           height:32.0,
                           width:32.0,
                         ),
-                        new Text(" "+data["symbol"]),
-                        new Container(width:5.0)
+                        Text(" "+data["symbol"]),
+                        Container(width:5.0)
                       ]
                   )
                 ]
             ),
-            body:new ListView(
-                physics: new ClampingScrollPhysics(),
+            body:ListView(
+                physics: ClampingScrollPhysics(),
                 children:[
-                  new Container(
+                  Container(
                       color: Colors.black54,
-                      child: new TabBar(
+                      child: TabBar(
                           tabs: [
-                            new Tab(icon: new AutoSizeText(
+                            Tab(icon: AutoSizeText(
                               "1D",
                               maxFontSize: 25.0,
-                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
                               minFontSize: 0.0
                             )),
-                            new Tab(icon: new AutoSizeText(
+                            Tab(icon: AutoSizeText(
                               "1W",
                               maxFontSize: 25.0,
-                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
                               minFontSize: 0.0
                             )),
-                            new Tab(icon: new AutoSizeText(
+                            Tab(icon: AutoSizeText(
                               "1M",
                               maxFontSize: 25.0,
-                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
                               minFontSize: 0.0
                             )),
-                            new Tab(icon: new AutoSizeText(
+                            Tab(icon: AutoSizeText(
                               "6M",
                               maxFontSize: 25.0,
-                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
                               minFontSize: 0.0
                             )),
-                            new Tab(icon: new AutoSizeText(
+                            Tab(icon: AutoSizeText(
                               "1Y",
                               maxFontSize: 25.0,
-                              style: new TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize:25.0,fontWeight: FontWeight.bold),
                               minFontSize: 0.0
                             ))
                           ]
                       )
                   ),
-                  new Container(height:15.0),
-                  new Container(
+                  Container(height:15.0),
+                  Container(
                       height: 200.0,
                       padding: EdgeInsets.only(right:10.0),
-                      child: new TabBarView(
-                          physics: new NeverScrollableScrollPhysics(),
+                      child: TabBarView(
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
-                            new SimpleTimeSeriesChart(widget.id,1,"m5"),
-                            new SimpleTimeSeriesChart(widget.id,7,"m30"),
-                            new SimpleTimeSeriesChart(widget.id,30,"h2"),
-                            new SimpleTimeSeriesChart(widget.id,182,"h12"),
-                            new SimpleTimeSeriesChart(widget.id,364,"d1")
+                            SimpleTimeSeriesChart(widget.id,1,"m5"),
+                            SimpleTimeSeriesChart(widget.id,7,"m30"),
+                            SimpleTimeSeriesChart(widget.id,30,"h2"),
+                            SimpleTimeSeriesChart(widget.id,182,"h12"),
+                            SimpleTimeSeriesChart(widget.id,364,"d1")
                           ]
                       )
                   ),
-                  new Container(height:10.0),
-                  new Row(
+                  Container(height:10.0),
+                  Row(
                       children: [
-                        new Expanded(child:new Info("Price",widget.id,"priceUsd")),
-                        new Expanded(child:new Info("Market Cap",widget.id,"marketCapUsd"))
+                        Expanded(child:Info("Price",widget.id,"priceUsd")),
+                        Expanded(child:Info("Market Cap",widget.id,"marketCapUsd"))
                       ]
                   ),
-                  new Row(
+                  Row(
                       children: [
-                        new Expanded(child:new Info("Supply",widget.id,"supply")),
-                        new Expanded(child:new Info("Max Supply",widget.id,"maxSupply")),
+                        Expanded(child:Info("Supply",widget.id,"supply")),
+                        Expanded(child:Info("Max Supply",widget.id,"maxSupply")),
                       ]
                   ),
-                  new Row(
+                  Row(
                       children: [
-                        new Expanded(child:new Info("24h Change",widget.id,"changePercent24Hr")),
-                        new Expanded(child:new Info("24h Volume",widget.id,"volumeUsd24Hr"))
+                        Expanded(child:Info("24h Change",widget.id,"changePercent24Hr")),
+                        Expanded(child:Info("24h Volume",widget.id,"volumeUsd24Hr"))
                       ]
                   ),
                 ]
@@ -957,7 +957,7 @@ class Info extends StatefulWidget{
   Info(this.title,this.ticker,this.id);
 
   @override
-  _InfoState createState() => new _InfoState();
+  _InfoState createState() => _InfoState();
 }
 
 class _InfoState extends State<Info>{
@@ -982,7 +982,7 @@ class _InfoState extends State<Info>{
     }
     setState((){});
     updateTimer?.cancel();
-    updateTimer = new Timer(new Duration(milliseconds: 400),(){
+    updateTimer = Timer(Duration(milliseconds: 400),(){
       if(disp){
         return;
       }
@@ -1022,13 +1022,13 @@ class _InfoState extends State<Info>{
     }else{
       NumberFormat formatter;
       if(widget.id=="priceUsd"){
-        formatter = new NumberFormat.currency(symbol: _symbol, decimalDigits: value>1?value<100000?2:0:value>.000001?6:7);
+        formatter = NumberFormat.currency(symbol: _symbol, decimalDigits: value>1?value<100000?2:0:value>.000001?6:7);
       }else if(widget.id=="marketCapUsd"){
-        formatter = new NumberFormat.currency(symbol: _symbol, decimalDigits: value>1?0:2);
+        formatter = NumberFormat.currency(symbol: _symbol, decimalDigits: value>1?0:2);
       }else if(widget.id=="changePercent24Hr"){
-        formatter = new NumberFormat.currency(symbol:"",decimalDigits:3);
+        formatter = NumberFormat.currency(symbol:"",decimalDigits:3);
       }else{
-        formatter = new NumberFormat.currency(symbol:"",decimalDigits:0);
+        formatter = NumberFormat.currency(symbol:"",decimalDigits:0);
       }
       text = formatter.format(value);
     }
@@ -1037,25 +1037,25 @@ class _InfoState extends State<Info>{
       text = (value>0?"+":"")+text;
       textColor = value<0?Colors.red:value>0?Colors.green:Colors.white;
     }
-    return new Container(
+    return Container(
         padding: EdgeInsets.only(top:2.0, left:2.0, right:2.0),
-        child: new Card(
-          child: new Container(
+        child: Card(
+          child: Container(
             height: 60.0,
             color: Colors.black45,
             padding: EdgeInsets.only(top:10.0,bottom:10.0),
-            child: new Column(
+            child: Column(
                 children: [
-                  new Text(widget.title,textAlign: TextAlign.left, style:new TextStyle(fontSize:17, fontWeight: FontWeight.bold)),
-                  new ConstrainedBox(
-                    child: new AutoSizeText(
+                  Text(widget.title,textAlign: TextAlign.left, style:TextStyle(fontSize:17, fontWeight: FontWeight.bold)),
+                  ConstrainedBox(
+                    child: AutoSizeText(
                         text,
                         minFontSize: 0,
                         maxFontSize: 17,
-                        style: new TextStyle(fontSize:17,color: textColor),
+                        style: TextStyle(fontSize:17,color: textColor),
                         maxLines: 1
                     ),
-                    constraints: new BoxConstraints(
+                    constraints: BoxConstraints(
                         maxWidth: MediaQuery.of(context).size.width/2-8
                     ),
                   )
@@ -1083,7 +1083,7 @@ class SimpleTimeSeriesChart extends StatefulWidget{
   SimpleTimeSeriesChart(this.id,this.startTime,this.period);
 
   @override
-  _SimpleTimeSeriesChartState createState() => new _SimpleTimeSeriesChartState();
+  _SimpleTimeSeriesChartState createState() => _SimpleTimeSeriesChartState();
 }
 
 class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
@@ -1098,8 +1098,8 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   @override
   void initState(){
     super.initState();
-    DateTime now = new DateTime.now();
-    http.get(Uri.encodeFull("https://api.coincap.io/v2/assets/${widget.id}/history?interval="+widget.period+"&start="+now.subtract(new Duration(days:widget.startTime)).millisecondsSinceEpoch.toString()+"&end="+now.millisecondsSinceEpoch.toString())).then((value){
+    DateTime now = DateTime.now();
+    http.get(Uri.encodeFull("https://api.coincap.io/v2/assets/${widget.id}/history?interval="+widget.period+"&start="+now.subtract(Duration(days:widget.startTime)).millisecondsSinceEpoch.toString()+"&end="+now.millisecondsSinceEpoch.toString())).then((value){
       seriesList = createChart(json.decode(value.body),widget.id);
       setState((){
         loading = false;
@@ -1120,11 +1120,11 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
   };
 
   Map<String,DateFormat> formatMap = {
-    "m5":new DateFormat("h꞉mm a"),
-    "m30":new DateFormat.MMMd(),
-    "h2":new DateFormat.MMMd(),
-    "h12":new DateFormat.MMMd(),
-    "d1":new DateFormat.MMMd(),
+    "m5":DateFormat("h꞉mm a"),
+    "m30":DateFormat.MMMd(),
+    "h2":DateFormat.MMMd(),
+    "h12":DateFormat.MMMd(),
+    "d1":DateFormat.MMMd(),
   };
 
   @override
@@ -1132,18 +1132,18 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     bool hasData = seriesList!=null&&seriesList.length>(widget.startTime*dataPerDay[widget.period]/10);
     double dif, factor, visMax, visMin;
     DateFormat xFormatter = formatMap[widget.period];
-    NumberFormat yFormatter = new NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base);
+    NumberFormat yFormatter = NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base);
     if(!loading){
       dif = (maxVal-minVal);
       factor = min(1,max(.2,dif/maxVal));
       visMin = max(0,minVal-dif*factor);
       visMax = visMin!=0?maxVal+dif*factor:maxVal+minVal;
     }
-    return !loading&&canLoad&&hasData?new Container(width: 350.0*MediaQuery.of(context).size.width/375.0,
+    return !loading&&canLoad&&hasData?Container(width: 350.0*MediaQuery.of(context).size.width/375.0,
         height:200.0,
-        child: new SfCartesianChart(
+        child: SfCartesianChart(
             series: [
-            new LineSeries<TimeSeriesPrice,DateTime>(
+            LineSeries<TimeSeriesPrice,DateTime>(
                 dataSource: seriesList,
                 xValueMapper: (TimeSeriesPrice s,_)=>s.time,
                 yValueMapper: (TimeSeriesPrice s,_)=>s.price,
@@ -1152,10 +1152,10 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             )
           ],
           plotAreaBackgroundColor: Colors.transparent,
-          primaryXAxis: new DateTimeAxis(
+          primaryXAxis: DateTimeAxis(
               dateFormat: xFormatter
           ),
-          primaryYAxis: new NumericAxis(
+          primaryYAxis: NumericAxis(
               numberFormat: yFormatter,
               decimalPlaces: base,
               visibleMaximum: visMax,
@@ -1168,14 +1168,14 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
             if(a.orientation==AxisOrientation.vertical){
               a.text = yFormatter.format(a.value);
             }else{
-              a.text = xFormatter.format(new DateTime.fromMillisecondsSinceEpoch(a.value));
+              a.text = xFormatter.format(DateTime.fromMillisecondsSinceEpoch(a.value));
             }
           },
-          trackballBehavior: new TrackballBehavior(
+          trackballBehavior: TrackballBehavior(
             activationMode: ActivationMode.singleTap,
             enable: true,
             shouldAlwaysShow: true,
-            tooltipSettings: new InteractiveTooltip(
+            tooltipSettings: InteractiveTooltip(
                 color: Colors.white,
                 format: "point.x | point.y",
                 decimalPlaces: base
@@ -1186,19 +1186,19 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
               a.chartPointInfo.label = "${xFormatter.format(v.x)} | ${yFormatter.format(v.y)}";
           },
         )
-    ):canLoad&&(hasData||loading)?new Container(
+    ):canLoad&&(hasData||loading)?Container(
         height:233.0,
         padding:EdgeInsets.only(left:10.0,right:10.0),
-        child:new Column(
+        child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            new CircularProgressIndicator()
+            CircularProgressIndicator()
           ]
         )
-    ):new Container(
+    ):Container(
         height:233.0,
-        child: new Center(
-            child: new Text("Sorry, this coin graph is not supported",style: new TextStyle(fontSize:17.0))
+        child: Center(
+            child: Text("Sorry, this coin graph is not supported",style: TextStyle(fontSize:17.0))
         )
     );
   }
@@ -1212,7 +1212,7 @@ List<TimeSeriesPrice> createChart(Map<String,dynamic> info, String s) {
         num val = num.parse(info["data"][i]["priceUsd"])*_exchangeRate;
         minVal = min(minVal??val,val);
         maxVal = max(maxVal??val,val);
-        data.add(new TimeSeriesPrice(new DateTime.fromMillisecondsSinceEpoch(info["data"][i]["time"]), val));
+        data.add(TimeSeriesPrice(DateTime.fromMillisecondsSinceEpoch(info["data"][i]["time"]), val));
       }
     }else{
       canLoad = false;
