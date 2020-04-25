@@ -1133,7 +1133,7 @@ class _SimpleTimeSeriesChartState extends State<SimpleTimeSeriesChart> {
     double dif, factor, visMax, visMin;
     DateFormat xFormatter = formatMap[widget.period];
     NumberFormat yFormatter = NumberFormat.currency(symbol:_symbol.toString().replaceAll("\.", ""),locale:"en_US",decimalDigits:base);
-    if(!loading){
+    if(!loading&&hasData){
       dif = (maxVal-minVal);
       factor = min(1,max(.2,dif/maxVal));
       visMin = max(0,minVal-dif*factor);
