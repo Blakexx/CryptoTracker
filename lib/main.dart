@@ -536,14 +536,14 @@ class SettingsState extends State<Settings>{
                         trailing: Switch(
                             value: _settings["disableGraphs"],
                             onChanged: (disp){
-                              setState((){
+                              context.findAncestorStateOfType<_AppState>().setState((){
                                 _settings["disableGraphs"] = !_settings["disableGraphs"];
                               });
                               _userData["settings/disableGraphs"] = _settings["disableGraphs"];
                             }
                         ),
                         onTap: (){
-                          setState((){
+                          context.findAncestorStateOfType<_AppState>().setState((){
                             _settings["disableGraphs"] = !_settings["disableGraphs"];
                           });
                           _userData["settings/disableGraphs"] = _settings["disableGraphs"];
