@@ -121,7 +121,7 @@ class _AppState extends State<App> {
         if(e[s]==null){
           e[s]=(s=="changePercent24Hr"?-1000000:-1);
         }else if(!["id","symbol","name"].contains(s)){
-          e[s] = num.parse(e[s]);
+          e[s] = num.parse(e[s], (e) => null);
         }
       }
     });
