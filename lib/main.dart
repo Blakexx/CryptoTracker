@@ -25,43 +25,44 @@ List<String> _savedCoins;
 Database _userData;
 Map<String,dynamic> _settings;
 String _symbol;
-Map<String, String> _currencySymbolMap = {
-  "USD":"\$",
-  "AUD":"A\$",
-  "BGN":"Лв. ",
-  "BRL":"R\$",
-  "CAD": "C\$",
-  "CHF": "Fr. ",
-  "CNY": "¥",
-  "CZK": "Kč",
-  "DKK": "kr. ",
-  "EUR": "€",
-  "GBP": "£",
-  "HKD": "HK\$",
-  "HRK": "kn ",
-  "HUF": "Ft ",
-  "IDR": "Rp ",
-  "ILS": "₪",
-  "INR": "₹",
-  "ISK": "kr ",
-  "JPY": "¥",
-  "KRW": "₩",
-  "MXN": "\$",
-  "MYR": "RM",
-  "NOK": "kr ",
-  "NZD": "\$",
-  "PHP": "₱",
-  "PLN": "zł",
-  "RON": "lei ",
-  "RUB": "₽",
-  "SEK": "kr ",
-  "SGD": "S\$",
-  "THB": "฿",
-  "TRY": "₺",
-  "ZAR": "R "
-};
-Map<String, double> _exchangeRates;
-double _exchangeRate;
+
+LinkedHashSet<String> _supportedCurrencies = LinkedHashSet.from([
+  "USD",
+  "AUD",
+  "BGN",
+  "BRL",
+  "CAD",
+  "CHF",
+  "CNY",
+  "CZK",
+  "DKK",
+  "EUR",
+  "GBP",
+  "HKD",
+  "HRK",
+  "HUF",
+  "IDR",
+  "ILS",
+  "INR",
+  "ISK",
+  "JPY",
+  "KRW",
+  "MXN",
+  "MYR",
+  "NOK",
+  "NZD",
+  "PHP",
+  "PLN",
+  "RON",
+  "RUB",
+  "SEK",
+  "SGD",
+  "THB",
+  "TRY",
+  "ZAR"
+]);
+Map<String, dynamic> _conversionMap;
+num _exchangeRate;
 
 bool _loading = false;
 
@@ -70,13 +71,14 @@ Future<dynamic> _apiGet(String link) async{
 }
 
 void _changeCurrency(String currency){
-  _exchangeRate = _exchangeRates[_settings["currency"]];
-  _symbol = _currencySymbolMap[_settings["currency"]];
+  var conversionData = _conversionMap[_settings["currency"]];
+  _exchangeRate = conversionData["rate"];
+  _symbol = conversionData["symbol"];
 }
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  SyncfusionLicense.registerLicense(key);
+  SyncfusionLicense.registerLicense(syncKey);
   _userData = Database((await getApplicationDocumentsDirectory()).path);
   _savedCoins = (await _userData["saved"])?.cast<String>() ?? [];
   _settings = await _userData["settings"];
@@ -87,7 +89,19 @@ void main() async{
     };
     _userData["settings"] = _settings;
   }
-  _exchangeRates = json.decode((await http.get("https://api.exchangeratesapi.io/latest?base=USD")).body)["rates"].cast<String,double>();
+  var exchangeData = json.decode(
+      (await http.get("https://api.coincap.io/v2/rates")).body
+  )["data"];
+  _conversionMap = HashMap();
+  for(dynamic data in exchangeData){
+    String symbol = data["symbol"];
+    if(_supportedCurrencies.contains(symbol)){
+      _conversionMap[symbol] = {
+        "symbol": data["currencySymbol"] ?? "",
+        "rate": 1/num.parse(data["rateUsd"])
+      };
+    }
+  }
   _changeCurrency(_settings["currency"]);
   _coinData = HashMap<String,Map<String,Comparable>>();
   runApp(App());
@@ -570,9 +584,9 @@ class SettingsState extends State<Settings>{
                                           _userData["settings/currency"] = s;
                                           context.findAncestorStateOfType<_AppState>().setState((){});
                                         },
-                                        items: _currencySymbolMap.keys.map((s)=>DropdownMenuItem(
-                                            value:s,
-                                            child: Text(s+" "+_currencySymbolMap[s])
+                                        items: _supportedCurrencies.map((s) => DropdownMenuItem(
+                                            value: s,
+                                            child: Text("$s ${_conversionMap[s]["symbol"]}")
                                         )).toList()
                                     )
                                 )
