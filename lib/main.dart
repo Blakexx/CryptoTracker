@@ -13,9 +13,7 @@ import "package:local_database/local_database.dart";
 import "package:auto_size_text/auto_size_text.dart";
 import "dart:math";
 import "package:syncfusion_flutter_charts/charts.dart";
-import "package:syncfusion_flutter_core/core.dart";
 import "image_keys.dart";
-import "key.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 String _api = "https://api.coincap.io/v2/";
@@ -71,14 +69,13 @@ Future<dynamic> _apiGet(String link) async{
 }
 
 void _changeCurrency(String currency){
-  var conversionData = _conversionMap[_settings["currency"]];
+  var conversionData = _conversionMap[currency];
   _exchangeRate = conversionData["rate"];
   _symbol = conversionData["symbol"];
 }
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  SyncfusionLicense.registerLicense(syncKey);
   _userData = Database((await getApplicationDocumentsDirectory()).path);
   _savedCoins = (await _userData["saved"])?.cast<String>() ?? [];
   _settings = await _userData["settings"];

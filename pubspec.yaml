@@ -19,24 +19,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons:
-  http:
+  http: 0.12.2
   local_database:
-  path_provider:
-  charts_flutter:
-  flutter_launcher_icons:
-  web_socket_channel:
-  auto_size_text:
-  syncfusion_flutter_charts:
-  url_launcher:
-  flutter_svg:
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  path_provider: 1.6.11
+  charts_flutter: 0.9.0
+  flutter_launcher_icons: 0.9.2
+  web_socket_channel: 2.1.0
+  auto_size_text: 2.1.0
+  syncfusion_flutter_charts: 18.2.47
+  url_launcher: 5.5.0
+  flutter_svg: 0.22.0
 
 flutter_icons:
   android: true
